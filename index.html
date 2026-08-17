@@ -2,11 +2,11 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
-<title>LES 9 ÉTAGES DE LA TOUR — Édition Mobile</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=League+Spartan:wght@800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>LES 9 ÉTAGES DE LA TOUR — Édition Mobile 9:16</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=League+Spartan:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
-<!-- Three.js for Mobile 3D -->
+<!-- Three.js for 3D Stage -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
 
@@ -17,234 +17,181 @@
 </script>
 
 <script src="book_data.js"></script>
+<script src="book_text.js"></script>
 
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body, html {
     width: 100%; height: 100%; overflow: hidden;
-    background: #060911; font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #f7eedb; user-select: none;
+    background: #080b13; font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #f7eedb; user-select: none; -webkit-tap-highlight-color: transparent;
 }
 
-/* TOP HEADER ÉLÉGANT ET COMPACT */
+/* TOP HEADER FIXE & LISIBLE */
 #m-header {
-    height: 56px; width: 100%; background: rgba(10, 14, 23, 0.96);
-    backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08);
+    height: 54px; width: 100%; background: #0c101c;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 12px; position: fixed; top: 0; left: 0; z-index: 100;
+    padding: 0 12px; position: fixed; top: 0; left: 0; z-index: 200;
 }
-.m-brand-box { display: flex; align-items: center; gap: 6px; }
-.m-title {
-    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase; color: #f7eedb;
+.brand-zone { display: flex; align-items: center; gap: 6px; }
+.title-txt {
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; color: #f7eedb;
 }
-.m-side-badge {
-    padding: 3px 8px; border-radius: 12px; font-size: 9px; font-weight: 800;
-    letter-spacing: 0.5px; text-transform: uppercase;
+.side-pill {
+    padding: 3px 8px; border-radius: 10px; font-size: 9px; font-weight: 800;
+    text-transform: uppercase;
 }
-.m-terrain { background: #c35936; color: #fff; }
-.m-sommet { background: #133968; color: #dfb256; }
+.pill-terrain { background: #c35936; color: #fff; }
+.pill-sommet { background: #133968; color: #dfb256; }
 
-.m-header-actions { display: flex; align-items: center; gap: 6px; }
-.btn-nav-h {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
-    color: #f7eedb; padding: 6px 10px; border-radius: 16px; font-size: 11px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;
+.header-btns { display: flex; align-items: center; gap: 6px; }
+.btn-h {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    color: #f7eedb; padding: 6px 10px; border-radius: 14px; font-size: 11px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 4px;
 }
-.btn-nav-h.active-bm {
-    background: #dfb256; color: #111; border-color: #dfb256;
-}
-.m-btn-flip {
-    background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
+.btn-h.active-bm { background: #dfb256; color: #111; font-weight: 800; }
+.btn-flip-act {
+    background: linear-gradient(135deg, #c35936, #dfb256);
     color: #111; font-weight: 900; font-size: 11px; border: none;
-    padding: 6px 12px; border-radius: 16px; cursor: pointer;
+    padding: 6px 11px; border-radius: 14px; cursor: pointer;
 }
 
-/* 3D WEBGL STAGE */
-#m-stage-3d {
+/* 3D STAGE FULLSCREEN */
+#stage-3d-box {
     width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 5;
     touch-action: none;
 }
-
-/* 3D HOME UI */
-#m-home-ui {
+#home-3d-cta {
     position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 10px;
-    z-index: 20; width: 90%; max-width: 320px; text-align: center;
+    width: 90%; max-width: 320px; z-index: 20; text-align: center;
+    display: flex; flex-direction: column; gap: 10px;
 }
-.m-hero-hint {
-    font-size: 11px; font-weight: 600; color: #889bb8;
-    background: rgba(14, 20, 32, 0.85); backdrop-filter: blur(10px);
-    padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-}
-.m-hero-cta {
-    background: #dfb256; color: #111; font-size: 14px; font-weight: 900;
-    padding: 12px 28px; border-radius: 25px; border: none; cursor: pointer;
-    box-shadow: 0 6px 25px rgba(223, 178, 86, 0.5); width: 100%;
+.cta-btn-main {
+    background: #dfb256; color: #111; font-size: 15px; font-weight: 900;
+    padding: 13px 25px; border-radius: 25px; border: none; cursor: pointer;
+    box-shadow: 0 8px 25px rgba(223, 178, 86, 0.5); width: 100%;
 }
 
-/* SMART RETURN TOAST / BANNER */
-#m-resume-banner {
-    position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 360px;
-    background: linear-gradient(135deg, #111a2d 0%, #c35936 100%);
-    border: 1.5px solid #dfb256; border-radius: 14px; padding: 12px 16px;
-    display: none; align-items: center; justify-content: space-between;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 150;
+/* =================================================== */
+/* VRAIE LISEUSE PLEIN ÉCRAN 9:16 REFLOW DYNAMIQUE */
+/* =================================================== */
+#live-reader-container {
+    position: fixed; top: 54px; left: 0; width: 100%; height: calc(100% - 54px);
+    display: none; flex-direction: column; justify-content: space-between;
+    background: #0d121f; color: #f7eedb; z-index: 90;
+    transition: background 0.3s, color 0.3s;
 }
 
-/* BOOKMARKS DRAWER (MODAL ISOLÉE PAR DÉFAUT EN DISPLAY: NONE) */
-#m-bookmarks-modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(4, 6, 12, 0.85); backdrop-filter: blur(20px);
-    display: none; justify-content: center; align-items: center; z-index: 300;
-    padding: 20px;
-}
-.bm-dialog-card {
-    background: #111726; border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 16px; padding: 22px 18px; width: 100%; max-width: 340px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.9); text-align: center;
-}
-.bm-list-box {
-    max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
-    margin: 15px 0; text-align: left;
-}
-.bm-entry {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-    padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between;
-    align-items: center; cursor: pointer;
-}
-.bm-entry:hover { background: rgba(223, 178, 86, 0.15); border-color: #dfb256; }
+/* THEMES DE LECTURE */
+#live-reader-container.theme-dark { background: #0b0f19; color: #f4ecdc; }
+#live-reader-container.theme-sepia { background: #f6eedb; color: #36291a; }
+#live-reader-container.theme-light { background: #ffffff; color: #181818; }
 
+/* REFLOW SCROLLABLE CONTENT (TEXTE DYNAMIQUE SANS DÉBORDEMENT) */
+#live-reader-body {
+    flex: 1; width: 100%; overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; padding: 18px 20px 75px 20px;
+    font-family: 'Lora', serif; line-height: 1.75;
+}
 
-/* DISPLAY SETTINGS MODAL PRO */
-#m-display-modal {
+/* FORMAT FAC-SIMILÉ PDF (SI MODE EXACT) */
+#pdf-facsimile-wrapper {
+    width: 100%; height: 100%; display: none;
+    justify-content: center; align-items: center; padding: 8px;
+}
+#pdf-page-card {
+    background: #fff; border-radius: 6px; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    max-height: 100%; max-width: 100%; display: flex; justify-content: center; align-items: center;
+}
+#pdf-page-card canvas {
+    max-height: calc(100vh - 130px); max-width: 94vw; width: auto; height: auto; display: block;
+}
+
+/* EN-TÊTE DE CHAPITRE REFLOW */
+.reflow-chap-title {
+    font-family: 'League Spartan', sans-serif; font-size: 13px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase; color: #dfb256;
+    margin-bottom: 12px; border-bottom: 1px solid rgba(223, 178, 86, 0.3);
+    padding-bottom: 6px; display: flex; justify-content: space-between;
+}
+.reflow-para {
+    margin-bottom: 14px; text-align: justify; word-break: break-word;
+}
+.reflow-table-box {
+    margin: 15px 0; padding: 12px; background: rgba(0,0,0,0.15); border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1); font-size: 0.9em; font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* TOP TOOLBAR INSIDE READER (TAILLE POLICE A- / A+ ET THÈMES) */
+#reader-quick-toolbar {
+    height: 38px; width: 100%; background: rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 15px; font-size: 11px;
+}
+.font-stepper { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+.btn-font-step {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #dfb256; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 900;
+    cursor: pointer;
+}
+.theme-selector-dots { display: flex; align-items: center; gap: 8px; }
+.theme-dot-btn {
+    width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 1.5px solid rgba(255,255,255,0.3);
+}
+
+/* BOTTOM FIXED DOCK (ZÉRO GLITCH) */
+#m-bottom-dock {
+    position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+    width: 94%; max-width: 400px; height: 46px;
+    background: rgba(12, 16, 28, 0.96); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 12px; z-index: 150;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+.dock-nav-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+    color: #f7eedb; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: 800;
+    cursor: pointer;
+}
+.dock-slider-bar {
+    flex: 1; margin: 0 10px; -webkit-appearance: none; appearance: none;
+    height: 4px; border-radius: 4px; background: rgba(255,255,255,0.2); outline: none;
+}
+.dock-slider-bar::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 15px; height: 15px;
+    border-radius: 50%; background: #dfb256; cursor: pointer;
+}
+#page-indicator-txt { font-size: 11px; font-weight: 800; color: #dfb256; min-width: 80px; text-align: center; }
+
+/* MODALS */
+#bookmarks-dialog-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(4, 6, 12, 0.85); backdrop-filter: blur(20px);
     display: none; justify-content: center; align-items: center; z-index: 350;
     padding: 20px;
 }
-.display-card {
+.dialog-box {
     background: #111726; border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 18px; padding: 22px 18px; width: 100%; max-width: 340px;
+    border-radius: 16px; padding: 22px 18px; width: 100%; max-width: 340px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.9); text-align: center;
 }
-.setting-section {
-    margin: 15px 0; padding: 12px; background: rgba(255,255,255,0.04);
-    border-radius: 12px; text-align: left;
+.dialog-list {
+    max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+    margin: 15px 0; text-align: left;
 }
-.setting-title {
-    font-size: 11px; font-weight: 800; color: #dfb256; text-transform: uppercase;
-    letter-spacing: 1px; margin-bottom: 8px;
-}
-.zoom-btn-row {
-    display: flex; align-items: center; justify-content: space-between; gap: 8px;
-}
-.btn-display-act {
-    flex: 1; padding: 8px; border-radius: 10px; background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15); color: #fff; font-weight: 800; font-size: 12px;
-    cursor: pointer; transition: all 0.2s;
-}
-.btn-display-act:hover { background: #dfb256; color: #111; }
-.theme-selector {
-    display: flex; gap: 10px; justify-content: center; margin-top: 6px;
-}
-.theme-pill {
-    padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 800; cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.2);
+.dialog-item {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between;
+    align-items: center; cursor: pointer;
 }
 
-/* 2D MOBILE LISEUSE */
-#m-reader-overlay {
-    position: fixed; top: 56px; left: 0; width: 100%; height: calc(100% - 56px);
-    display: none; justify-content: center; align-items: center;
-    background: radial-gradient(circle at center, #111726 0%, #05070c 100%);
-    backdrop-filter: blur(25px); z-index: 90;
-    overflow: hidden;
-}
-
-.m-stage-wrap {
-    perspective: 1800px; width: 100%; height: 100%;
-    display: flex; justify-content: center; align-items: center; padding: 10px;
-}
-
-.m-page-card {
-    background: #fff; border-radius: 6px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.85);
-    overflow: hidden; max-height: 82vh; max-width: 92vw;
-    display: flex; justify-content: center; align-items: center;
-    position: relative; transform-style: preserve-3d;
-    transform-origin: left center;
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.m-page-card canvas {
-    max-height: 82vh; max-width: 92vw; width: auto; height: auto; display: block;
-}
-
-#m-ribbon {
-    position: absolute; top: 0; right: 20px; width: 24px; height: 38px;
-    background: #dfb256; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4); display: none; z-index: 30;
-    cursor: pointer;
-}
-
-.m-page-card.flip-next-anim {
-    animation: flipNext 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.m-page-card.flip-prev-anim {
-    animation: flipPrev 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-@keyframes flipNext {
-    0% { transform: rotateY(0deg) scale(1); }
-    50% { transform: rotateY(-30deg) scale(0.95); opacity: 0.9; }
-    100% { transform: rotateY(0deg) scale(1); }
-}
-@keyframes flipPrev {
-    0% { transform: rotateY(0deg) scale(1); }
-    50% { transform: rotateY(30deg) scale(0.95); opacity: 0.9; }
-    100% { transform: rotateY(0deg) scale(1); }
-}
-
-/* TAP ZONES */
-.m-tap-zones {
-    position: absolute; width: 100%; height: 100%; top: 0; left: 0;
-    display: flex; z-index: 40;
-}
-.tap-l { width: 30%; height: 100%; }
-.tap-c { width: 40%; height: 100%; }
-.tap-r { width: 30%; height: 100%; }
-
-/* AUTO-FADE BOTTOM DOCK */
-#m-bottom-dock {
-    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 380px; height: 48px;
-    background: rgba(14, 20, 32, 0.94); backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.18); border-radius: 30px;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0 14px; z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-    opacity: 0.2; transition: opacity 0.4s ease, transform 0.3s ease;
-}
-#m-bottom-dock:hover, #m-bottom-dock.active {
-    opacity: 1; transform: translateX(-50%) translateY(-2px);
-}
-
-.dock-btn {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-    color: #f7eedb; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: 700;
-    cursor: pointer;
-}
-.dock-slider {
-    flex: 1; margin: 0 10px; -webkit-appearance: none; appearance: none;
-    height: 4px; border-radius: 4px; background: rgba(255,255,255,0.2); outline: none;
-}
-.dock-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 14px; height: 14px;
-    border-radius: 50%; background: #dfb256; cursor: pointer;
-}
-
-#toast-alert {
-    position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
+#toast-box {
+    position: fixed; top: 65px; left: 50%; transform: translateX(-50%);
     background: #dfb256; color: #111; font-weight: 800; font-size: 11px;
     padding: 7px 18px; border-radius: 20px; display: none; z-index: 400;
     box-shadow: 0 8px 20px rgba(0,0,0,0.5);
@@ -253,160 +200,141 @@ body, html {
 </head>
 <body>
 
-<div id="toast-alert">Page mémorisée !</div>
+<div id="toast-box">Page mémorisée !</div>
 
 <!-- TOP HEADER -->
 <div id="m-header">
-    <div class="m-brand-box">
-        <span class="m-title">9 ÉTAGES</span>
-        <span id="m-side-badge" class="m-side-badge m-terrain">TERRAIN</span>
+    <div class="brand-zone">
+        <span class="title-txt">9 ÉTAGES</span>
+        <span id="badge-side" class="side-pill pill-terrain">TERRAIN</span>
     </div>
 
-    <div class="m-header-actions">
-        <button id="btn-save-bm" class="btn-nav-h" onclick="toggleBookmark()">🔖 <span id="label-bm-btn">Marquer</span></button>
-        <button class="btn-nav-h" onclick="openBookmarksModal()">📂 <span id="label-count-bm">Pages (0)</span></button>
-        <button class="btn-nav-h" onclick="openDisplayModal()" title="Ajuster la taille et l'affichage" style="border-color:#dfb256; color:#dfb256;">⚙️ Affichage</button>
-        <button id="btn-toggle-view" class="btn-nav-h" onclick="toggleReading()">📖 Lire</button>
-        <button class="m-btn-flip" onclick="flipTeteBecheMobile()">🔄 RETOURNER</button>
-    </div>
-</div>
-
-<!-- SMART RETURN RESUME BANNER -->
-<div id="m-resume-banner">
-    <div>
-        <div style="font-size:11px; font-weight:800; color:#dfb256;">REPRENDRE LA LECTURE</div>
-        <div id="resume-text" style="font-size:11px; color:#ddd; margin-top:2px;">Côté Terrain · Page 1</div>
-    </div>
-    <div style="display:flex; align-items:center; gap:6px;">
-        <button onclick="confirmResume()" style="background:#dfb256; color:#111; font-weight:800; font-size:11px; padding:6px 12px; border:none; border-radius:15px; cursor:pointer;">Reprendre ➔</button>
-        <button onclick="dismissResume()" style="background:transparent; border:none; color:#aaa; font-size:14px; cursor:pointer;">✕</button>
+    <div class="header-btns">
+        <button id="btn-save-bm" class="btn-h" onclick="toggleCurrentBookmark()">🔖 <span id="txt-bm-label">Marquer</span></button>
+        <button class="btn-h" onclick="openBookmarksList()">📂 <span id="txt-bm-total">Pages (0)</span></button>
+        <button id="btn-view-mode" class="btn-h" onclick="toggleViewMode()" style="border-color:#dfb256; color:#dfb256;">Aa Texte</button>
+        <button class="btn-flip-act" onclick="flip3DTeteBeche()">🔄 RETOURNER</button>
     </div>
 </div>
 
-<!-- BOOKMARKS DIALOG (DISPARAISSEMENT COMPLET QUAND FERMÉ) -->
-<div id="m-bookmarks-modal">
-    <div class="bm-dialog-card">
-        <div style="font-size:28px; margin-bottom:6px;">🔖</div>
-        <h3 style="font-size:16px; color:#dfb256; text-transform:uppercase;">Mes Marque-Pages</h3>
-        <p style="font-size:11px; color:#889bb8; margin-bottom:12px;">Accédez instantanément à vos pages</p>
-        <div class="bm-list-box" id="bm-items-container"></div>
-        <button onclick="closeBookmarksModal()" style="background:#dfb256; color:#111; font-weight:800; font-size:12px; padding:9px 22px; border-radius:20px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
+<!-- 3D WEBGL FULLSCREEN STAGE -->
+<div id="stage-3d-box"></div>
+
+<!-- 3D HOME CTA -->
+<div id="home-3d-cta">
+    <div style="font-size:11px; color:#889bb8; background:rgba(12,16,28,0.85); padding:6px 14px; border-radius:15px; border:1px solid rgba(255,255,255,0.1);">
+        👆 Touchez & glissez pour manipuler à 360°
     </div>
-</div>
-
-<!-- 3D WEBGL STAGE -->
-
-<!-- DISPLAY SETTINGS MODAL -->
-<div id="m-display-modal">
-    <div class="display-card">
-        <div style="font-size:26px; margin-bottom:4px;">🔍</div>
-        <h3 style="font-size:16px; color:#dfb256; text-transform:uppercase;">Ajuster l'Affichage</h3>
-        <p style="font-size:11px; color:#889bb8; margin-bottom:8px;">Personnalisez la taille pour votre confort</p>
-        
-        <div class="setting-section">
-            <div class="setting-title">Taille & Zoom de la page</div>
-            <div class="zoom-btn-row">
-                <button class="btn-display-act" onclick="adjustScale(-0.25)">− Réduire</button>
-                <span id="zoom-indicator" style="font-size:12px; font-weight:800; color:#dfb256; min-width:48px; text-align:center;">100%</span>
-                <button class="btn-display-act" onclick="adjustScale(0.25)">+ Agrandir</button>
-                <button class="btn-display-act" onclick="resetScale()" style="max-width:45px;">1:1</button>
-            </div>
-        </div>
-
-        <div class="setting-section">
-            <div class="setting-title">Ambiance de lecture</div>
-            <div class="theme-selector">
-                <div class="theme-pill" style="background:#090c14; color:#dfb256; border-color:#dfb256;" onclick="setTheme('dark')">Sombre</div>
-                <div class="theme-pill" style="background:#f4ecd8; color:#333;" onclick="setTheme('sepia')">Sépia</div>
-                <div class="theme-pill" style="background:#ffffff; color:#111;" onclick="setTheme('light')">Clair</div>
-            </div>
-        </div>
-
-        <button onclick="closeDisplayModal()" style="background:#dfb256; color:#111; font-weight:800; font-size:12px; padding:10px 24px; border-radius:20px; border:none; cursor:pointer; width:100%; margin-top:8px;">Valider ✓</button>
-    </div>
-</div>
-
-<div id="m-stage-3d"></div>
-
-<!-- 3D HOME UI -->
-<div id="m-home-ui">
-    <div class="m-hero-hint">👆 Touchez & glissez dans toutes les directions pour manipuler en 3D</div>
-    <button class="m-hero-cta" onclick="toggleReading()">
+    <button class="cta-btn-main" onclick="openReader()">
         OUVRIR LE LIVRE ➔
     </button>
 </div>
 
-<!-- 2D MOBILE LISEUSE -->
-<div id="m-reader-overlay">
-    <div class="m-stage-wrap">
-        <div id="m-page-card" class="m-page-card">
-            <div id="m-ribbon" onclick="toggleBookmark()" title="Retirer marque-page"></div>
-            <canvas id="m-page-canvas"></canvas>
+<!-- LIVE REFLOW & PDF DUAL-READER CONTAINER (9:16) -->
+<div id="live-reader-container" class="theme-dark">
+    
+    <!-- SUB-TOOLBAR: DYNAMIC FONT SIZE & THEMES -->
+    <div id="reader-quick-toolbar">
+        <div class="font-stepper">
+            <span>Taille :</span>
+            <button class="btn-font-step" onclick="changeFontSize(-2)">A−</button>
+            <span id="font-sz-display" style="color:#dfb256;">16px</span>
+            <button class="btn-font-step" onclick="changeFontSize(2)">A+</button>
+        </div>
+
+        <div class="theme-selector-dots">
+            <div class="theme-dot-btn" style="background:#0b0f19; border-color:#dfb256;" onclick="applyTheme('theme-dark')"></div>
+            <div class="theme-dot-btn" style="background:#f6eedb;" onclick="applyTheme('theme-sepia')"></div>
+            <div class="theme-dot-btn" style="background:#ffffff;" onclick="applyTheme('theme-light')"></div>
         </div>
     </div>
 
-    <!-- TOUCH TAP & SWIPE ZONES -->
-    <div class="m-tap-zones">
-        <div class="tap-l" onclick="prevPage()"></div>
-        <div class="tap-c" onclick="toggleDock()"></div>
-        <div class="tap-r" onclick="nextPage()"></div>
+    <!-- 1. LIVE REFLOW BODY (DYNAMIQUE, CENTRÉ, LISIBLE) -->
+    <div id="live-reader-body">
+        <div class="reflow-chap-title">
+            <span id="reflow-header-tag">CÔTÉ TERRAIN · PAGE 1</span>
+        </div>
+        <div id="reflow-text-zone" style="font-size: 16px;"></div>
     </div>
 
-    <!-- AUTO-FADE DOCK -->
+    <!-- 2. EXACT PDF CANVAS (SI MODE FAC-SIMILÉ) -->
+    <div id="pdf-facsimile-wrapper">
+        <div id="pdf-page-card">
+            <canvas id="pdf-canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- FIXED NON-GLITCHING BOTTOM DOCK -->
     <div id="m-bottom-dock">
-        <button class="dock-btn" onclick="prevPage()">◀</button>
-        <input type="range" id="m-slider" class="dock-slider" min="1" max="168" value="1" oninput="onSlider(this.value)" />
-        <span id="m-page-tag" style="font-size:11px; font-weight:800; color:#dfb256; min-width:52px; text-align:center;">p. 1 / 168</span>
-        <button class="dock-btn" onclick="nextPage()">▶</button>
+        <button class="dock-nav-btn" onclick="prevStep()">◀</button>
+        <input type="range" id="page-scrubber" class="dock-slider-bar" min="1" max="168" value="1" oninput="onScrubPage(this.value)" />
+        <span id="page-indicator-txt">Couverture</span>
+        <button class="dock-nav-btn" onclick="nextStep()">▶</button>
+    </div>
+</div>
+
+<!-- BOOKMARKS MODAL -->
+<div id="bookmarks-dialog-overlay">
+    <div class="dialog-box">
+        <div style="font-size:28px; margin-bottom:6px;">🔖</div>
+        <h3 style="font-size:16px; color:#dfb256; text-transform:uppercase;">Mes Marque-Pages</h3>
+        <p style="font-size:11px; color:#889bb8; margin-bottom:12px;">Accédez instantanément à vos pages</p>
+        <div class="dialog-list" id="dialog-bm-items"></div>
+        <button onclick="closeBookmarksList()" style="background:#dfb256; color:#111; font-weight:800; font-size:12px; padding:9px 22px; border-radius:20px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
     </div>
 </div>
 
 <script>
-const STORAGE_KEY = "LES_9_ETAGES_MOBILE_STORE_V2";
+const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_V3";
 
 let currentSide = 'terrain'; // 'terrain' or 'sommet'
+let currentPage = 1; // 1 to 168 (1 = Couverture, 2 = Page 1)
+let isReading = false;
+let isPdfMode = false; // False = Reflow Dynamique 9:16, True = PDF Facsimile
+let currentFontSize = 16;
+
 let docTerrain = null;
 let docSommet = null;
-let currentPage = 1;
-let isReading = false;
-let dockTimer = null;
-let touchStartX = 0, touchEndX = 0;
 
-// Three.js
+// Three.js 3D
 let scene, camera, renderer, bookMesh;
 let isFlipping3D = false;
 let isTouchDragging = false;
 let prevTouchPos = { x: 0, y: 0 };
 
-let sessionStore = {
+let userStore = {
     terrainLastPage: 1,
     sommetLastPage: 1,
     terrainBookmarks: [],
     sommetBookmarks: [],
+    fontSize: 16,
+    theme: 'theme-dark',
     lastSide: 'terrain'
 };
 
-function loadStore() {
+function loadUserStore() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
         try {
-            sessionStore = JSON.parse(saved);
-            currentSide = sessionStore.lastSide || 'terrain';
-            currentPage = (currentSide === 'terrain') ? (sessionStore.terrainLastPage || 1) : (sessionStore.sommetLastPage || 1);
+            userStore = JSON.parse(saved);
+            currentSide = userStore.lastSide || 'terrain';
+            currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
+            currentFontSize = userStore.fontSize || 16;
         } catch(e) {}
     }
 }
 
-function saveStore() {
-    if (currentSide === 'terrain') sessionStore.terrainLastPage = currentPage;
-    else sessionStore.sommetLastPage = currentPage;
-    sessionStore.lastSide = currentSide;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionStore));
-    updateBookmarkStatus();
+function saveUserStore() {
+    if (currentSide === 'terrain') userStore.terrainLastPage = currentPage;
+    else userStore.sommetLastPage = currentPage;
+    userStore.lastSide = currentSide;
+    userStore.fontSize = currentFontSize;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userStore));
+    updateBookmarkUI();
 }
 
-function init3D() {
-    const container = document.getElementById('m-stage-3d');
+function init3DStage() {
+    const container = document.getElementById('stage-3d-box');
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -466,7 +394,7 @@ function init3D() {
     bookMesh.rotation.set(0.15, -0.35, 0);
     scene.add(bookMesh);
 
-    // TRACKBALL QUATERNION TOUCH (LIBRE 360°)
+    // FREE TOUCH TRACKBALL (360° SANS BLOCAGE)
     const dom = renderer.domElement;
     dom.addEventListener('touchstart', (e) => {
         isTouchDragging = true;
@@ -496,12 +424,12 @@ function init3D() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    animate3D();
-    initApp();
+    animate3DLoop();
+    initAppCore();
 }
 
-function animate3D(time) {
-    requestAnimationFrame(animate3D);
+function animate3DLoop(time) {
+    requestAnimationFrame(animate3DLoop);
     TWEEN.update(time);
     if (!isFlipping3D && bookMesh && !isReading) {
         bookMesh.position.y = Math.sin(time * 0.0015) * 0.08;
@@ -509,92 +437,104 @@ function animate3D(time) {
     renderer.render(scene, camera);
 }
 
-async function initApp() {
-    loadStore();
+async function initAppCore() {
+    loadUserStore();
     docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
-    updateBadge();
-    checkStartupResume();
-    setupSwipe();
+    updateSideBadge();
+    applyTheme(userStore.theme || 'theme-dark');
+    document.getElementById('font-sz-display').innerText = `${currentFontSize}px`;
+    setupTouchGestures();
 }
 
-function checkStartupResume() {
-    const lastP = (sessionStore.lastSide === 'terrain') ? sessionStore.terrainLastPage : sessionStore.sommetLastPage;
-    if (lastP && lastP > 1) {
-        const sideName = (sessionStore.lastSide === 'terrain') ? 'Côté Terrain' : 'Côté Sommet';
-        const pLabel = (lastP === 1) ? "Couverture" : `Page ${lastP - 1}`;
-    document.getElementById('resume-text').innerText = `${sideName} · ${pLabel}`;
-        document.getElementById('m-resume-banner').style.display = 'flex';
+function renderActiveView() {
+    const pLabel = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / 167`;
+    document.getElementById('page-scrubber').value = currentPage;
+    document.getElementById('page-indicator-txt').innerText = pLabel;
+
+    if (isPdfMode) {
+        document.getElementById('live-reader-body').style.display = 'none';
+        document.getElementById('pdf-facsimile-wrapper').style.display = 'flex';
+        document.getElementById('reader-quick-toolbar').style.display = 'none';
+        renderPdfPage();
+    } else {
+        document.getElementById('live-reader-body').style.display = 'block';
+        document.getElementById('pdf-facsimile-wrapper').style.display = 'none';
+        document.getElementById('reader-quick-toolbar').style.display = 'flex';
+        renderReflowPage();
     }
-    updateBookmarkStatus();
+
+    saveUserStore();
 }
 
-function confirmResume() {
-    dismissResume();
-    currentSide = sessionStore.lastSide || 'terrain';
-    currentPage = (currentSide === 'terrain') ? (sessionStore.terrainLastPage || 1) : (sessionStore.sommetLastPage || 1);
-    updateBadge();
-    if (!isReading) toggleReading();
-    else renderPage();
+// 1. LIVE REFLOW DYNAMIQUE (9:16 PLEIN ÉCRAN FLUIDE)
+function renderReflowPage() {
+    const rawList = (currentSide === 'terrain') ? window.BOOK_CONTENT.terrain : window.BOOK_CONTENT.sommet;
+    const pageItem = rawList[currentPage - 1];
+
+    const zone = document.getElementById('reflow-text-zone');
+    const headerTag = document.getElementById('reflow-header-tag');
+
+    const sideName = (currentSide === 'terrain') ? 'CÔTÉ TERRAIN' : 'CÔTÉ SOMMET';
+    const pName = (currentPage === 1) ? 'COUVERTURE' : `PAGE ${currentPage - 1}`;
+    headerTag.innerText = `${sideName} · ${pName}`;
+
+    if (!pageItem || !pageItem.text) {
+        zone.innerHTML = `<div style="text-align:center; padding:40px 10px; color:#888;">(Illustration ou page graphique originale)<br><br><button onclick="toggleViewMode()" style="background:#dfb256; color:#111; font-weight:800; padding:8px 16px; border:none; border-radius:15px; cursor:pointer;">Voir en mode PDF exact ➔</button></div>`;
+    } else {
+        // Render formatted paragraphs with proper typography
+        const paragraphs = pageItem.text.split("\n\n").filter(p => p.trim());
+        let htmlContent = "";
+        paragraphs.forEach(p => {
+            htmlContent += `<p class="reflow-para" style="font-size: ${currentFontSize}px;">${p.replace(/\n/g, ' ')}</p>`;
+        });
+        zone.innerHTML = htmlContent;
+    }
+
+    document.getElementById('live-reader-body').scrollTop = 0;
 }
 
-function dismissResume() {
-    document.getElementById('m-resume-banner').style.display = 'none';
-}
-
-async function renderPage(anim = null) {
+// 2. MODE PDF EXACT (FAC-SIMILÉ)
+async function renderPdfPage() {
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     if (!activeDoc) return;
 
-    const card = document.getElementById('m-page-card');
-    card.classList.remove('flip-next-anim', 'flip-prev-anim');
-    void card.offsetWidth;
-    if (anim === 'next') card.classList.add('flip-next-anim');
-    else if (anim === 'prev') card.classList.add('flip-prev-anim');
-
     const page = await activeDoc.getPage(currentPage);
-    const canvas = document.getElementById('m-page-canvas');
+    const canvas = document.getElementById('pdf-canvas');
     const ctx = canvas.getContext('2d');
     
-    const viewport = page.getViewport({ scale: 2.3 });
+    const viewport = page.getViewport({ scale: 2.2 });
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
-    document.getElementById('m-slider').value = currentPage;
-    const displayTxt = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / 167`;
-    document.getElementById('m-page-tag').innerText = displayTxt;
-
-    saveStore();
-    wakeDock();
 }
 
-function nextPage() {
-    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
-    if (activeDoc && currentPage < activeDoc.numPages) {
+function nextStep() {
+    const maxP = 168;
+    if (currentPage < maxP) {
         currentPage++;
-        renderPage('next');
+        renderActiveView();
     }
 }
 
-function prevPage() {
+function prevStep() {
     if (currentPage > 1) {
         currentPage--;
-        renderPage('prev');
+        renderActiveView();
     }
 }
 
-function onSlider(val) {
+function onScrubPage(val) {
     currentPage = parseInt(val);
-    renderPage();
+    renderActiveView();
 }
 
-function flipTeteBecheMobile() {
+function flip3DTeteBeche() {
     if (isFlipping3D) return;
     isFlipping3D = true;
 
     currentSide = (currentSide === 'terrain') ? 'sommet' : 'terrain';
-    currentPage = (currentSide === 'terrain') ? (sessionStore.terrainLastPage || 1) : (sessionStore.sommetLastPage || 1);
+    currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
 
     const targetY = (currentSide === 'sommet') ? Math.PI - 0.35 : -0.35;
     const targetZ = (currentSide === 'sommet') ? Math.PI : 0;
@@ -605,43 +545,77 @@ function flipTeteBecheMobile() {
         .onComplete(() => { isFlipping3D = false; })
         .start();
 
-    updateBadge();
-    if (isReading) renderPage();
+    updateSideBadge();
+    if (isReading) renderActiveView();
 }
 
-function updateBadge() {
-    const b = document.getElementById('m-side-badge');
+function updateSideBadge() {
+    const b = document.getElementById('badge-side');
     if (currentSide === 'terrain') {
-        b.className = "m-side-badge m-terrain";
+        b.className = "side-pill pill-terrain";
         b.innerText = "TERRAIN";
     } else {
-        b.className = "m-side-badge m-sommet";
+        b.className = "side-pill pill-sommet";
         b.innerText = "SOMMET";
     }
 }
 
-function toggleBookmark() {
-    const list = (currentSide === 'terrain') ? sessionStore.terrainBookmarks : sessionStore.sommetBookmarks;
+function changeFontSize(delta) {
+    currentFontSize = Math.max(13, Math.min(28, currentFontSize + delta));
+    document.getElementById('font-sz-display').innerText = `${currentFontSize}px`;
+    userStore.fontSize = currentFontSize;
+    renderReflowPage();
+}
+
+function applyTheme(themeName) {
+    const el = document.getElementById('live-reader-container');
+    el.className = themeName;
+    userStore.theme = themeName;
+}
+
+function toggleViewMode() {
+    isPdfMode = !isPdfMode;
+    const btn = document.getElementById('btn-view-mode');
+    btn.innerText = isPdfMode ? "📄 PDF Exact" : "Aa Texte";
+    btn.style.background = isPdfMode ? "#dfb256" : "rgba(255,255,255,0.08)";
+    btn.style.color = isPdfMode ? "#111" : "#dfb256";
+    if (isReading) renderActiveView();
+}
+
+function openReader() {
+    isReading = true;
+    document.getElementById('live-reader-container').style.display = 'flex';
+    document.getElementById('home-3d-cta').style.display = 'none';
+    renderActiveView();
+}
+
+function closeReader() {
+    isReading = false;
+    document.getElementById('live-reader-container').style.display = 'none';
+    document.getElementById('home-3d-cta').style.display = 'flex';
+}
+
+function toggleCurrentBookmark() {
+    const list = (currentSide === 'terrain') ? userStore.terrainBookmarks : userStore.sommetBookmarks;
     const idx = list.indexOf(currentPage);
+    const pLabel = (currentPage === 1) ? "Couverture" : `Page ${currentPage - 1}`;
     if (idx === -1) {
         list.push(currentPage);
         list.sort((a,b) => a - b);
-        const tLabel = (currentPage === 1) ? "Couverture" : `Page ${currentPage - 1}`;
-    showToast(`🔖 ${tLabel} marquée !`);
+        showToastAlert(`🔖 ${pLabel} mémorisée !`);
     } else {
         list.splice(idx, 1);
-        showToast(`Marque-page retiré`);
+        showToastAlert(`Marque-page retiré`);
     }
-    saveStore();
+    saveUserStore();
 }
 
-function updateBookmarkStatus() {
-    const list = (currentSide === 'terrain') ? sessionStore.terrainBookmarks : sessionStore.sommetBookmarks;
+function updateBookmarkUI() {
+    const list = (currentSide === 'terrain') ? userStore.terrainBookmarks : userStore.sommetBookmarks;
     const isBm = list.includes(currentPage);
-    document.getElementById('m-ribbon').style.display = isBm ? 'block' : 'none';
     
     const btn = document.getElementById('btn-save-bm');
-    const label = document.getElementById('label-bm-btn');
+    const label = document.getElementById('txt-bm-label');
     if (isBm) {
         btn.classList.add('active-bm');
         label.innerText = "Mémorisée ★";
@@ -650,139 +624,86 @@ function updateBookmarkStatus() {
         label.innerText = "Marquer";
     }
 
-    const totalCount = (sessionStore.terrainBookmarks || []).length + (sessionStore.sommetBookmarks || []).length;
-    document.getElementById('label-count-bm').innerText = `Pages (${totalCount})`;
+    const total = (userStore.terrainBookmarks || []).length + (userStore.sommetBookmarks || []).length;
+    document.getElementById('txt-bm-total').innerText = `Pages (${total})`;
 }
 
-function openBookmarksModal() {
-    const c = document.getElementById('bm-items-container');
+function openBookmarksList() {
+    const c = document.getElementById('dialog-bm-items');
     c.innerHTML = '';
     
     const all = [];
-    (sessionStore.terrainBookmarks || []).forEach(p => all.push({ side: 'terrain', page: p }));
-    (sessionStore.sommetBookmarks || []).forEach(p => all.push({ side: 'sommet', page: p }));
+    (userStore.terrainBookmarks || []).forEach(p => all.push({ side: 'terrain', page: p }));
+    (userStore.sommetBookmarks || []).forEach(p => all.push({ side: 'sommet', page: p }));
 
     if (all.length === 0) {
-        c.innerHTML = '<div style="font-size:12px; color:#888; text-align:center; padding:15px;">Aucun marque-page pour le moment.</div>';
+        c.innerHTML = '<div style="font-size:12px; color:#888; text-align:center; padding:15px;">Aucun marque-page enregistré.</div>';
     } else {
         all.forEach(item => {
             const row = document.createElement('div');
-            row.className = 'bm-entry';
+            row.className = 'dialog-item';
             const badgeBg = (item.side === 'terrain') ? '#c35936' : '#133968';
+            const pTxt = (item.page === 1) ? "Couverture" : `Page ${item.page - 1}`;
             row.innerHTML = `
-                <div onclick="jumpTo('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:8px; flex:1;">
+                <div onclick="jumpToBm('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:8px; flex:1;">
                     <span style="background:${badgeBg}; color:#fff; font-size:9px; font-weight:800; padding:2px 6px; border-radius:8px; text-transform:uppercase;">${item.side}</span>
-                    <span style="font-size:13px; font-weight:700; color:#f7eedb;">${(item.page === 1) ? "Couverture" : "Page " + (item.page - 1)}</span>
+                    <span style="font-size:13px; font-weight:700; color:#f7eedb;">${pTxt}</span>
                 </div>
-                <button onclick="delBookmark('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#e74c3c; font-size:14px; cursor:pointer;">🗑️</button>
+                <button onclick="delBmItem('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#e74c3c; font-size:14px; cursor:pointer;">🗑️</button>
             `;
             c.appendChild(row);
         });
     }
 
-    document.getElementById('m-bookmarks-modal').style.display = 'flex';
+    document.getElementById('bookmarks-dialog-overlay').style.display = 'flex';
 }
 
-function closeBookmarksModal() {
-    document.getElementById('m-bookmarks-modal').style.display = 'none';
+function closeBookmarksList() {
+    document.getElementById('bookmarks-dialog-overlay').style.display = 'none';
 }
 
-function jumpTo(side, pageNum) {
-    closeBookmarksModal();
+function jumpToBm(side, pageNum) {
+    closeBookmarksList();
     currentSide = side;
     currentPage = pageNum;
-    updateBadge();
-    if (!isReading) toggleReading();
-    else renderPage();
+    updateSideBadge();
+    if (!isReading) openReader();
+    else renderActiveView();
 }
 
-function delBookmark(side, pageNum, event) {
+function delBmItem(side, pageNum, event) {
     event.stopPropagation();
-    const list = (side === 'terrain') ? sessionStore.terrainBookmarks : sessionStore.sommetBookmarks;
+    const list = (side === 'terrain') ? userStore.terrainBookmarks : userStore.sommetBookmarks;
     const idx = list.indexOf(pageNum);
     if (idx !== -1) {
         list.splice(idx, 1);
-        saveStore();
-        openBookmarksModal();
+        saveUserStore();
+        openBookmarksList();
     }
 }
 
-function toggleReading() {
-    isReading = !isReading;
-    document.getElementById('m-reader-overlay').style.display = isReading ? 'flex' : 'none';
-    document.getElementById('m-home-ui').style.display = isReading ? 'none' : 'flex';
-    document.getElementById('btn-toggle-view').innerText = isReading ? '🧊 3D' : '📖 Lire';
-    if (isReading) renderPage();
-}
-
-function setupSwipe() {
-    const vp = document.getElementById('m-reader-overlay');
-    vp.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        wakeDock();
-    }, { passive: true });
-
-    vp.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchEndX - touchStartX;
-        if (diff < -45) nextPage();
-        if (diff > 45) prevPage();
-    }, { passive: true });
-}
-
-function wakeDock() {
-    const d = document.getElementById('m-bottom-dock');
-    d.classList.add('active');
-    clearTimeout(dockTimer);
-    dockTimer = setTimeout(() => { d.classList.remove('active'); }, 3500);
-}
-
-function toggleDock() {
-    document.getElementById('m-bottom-dock').classList.toggle('active');
-}
-
-function showToast(txt) {
-    const t = document.getElementById('toast-alert');
+function showToastAlert(txt) {
+    const t = document.getElementById('toast-box');
     t.innerText = txt; t.style.display = 'block';
     setTimeout(() => { t.style.display = 'none'; }, 2200);
 }
 
+function setupTouchGestures() {
+    let tStartX = 0, tEndX = 0;
+    const reader = document.getElementById('live-reader-container');
+    reader.addEventListener('touchstart', (e) => {
+        tStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
 
-let currentMobileScale = 1.0;
-
-function openDisplayModal() {
-    document.getElementById('m-display-modal').style.display = 'flex';
+    reader.addEventListener('touchend', (e) => {
+        tEndX = e.changedTouches[0].screenX;
+        const diff = tEndX - tStartX;
+        if (diff < -50) nextStep();
+        if (diff > 50) prevStep();
+    }, { passive: true });
 }
 
-function closeDisplayModal() {
-    document.getElementById('m-display-modal').style.display = 'none';
-}
-
-function adjustScale(delta) {
-    currentMobileScale = Math.max(0.75, Math.min(2.0, +(currentMobileScale + delta).toFixed(2)));
-    applyMobileScale();
-}
-
-function resetScale() {
-    currentMobileScale = 1.0;
-    applyMobileScale();
-}
-
-function applyMobileScale() {
-    const card = document.getElementById('m-page-card');
-    card.style.transform = `scale(${currentMobileScale})`;
-    document.getElementById('zoom-indicator').innerText = `${Math.round(currentMobileScale * 100)}%`;
-}
-
-function setTheme(theme) {
-    const overlay = document.getElementById('m-reader-overlay');
-    if (theme === 'dark') overlay.style.background = 'radial-gradient(circle at center, #111726 0%, #05070c 100%)';
-    else if (theme === 'sepia') overlay.style.background = '#e8dec8';
-    else if (theme === 'light') overlay.style.background = '#f0f0f0';
-    closeDisplayModal();
-}
-
-window.onload = init3D;
+window.onload = init3DStage;
 </script>
 </body>
 </html>
