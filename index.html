@@ -116,6 +116,44 @@ body, html {
 }
 .bm-entry:hover { background: rgba(223, 178, 86, 0.15); border-color: #dfb256; }
 
+
+/* DISPLAY SETTINGS MODAL PRO */
+#m-display-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(4, 6, 12, 0.85); backdrop-filter: blur(20px);
+    display: none; justify-content: center; align-items: center; z-index: 350;
+    padding: 20px;
+}
+.display-card {
+    background: #111726; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 18px; padding: 22px 18px; width: 100%; max-width: 340px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9); text-align: center;
+}
+.setting-section {
+    margin: 15px 0; padding: 12px; background: rgba(255,255,255,0.04);
+    border-radius: 12px; text-align: left;
+}
+.setting-title {
+    font-size: 11px; font-weight: 800; color: #dfb256; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 8px;
+}
+.zoom-btn-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.btn-display-act {
+    flex: 1; padding: 8px; border-radius: 10px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15); color: #fff; font-weight: 800; font-size: 12px;
+    cursor: pointer; transition: all 0.2s;
+}
+.btn-display-act:hover { background: #dfb256; color: #111; }
+.theme-selector {
+    display: flex; gap: 10px; justify-content: center; margin-top: 6px;
+}
+.theme-pill {
+    padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 800; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
 /* 2D MOBILE LISEUSE */
 #m-reader-overlay {
     position: fixed; top: 56px; left: 0; width: 100%; height: calc(100% - 56px);
@@ -227,6 +265,7 @@ body, html {
     <div class="m-header-actions">
         <button id="btn-save-bm" class="btn-nav-h" onclick="toggleBookmark()">🔖 <span id="label-bm-btn">Marquer</span></button>
         <button class="btn-nav-h" onclick="openBookmarksModal()">📂 <span id="label-count-bm">Pages (0)</span></button>
+        <button class="btn-nav-h" onclick="openDisplayModal()" title="Ajuster la taille et l'affichage" style="border-color:#dfb256; color:#dfb256;">⚙️ Affichage</button>
         <button id="btn-toggle-view" class="btn-nav-h" onclick="toggleReading()">📖 Lire</button>
         <button class="m-btn-flip" onclick="flipTeteBecheMobile()">🔄 RETOURNER</button>
     </div>
@@ -256,6 +295,37 @@ body, html {
 </div>
 
 <!-- 3D WEBGL STAGE -->
+
+<!-- DISPLAY SETTINGS MODAL -->
+<div id="m-display-modal">
+    <div class="display-card">
+        <div style="font-size:26px; margin-bottom:4px;">🔍</div>
+        <h3 style="font-size:16px; color:#dfb256; text-transform:uppercase;">Ajuster l'Affichage</h3>
+        <p style="font-size:11px; color:#889bb8; margin-bottom:8px;">Personnalisez la taille pour votre confort</p>
+        
+        <div class="setting-section">
+            <div class="setting-title">Taille & Zoom de la page</div>
+            <div class="zoom-btn-row">
+                <button class="btn-display-act" onclick="adjustScale(-0.25)">− Réduire</button>
+                <span id="zoom-indicator" style="font-size:12px; font-weight:800; color:#dfb256; min-width:48px; text-align:center;">100%</span>
+                <button class="btn-display-act" onclick="adjustScale(0.25)">+ Agrandir</button>
+                <button class="btn-display-act" onclick="resetScale()" style="max-width:45px;">1:1</button>
+            </div>
+        </div>
+
+        <div class="setting-section">
+            <div class="setting-title">Ambiance de lecture</div>
+            <div class="theme-selector">
+                <div class="theme-pill" style="background:#090c14; color:#dfb256; border-color:#dfb256;" onclick="setTheme('dark')">Sombre</div>
+                <div class="theme-pill" style="background:#f4ecd8; color:#333;" onclick="setTheme('sepia')">Sépia</div>
+                <div class="theme-pill" style="background:#ffffff; color:#111;" onclick="setTheme('light')">Clair</div>
+            </div>
+        </div>
+
+        <button onclick="closeDisplayModal()" style="background:#dfb256; color:#111; font-weight:800; font-size:12px; padding:10px 24px; border-radius:20px; border:none; cursor:pointer; width:100%; margin-top:8px;">Valider ✓</button>
+    </div>
+</div>
+
 <div id="m-stage-3d"></div>
 
 <!-- 3D HOME UI -->
@@ -675,6 +745,41 @@ function showToast(txt) {
     const t = document.getElementById('toast-alert');
     t.innerText = txt; t.style.display = 'block';
     setTimeout(() => { t.style.display = 'none'; }, 2200);
+}
+
+
+let currentMobileScale = 1.0;
+
+function openDisplayModal() {
+    document.getElementById('m-display-modal').style.display = 'flex';
+}
+
+function closeDisplayModal() {
+    document.getElementById('m-display-modal').style.display = 'none';
+}
+
+function adjustScale(delta) {
+    currentMobileScale = Math.max(0.75, Math.min(2.0, +(currentMobileScale + delta).toFixed(2)));
+    applyMobileScale();
+}
+
+function resetScale() {
+    currentMobileScale = 1.0;
+    applyMobileScale();
+}
+
+function applyMobileScale() {
+    const card = document.getElementById('m-page-card');
+    card.style.transform = `scale(${currentMobileScale})`;
+    document.getElementById('zoom-indicator').innerText = `${Math.round(currentMobileScale * 100)}%`;
+}
+
+function setTheme(theme) {
+    const overlay = document.getElementById('m-reader-overlay');
+    if (theme === 'dark') overlay.style.background = 'radial-gradient(circle at center, #111726 0%, #05070c 100%)';
+    else if (theme === 'sepia') overlay.style.background = '#e8dec8';
+    else if (theme === 'light') overlay.style.background = '#f0f0f0';
+    closeDisplayModal();
 }
 
 window.onload = init3D;
