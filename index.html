@@ -208,7 +208,8 @@ body, html {
         <button id="m-btn-bm" class="m-btn-glass" onclick="toggleBookmark()" title="Marquer cette page">
             🔖 <span id="m-bm-text">Marquer</span>
         </button>
-        <button id="m-btn-toggle" class="m-btn-glass" onclick="toggleReadingMode()">📖 Lire</button>
+        <button id="m-btn-mode-reflow" class="m-btn-glass" onclick="toggleReflowMode()" title="Changer taille police">Aa Texte</button>
+        <button id="m-btn-toggle" class="m-btn-glass" onclick="toggleReadingMode()">📖 3D/PDF</button>
         <button class="m-btn-flip" onclick="animateMobile3DTeteBeche()">🔄 RETOURNER</button>
     </div>
 </div>
@@ -225,6 +226,24 @@ body, html {
 </div>
 
 <!-- 2D MOBILE LISEUSE OVERLAY -->
+
+<!-- REFLOW ADAPTIVE TEXT VIEW -->
+<div id="m-reflow-view" class="theme-dark">
+    <div>
+        <div class="reflow-header-tag" id="reflow-tag-header">CÔTÉ TERRAIN · PAGE 1</div>
+        <div id="reflow-content" class="reflow-body-text" style="font-size: 16px;"></div>
+    </div>
+</div>
+
+
+<!-- REFLOW ADAPTIVE TEXT VIEW -->
+<div id="m-reflow-view" class="theme-dark">
+    <div>
+        <div class="reflow-header-tag" id="reflow-tag-header">CÔTÉ TERRAIN · PAGE 1</div>
+        <div id="reflow-content" class="reflow-body-text" style="font-size: 16px;"></div>
+    </div>
+</div>
+
 <div id="m-reader-overlay">
     <div class="m-perspective-stage">
         <div id="m-card-wrap" class="m-single-page-card">
@@ -245,6 +264,24 @@ body, html {
         <button class="m-ctrl-btn" onclick="prevPage()">◀</button>
         <input type="range" id="m-page-slider" class="m-slider-bar" min="1" max="168" value="1" oninput="onMobileSlider(this.value)" />
         <span id="m-page-display">p. 1 / 168</span>
+
+        <div class="font-ctrl-group">
+            <button class="btn-font-sz" onclick="adjustFontSize(-2)">A-</button>
+            <button class="btn-font-sz" onclick="adjustFontSize(2)">A+</button>
+            <div class="theme-dot" style="background:#0f141f; border-color:#dfb256;" onclick="setReflowTheme('theme-dark')"></div>
+            <div class="theme-dot" style="background:#f4ecd8;" onclick="setReflowTheme('theme-sepia')"></div>
+            <div class="theme-dot" style="background:#ffffff;" onclick="setReflowTheme('theme-light')"></div>
+        </div>
+
+
+        <div class="font-ctrl-group">
+            <button class="btn-font-sz" onclick="adjustFontSize(-2)">A-</button>
+            <button class="btn-font-sz" onclick="adjustFontSize(2)">A+</button>
+            <div class="theme-dot" style="background:#0f141f; border-color:#dfb256;" onclick="setReflowTheme('theme-dark')"></div>
+            <div class="theme-dot" style="background:#f4ecd8;" onclick="setReflowTheme('theme-sepia')"></div>
+            <div class="theme-dot" style="background:#ffffff;" onclick="setReflowTheme('theme-light')"></div>
+        </div>
+
         <button class="m-ctrl-btn" onclick="nextPage()">▶</button>
     </div>
 </div>
@@ -455,20 +492,20 @@ function nextPage() {
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     if (activeDoc && currentPage < activeDoc.numPages) {
         currentPage++;
-        renderPageMobile('next');
+        renderPageMobile('next'); if (isReflowMode) renderReflowPage(); if (isReflowMode) renderReflowPage();
     }
 }
 
 function prevPage() {
     if (currentPage > 1) {
         currentPage--;
-        renderPageMobile('prev');
+        renderPageMobile('prev'); if (isReflowMode) renderReflowPage(); if (isReflowMode) renderReflowPage();
     }
 }
 
 function onMobileSlider(val) {
     currentPage = parseInt(val);
-    renderPageMobile();
+    renderPageMobile(); if (isReflowMode) renderReflowPage(); if (isReflowMode) renderReflowPage();
 }
 
 function updateBadgeUI() {
@@ -513,7 +550,7 @@ function toggleReadingMode() {
     document.getElementById('m-reader-overlay').style.display = isReading ? 'flex' : 'none';
     document.getElementById('m-home-ui').style.display = isReading ? 'none' : 'flex';
     document.getElementById('m-btn-toggle').innerText = isReading ? '🧊 3D' : '📖 Lire';
-    if (isReading) renderPageMobile();
+    if (isReading) renderPageMobile(); if (isReflowMode) renderReflowPage(); if (isReflowMode) renderReflowPage();
 }
 
 function setupTouchLiseuse() {
@@ -540,6 +577,127 @@ function wakeDockBar() {
 
 function toggleDockBar() {
     document.getElementById('m-dock-bar').classList.toggle('active');
+}
+
+
+let isReflowMode = false;
+let currentFontSize = 16;
+
+function toggleReflowMode() {
+    isReflowMode = !isReflowMode;
+    const reflowEl = document.getElementById('m-reflow-view');
+    const pdfEl = document.getElementById('m-reader-overlay');
+    const btnAa = document.getElementById('m-btn-mode-reflow');
+
+    if (isReflowMode) {
+        if (!isReading) toggleReadingMode();
+        reflowEl.style.display = 'flex';
+        pdfEl.style.display = 'none';
+        btnAa.innerText = '📄 Mode PDF';
+        btnAa.style.background = '#dfb256';
+        btnAa.style.color = '#111';
+        renderReflowPage();
+    } else {
+        reflowEl.style.display = 'none';
+        pdfEl.style.display = 'flex';
+        btnAa.innerText = 'Aa Texte';
+        btnAa.style.background = 'rgba(255,255,255,0.08)';
+        btnAa.style.color = '#dfb256';
+        renderPageMobile(); if (isReflowMode) renderReflowPage(); if (isReflowMode) renderReflowPage();
+    }
+}
+
+async function renderReflowPage() {
+    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
+    if (!activeDoc) return;
+
+    try {
+        const page = await activeDoc.getPage(currentPage);
+        const textContent = await page.getTextContent();
+        let pageStr = textContent.items.map(item => item.str).join(' ');
+        
+        // Clean line breaks and formatting
+        pageStr = pageStr.replace(/(\.\s+)/g, '.\n\n');
+
+        document.getElementById('reflow-tag-header').innerText = `${currentSide.toUpperCase()} · PAGE ${currentPage} / 168`;
+        document.getElementById('reflow-content').innerText = pageStr || "(Page d'illustration graphique)";
+        document.getElementById('reflow-content').style.fontSize = currentFontSize + 'px';
+        document.getElementById('m-reflow-view').scrollTop = 0;
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+function adjustFontSize(delta) {
+    currentFontSize = Math.max(13, Math.min(26, currentFontSize + delta));
+    document.getElementById('reflow-content').style.fontSize = currentFontSize + 'px';
+    if (!isReflowMode) toggleReflowMode();
+}
+
+function setReflowTheme(themeClass) {
+    const el = document.getElementById('m-reflow-view');
+    el.className = themeClass;
+    if (!isReflowMode) toggleReflowMode();
+}
+
+
+let isReflowMode = false;
+let currentFontSize = 16;
+
+function toggleReflowMode() {
+    isReflowMode = !isReflowMode;
+    const reflowEl = document.getElementById('m-reflow-view');
+    const pdfEl = document.getElementById('m-reader-overlay');
+    const btnAa = document.getElementById('m-btn-mode-reflow');
+
+    if (isReflowMode) {
+        if (!isReading) toggleReadingMode();
+        reflowEl.style.display = 'flex';
+        pdfEl.style.display = 'none';
+        btnAa.innerText = '📄 Mode PDF';
+        btnAa.style.background = '#dfb256';
+        btnAa.style.color = '#111';
+        renderReflowPage();
+    } else {
+        reflowEl.style.display = 'none';
+        pdfEl.style.display = 'flex';
+        btnAa.innerText = 'Aa Texte';
+        btnAa.style.background = 'rgba(255,255,255,0.08)';
+        btnAa.style.color = '#dfb256';
+        renderPageMobile(); if (isReflowMode) renderReflowPage();
+    }
+}
+
+async function renderReflowPage() {
+    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
+    if (!activeDoc) return;
+
+    try {
+        const page = await activeDoc.getPage(currentPage);
+        const textContent = await page.getTextContent();
+        let pageStr = textContent.items.map(item => item.str).join(' ');
+        
+        pageStr = pageStr.replace(/(\.\s+)/g, '.\n\n');
+
+        document.getElementById('reflow-tag-header').innerText = `${currentSide.toUpperCase()} · PAGE ${currentPage} / 168`;
+        document.getElementById('reflow-content').innerText = pageStr || "(Page d'illustration graphique)";
+        document.getElementById('reflow-content').style.fontSize = currentFontSize + 'px';
+        document.getElementById('m-reflow-view').scrollTop = 0;
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+function adjustFontSize(delta) {
+    currentFontSize = Math.max(13, Math.min(26, currentFontSize + delta));
+    document.getElementById('reflow-content').style.fontSize = currentFontSize + 'px';
+    if (!isReflowMode) toggleReflowMode();
+}
+
+function setReflowTheme(themeClass) {
+    const el = document.getElementById('m-reflow-view');
+    el.className = themeClass;
+    if (!isReflowMode) toggleReflowMode();
 }
 
 window.onload = initMobile3D;
