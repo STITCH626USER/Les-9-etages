@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>LES 9 ÉTAGES DE LA TOUR — Liseuse Haute Fidélité</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=League+Spartan:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<title>LES 9 ÉTAGES DE LA TOUR — Édition Mobile</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=League+Spartan:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- Three.js for 3D Showcase -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
 
-<!-- PDF.js Mozilla with SVG/TextLayer Support -->
+<!-- PDF.js Mozilla -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -22,11 +22,11 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body, html {
     width: 100%; height: 100%; overflow: hidden;
-    background: #080b13; font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #060911; font-family: 'Plus Jakarta Sans', sans-serif;
     color: #f7eedb; user-select: none; -webkit-tap-highlight-color: transparent;
 }
 
-/* TOP HEADER ÉPURÉ ET COMPACT */
+/* TOP HEADER ÉPURÉ ET FIXE */
 #m-header {
     height: 52px; width: 100%; background: #0c101c;
     border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -58,7 +58,7 @@ body, html {
     padding: 6px 11px; border-radius: 14px; cursor: pointer;
 }
 
-/* 3D HOME SHOWCASE */
+/* 3D WEBGL FULLSCREEN STAGE */
 #stage-3d-box {
     width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 5;
     touch-action: none;
@@ -75,64 +75,62 @@ body, html {
 }
 
 /* =================================================== */
-/* LISEUSE HAUTE FIDÉLITÉ (CONSERVE 100% DE LA STRUCTURE ORIGINALE) */
+/* LISEUSE HAUTE FIDÉLITÉ PLEIN ÉCRAN 9:16 */
 /* =================================================== */
 #live-reader-container {
     position: fixed; top: 52px; left: 0; width: 100%; height: calc(100% - 52px);
     display: none; justify-content: center; align-items: center;
-    background: #0b0f19; z-index: 90; overflow: hidden;
+    background: #080b13; z-index: 90; overflow: hidden;
 }
 
-/* SCROLLABLE VIEWPORT QUAND LA PAGE EST PLUS GRANDE QUE L'ÉCRAN */
-#reader-viewport {
-    width: 100%; height: 100%; display: flex;
-    justify-content: center; align-items: center;
+/* VIEWPORT DE LECTURE SCROLLABLE VERTICALEMENT */
+#reader-scroll-viewport {
+    width: 100%; height: 100%;
     overflow-y: auto; overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 10px 10px 75px 10px;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 46px 8px 75px 8px; /* Top padding for toolbar, bottom for dock */
 }
 
-/* LE CONTENEUR DE LA PAGE QUI CONSERVE TOUS LES TABLEAUX ET PARAGRAPHES EXACTS */
-#book-page-canvas-wrapper {
+/* PAGE CARD QUI CONSERVE TOUS LES TABLEAUX ET PARAGRAPHES EXACTS */
+#page-card-outer {
     background: #ffffff; border-radius: 6px;
-    box-shadow: 0 15px 45px rgba(0,0,0,0.85);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.85);
     display: flex; justify-content: center; align-items: center;
-    position: relative; transition: width 0.25s ease, height 0.25s ease;
-    margin: auto;
+    margin: 0 auto;
 }
 
-#book-page-canvas {
+#page-canvas {
     display: block; width: 100%; height: auto;
     border-radius: 6px;
 }
 
-/* QUICK TOOLBAR (TAILLE AFFICHAGE OPTIMISÉE SANS DÉFORMER) */
-#reader-quick-toolbar {
+/* TOP TOOLBAR INTÉGRÉE DANS LA LISEUSE */
+#reader-zoom-bar {
     position: fixed; top: 56px; left: 50%; transform: translateX(-50%);
-    background: rgba(14, 20, 32, 0.92); backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
+    background: rgba(12, 16, 28, 0.94); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 20px;
     padding: 4px 14px; display: flex; align-items: center; gap: 10px;
     z-index: 120; font-size: 11px; font-weight: 800;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
 }
-.btn-size-step {
+.btn-sz {
     background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    color: #dfb256; padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 900;
+    color: #dfb256; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 900;
     cursor: pointer;
 }
-.btn-fit-mode {
-    background: transparent; border: none; color: #f7eedb; font-size: 10px; font-weight: 700;
+.btn-fit-916 {
+    background: transparent; border: none; color: #f7eedb; font-size: 10px; font-weight: 800;
     cursor: pointer; text-decoration: underline;
 }
 
-/* TAP ZONES POUR TOURNER LA PAGE RAPIDEMENT */
-.tap-touch-zones {
-    position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+/* TAP ZONES GAUCHE / DROITE */
+.tap-zones-wrap {
+    position: fixed; top: 90px; left: 0; width: 100%; height: calc(100% - 150px);
     display: flex; z-index: 100; pointer-events: none;
 }
-.tap-zone-l { width: 25%; height: 100%; pointer-events: auto; }
-.tap-zone-r { width: 25%; height: 100%; pointer-events: auto; }
-.tap-zone-m { width: 50%; height: 100%; pointer-events: none; }
+.tap-left { width: 25%; height: 100%; pointer-events: auto; }
+.tap-right { width: 25%; height: 100%; pointer-events: auto; }
 
 /* FIXED NON-GLITCHING BOTTOM DOCK */
 #m-bottom-dock {
@@ -207,7 +205,7 @@ body, html {
     </div>
 </div>
 
-<!-- 3D WEBGL STAGE -->
+<!-- 3D STAGE -->
 <div id="stage-3d-box"></div>
 
 <!-- 3D HOME CTA -->
@@ -220,32 +218,32 @@ body, html {
     </button>
 </div>
 
-<!-- LISEUSE HAUTE FIDÉLITÉ STRUCTURELLE -->
+<!-- LISEUSE HAUTE FIDÉLITÉ 9:16 SANS CASSER LA STRUCTURE -->
 <div id="live-reader-container">
     
-    <!-- BARRE D'AJUSTEMENT DE LISIBILITÉ SANS CASSER LA STRUCTURE -->
-    <div id="reader-quick-toolbar">
+    <!-- ZOOM BAR PRO AVEC RE-RENDU DYNAMIQUE VECTORIEL RETINA -->
+    <div id="reader-zoom-bar">
         <span>Taille :</span>
-        <button class="btn-size-step" onclick="adjustPageDisplayScale(-0.15)">A−</button>
-        <span id="scale-display" style="color:#dfb256;">100%</span>
-        <button class="btn-size-step" onclick="adjustPageDisplayScale(0.15)">A+</button>
-        <button class="btn-fit-mode" onclick="toggleFitMode()">Plein écran 9:16</button>
+        <button class="btn-sz" onclick="stepScale(-0.15)">A−</button>
+        <span id="scale-indicator" style="color:#dfb256;">100%</span>
+        <button class="btn-sz" onclick="stepScale(0.15)">A+</button>
+        <button class="btn-fit-916" onclick="resetTo916()">Plein écran 9:16</button>
     </div>
 
-    <div id="reader-viewport">
-        <div id="book-page-canvas-wrapper">
-            <canvas id="book-page-canvas"></canvas>
+    <div id="reader-scroll-viewport">
+        <div id="page-card-outer">
+            <canvas id="page-canvas"></canvas>
         </div>
     </div>
 
-    <!-- TAP ZONES GAUCHE / DROITE -->
-    <div class="tap-touch-zones">
-        <div class="tap-zone-l" onclick="prevStep()"></div>
-        <div class="tap-zone-m"></div>
-        <div class="tap-zone-r" onclick="nextStep()"></div>
+    <!-- TAP GAUCHE / DROITE -->
+    <div class="tap-zones-wrap">
+        <div class="tap-left" onclick="prevStep()"></div>
+        <div style="flex:1;"></div>
+        <div class="tap-right" onclick="nextStep()"></div>
     </div>
 
-    <!-- FIXED NON-GLITCHING BOTTOM DOCK -->
+    <!-- FIXED BOTTOM DOCK -->
     <div id="m-bottom-dock">
         <button class="dock-nav-btn" onclick="prevStep()">◀</button>
         <input type="range" id="page-scrubber" class="dock-slider-bar" min="1" max="168" value="1" oninput="onScrubPage(this.value)" />
@@ -266,13 +264,12 @@ body, html {
 </div>
 
 <script>
-const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_V4";
+const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_V5";
 
 let currentSide = 'terrain'; // 'terrain' or 'sommet'
 let currentPage = 1; // 1 to 168 (1 = Couverture, 2 = Page 1)
 let isReading = false;
-let displayScaleRatio = 1.0; // 0.8 to 1.6
-let isFitWidth916 = true; // Plein écran 9:16
+let userScaleFactor = 1.0; // Dynamic scale multiplier (1.0 = 100%, 1.15 = 115%, etc.)
 
 let docTerrain = null;
 let docSommet = null;
@@ -288,7 +285,7 @@ let userStore = {
     sommetLastPage: 1,
     terrainBookmarks: [],
     sommetBookmarks: [],
-    displayScale: 1.0,
+    scale: 1.0,
     lastSide: 'terrain'
 };
 
@@ -299,7 +296,7 @@ function loadUserStore() {
             userStore = JSON.parse(saved);
             currentSide = userStore.lastSide || 'terrain';
             currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
-            displayScaleRatio = userStore.displayScale || 1.0;
+            userScaleFactor = userStore.scale || 1.0;
         } catch(e) {}
     }
 }
@@ -308,7 +305,7 @@ function saveUserStore() {
     if (currentSide === 'terrain') userStore.terrainLastPage = currentPage;
     else userStore.sommetLastPage = currentPage;
     userStore.lastSide = currentSide;
-    userStore.displayScale = displayScaleRatio;
+    userStore.scale = userScaleFactor;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(userStore));
     updateBookmarkUI();
 }
@@ -402,7 +399,7 @@ function init3DStage() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        if (isReading) renderHighFidelityPage();
+        if (isReading) renderCanvasPage();
     });
 
     animate3DLoop();
@@ -423,79 +420,79 @@ async function initAppCore() {
     docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     updateSideBadge();
-    document.getElementById('scale-display').innerText = `${Math.round(displayScaleRatio * 100)}%`;
+    document.getElementById('scale-indicator').innerText = `${Math.round(userScaleFactor * 100)}%`;
     setupTouchGestures();
 }
 
-// RENDU HAUTE FIDÉLITÉ ULTRA-NET QUI PRÉSERVE LES TABLEAUX, ENCADRÉS ET TYPOGRAPHIES ORIGINALES
-async function renderHighFidelityPage() {
+// RENDU RETINA DYNAMIQUE AVEC RECALCUL VECTORIEL EN TEMPS RÉEL (100% CENTRÉ ET NET)
+async function renderCanvasPage() {
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     if (!activeDoc) return;
 
     const pLabel = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / 167`;
     document.getElementById('page-scrubber').value = currentPage;
     document.getElementById('page-indicator-txt').innerText = pLabel;
+    document.getElementById('scale-indicator').innerText = `${Math.round(userScaleFactor * 100)}%`;
 
     const page = await activeDoc.getPage(currentPage);
-    const canvas = document.getElementById('book-page-canvas');
-    const wrapper = document.getElementById('book-page-canvas-wrapper');
+    const canvas = document.getElementById('page-canvas');
+    const outer = document.getElementById('page-card-outer');
     const ctx = canvas.getContext('2d');
 
-    // Calculate optimal 9:16 mobile viewport width
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight - 52 - 60; // Available viewport
-    
-    // Scale dynamically to fit 9:16 screen width while allowing readable proportional scaling
-    const baseScale = isFitWidth916 ? (screenWidth * 0.94 / (page.view[2] - page.view[0])) : 1.0;
-    const targetScale = baseScale * displayScaleRatio * 2.2; // 2.2X for crisp retina text rendering
+    // Available screen width
+    const screenW = window.innerWidth;
+    const baseWidth = screenW * 0.94; // 94% width for 9:16 mobile ratio
 
-    const viewport = page.getViewport({ scale: targetScale });
+    // Target CSS width
+    const cssWidth = baseWidth * userScaleFactor;
+    const scaleFactor = cssWidth / (page.view[2] - page.view[0]);
+
+    // Canvas resolution (2.2X for razor sharp Retina vector text rendering)
+    const retinaScale = scaleFactor * 2.2;
+    const viewport = page.getViewport({ scale: retinaScale });
+
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
-    // Proportional CSS sizing (Centré, net, sans distorsion)
-    const cssWidth = (viewport.width / 2.2);
-    const cssHeight = (viewport.height / 2.2);
-    wrapper.style.width = cssWidth + 'px';
-    wrapper.style.height = cssHeight + 'px';
+    // Apply exact CSS dimensions (keeps page centered)
+    outer.style.width = cssWidth + 'px';
+    outer.style.height = (viewport.height / 2.2) + 'px';
 
     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-    // Scroll to top on page turn
-    document.getElementById('reader-viewport').scrollTop = 0;
     saveUserStore();
 }
 
-function adjustPageDisplayScale(delta) {
-    displayScaleRatio = Math.max(0.75, Math.min(1.75, +(displayScaleRatio + delta).toFixed(2)));
-    document.getElementById('scale-display').innerText = `${Math.round(displayScaleRatio * 100)}%`;
-    renderHighFidelityPage();
+function stepScale(delta) {
+    userScaleFactor = Math.max(0.8, Math.min(2.0, +(userScaleFactor + delta).toFixed(2)));
+    renderCanvasPage();
 }
 
-function toggleFitMode() {
-    isFitWidth916 = !isFitWidth916;
-    displayScaleRatio = 1.0;
-    document.getElementById('scale-display').innerText = `100%`;
-    renderHighFidelityPage();
+function resetTo916() {
+    userScaleFactor = 1.0;
+    renderCanvasPage();
+    document.getElementById('reader-scroll-viewport').scrollTop = 0;
 }
 
 function nextStep() {
     if (currentPage < 168) {
         currentPage++;
-        renderHighFidelityPage();
+        renderCanvasPage();
+        document.getElementById('reader-scroll-viewport').scrollTop = 0;
     }
 }
 
 function prevStep() {
     if (currentPage > 1) {
         currentPage--;
-        renderHighFidelityPage();
+        renderCanvasPage();
+        document.getElementById('reader-scroll-viewport').scrollTop = 0;
     }
 }
 
 function onScrubPage(val) {
     currentPage = parseInt(val);
-    renderHighFidelityPage();
+    renderCanvasPage();
 }
 
 function flip3DTeteBeche() {
@@ -515,7 +512,7 @@ function flip3DTeteBeche() {
         .start();
 
     updateSideBadge();
-    if (isReading) renderHighFidelityPage();
+    if (isReading) renderCanvasPage();
 }
 
 function updateSideBadge() {
@@ -533,7 +530,7 @@ function openReader() {
     isReading = true;
     document.getElementById('live-reader-container').style.display = 'flex';
     document.getElementById('home-3d-cta').style.display = 'none';
-    renderHighFidelityPage();
+    renderCanvasPage();
 }
 
 function toggleCurrentBookmark() {
@@ -609,7 +606,7 @@ function jumpToBm(side, pageNum) {
     currentPage = pageNum;
     updateSideBadge();
     if (!isReading) openReader();
-    else renderHighFidelityPage();
+    else renderCanvasPage();
 }
 
 function delBmItem(side, pageNum, event) {
