@@ -452,7 +452,8 @@ function checkStartupResume() {
     const lastP = (sessionStore.lastSide === 'terrain') ? sessionStore.terrainLastPage : sessionStore.sommetLastPage;
     if (lastP && lastP > 1) {
         const sideName = (sessionStore.lastSide === 'terrain') ? 'Côté Terrain' : 'Côté Sommet';
-        document.getElementById('resume-text').innerText = `${sideName} · Page ${lastP} / 168`;
+        const pLabel = (lastP === 1) ? "Couverture" : `Page ${lastP - 1}`;
+    document.getElementById('resume-text').innerText = `${sideName} · ${pLabel}`;
         document.getElementById('m-resume-banner').style.display = 'flex';
     }
     updateBookmarkStatus();
@@ -491,7 +492,8 @@ async function renderPage(anim = null) {
     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
     document.getElementById('m-slider').value = currentPage;
-    document.getElementById('m-page-tag').innerText = `p. ${currentPage} / 168`;
+    const displayTxt = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / 167`;
+    document.getElementById('m-page-tag').innerText = displayTxt;
 
     saveStore();
     wakeDock();
@@ -554,7 +556,8 @@ function toggleBookmark() {
     if (idx === -1) {
         list.push(currentPage);
         list.sort((a,b) => a - b);
-        showToast(`🔖 Page ${currentPage} marquée !`);
+        const tLabel = (currentPage === 1) ? "Couverture" : `Page ${currentPage - 1}`;
+    showToast(`🔖 ${tLabel} marquée !`);
     } else {
         list.splice(idx, 1);
         showToast(`Marque-page retiré`);
@@ -599,7 +602,7 @@ function openBookmarksModal() {
             row.innerHTML = `
                 <div onclick="jumpTo('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:8px; flex:1;">
                     <span style="background:${badgeBg}; color:#fff; font-size:9px; font-weight:800; padding:2px 6px; border-radius:8px; text-transform:uppercase;">${item.side}</span>
-                    <span style="font-size:13px; font-weight:700; color:#f7eedb;">Page ${item.page}</span>
+                    <span style="font-size:13px; font-weight:700; color:#f7eedb;">${(item.page === 1) ? "Couverture" : "Page " + (item.page - 1)}</span>
                 </div>
                 <button onclick="delBookmark('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#e74c3c; font-size:14px; cursor:pointer;">🗑️</button>
             `;
