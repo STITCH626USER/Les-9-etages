@@ -205,12 +205,40 @@ body, html {
     </div>
 
     <div class="m-header-actions">
-        <button id="m-btn-bm" class="m-btn-glass" onclick="toggleBookmark()" title="Marquer cette page">
-            🔖 <span id="m-bm-text">Marquer</span>
+        <button id="m-btn-bm" class="btn-save-bm" onclick="toggleBookmark()" title="Marquer cette page">
+            <span id="bm-icon">🔖</span> <span id="m-bm-text">Marquer</span>
         </button>
-        <button id="m-btn-mode-reflow" class="m-btn-glass" onclick="toggleReflowMode()" title="Changer taille police">Aa Texte</button>
+        <button id="m-btn-list-bm" class="btn-save-bm" onclick="openBookmarksDrawer()" title="Voir mes marque-pages">
+            📂 <span id="m-bm-count">Mes Pages (0)</span>
+        </button>
+        <button id="m-btn-mode-reflow" class="m-btn-glass" onclick="toggleReflowMode()" title="Changer taille police">Aa</button>
         <button id="m-btn-toggle" class="m-btn-glass" onclick="toggleReadingMode()">📖 3D/PDF</button>
         <button class="m-btn-flip" onclick="animateMobile3DTeteBeche()">🔄 RETOURNER</button>
+</div>
+</div>
+
+<!-- SMART RESUME BANNER -->
+<div id="m-resume-banner">
+    <div class="banner-info">
+        <h4>Reprendre la lecture</h4>
+        <p id="banner-resume-text">Dernière lecture : Terrain · Page 1</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn-resume-cta" onclick="confirmResumeReading()">Reprendre ➔</button>
+        <button onclick="dismissResumeBanner()" style="background:transparent; border:none; color:#bbb; font-size:16px; cursor:pointer;">✕</button>
+    </div>
+</div>
+
+<!-- BOOKMARKS DRAWER MODAL -->
+<div id="m-bookmarks-drawer">
+    <div class="drawer-card">
+        <div style="font-size:32px; margin-bottom:8px;">🔖</div>
+        <h3>Mes Marque-Pages</h3>
+        <p>Accédez instantanément à vos pages enregistrées</p>
+        <div class="bm-list-container" id="bm-items-list">
+            <!-- Dynamic list -->
+        </div>
+        <button onclick="closeBookmarksDrawer()" style="background:#dfb256; color:#111; font-weight:800; padding:10px 24px; border-radius:20px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
     </div>
 </div>
 
@@ -537,6 +565,8 @@ function checkBookmark() {
     const isBm = list.includes(currentPage);
     document.getElementById('m-bookmark-ribbon').style.display = isBm ? 'block' : 'none';
     document.getElementById('m-bm-text').innerText = isBm ? 'Mémorisée ★' : 'Marquer';
+    document.getElementById('m-btn-bm').className = isBm ? 'btn-save-bm active-bm' : 'btn-save-bm';
+    updateBookmarkCounts();
 }
 
 function showToast(txt) {
@@ -700,7 +730,95 @@ function setReflowTheme(themeClass) {
     if (!isReflowMode) toggleReflowMode();
 }
 
-window.onload = initMobile3D;
+
+function checkResumeOnStartup() {
+    loadStoredMobileSession();
+    const lastP = (sessionData.lastReadSide === 'terrain') ? sessionData.terrainLastPage : sessionData.sommetLastPage;
+    
+    if (lastP && lastP > 1) {
+        const sideName = (sessionData.lastReadSide === 'terrain') ? 'Côté Terrain' : 'Côté Sommet';
+        document.getElementById('banner-resume-text').innerText = `${sideName} · Page ${lastP} / 168`;
+        document.getElementById('m-resume-banner').style.display = 'flex';
+    }
+    updateBookmarkCounts();
+}
+
+function confirmResumeReading() {
+    dismissResumeBanner();
+    currentSide = sessionData.lastReadSide || 'terrain';
+    currentPage = (currentSide === 'terrain') ? (sessionData.terrainLastPage || 1) : (sessionData.sommetLastPage || 1);
+    updateBadgeUI();
+    if (!isReading) toggleReadingMode();
+    else renderPageMobile();
+}
+
+function dismissResumeBanner() {
+    document.getElementById('m-resume-banner').style.display = 'none';
+}
+
+function openBookmarksDrawer() {
+    const listEl = document.getElementById('bm-items-list');
+    listEl.innerHTML = '';
+    
+    const allBms = [];
+    (sessionData.terrainBookmarks || []).forEach(p => allBms.push({ side: 'terrain', page: p }));
+    (sessionData.sommetBookmarks || []).forEach(p => allBms.push({ side: 'sommet', page: p }));
+    
+    if (allBms.length === 0) {
+        listEl.innerHTML = '<div style="font-size:12px; color:#888; padding:15px;">Aucun marque-page enregistré pour le moment.<br>Cliquez sur 🔖 Marquer en haut pour en ajouter un.</div>';
+    } else {
+        allBms.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'bm-item';
+            const badgeClass = (item.side === 'terrain') ? 'bm-side-t' : 'bm-side-s';
+            const sideLabel = (item.side === 'terrain') ? 'Terrain' : 'Sommet';
+            row.innerHTML = `
+                <div onclick="jumpToBookmark('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:8px; flex:1;">
+                    <span class="bm-tag-side ${badgeClass}">${sideLabel}</span>
+                    <span style="font-size:13px; font-weight:700; color:#f7eedb;">Page ${item.page}</span>
+                </div>
+                <button class="btn-del-bm" onclick="deleteBookmark('${item.side}', ${item.page}, event)" title="Supprimer">🗑️</button>
+            `;
+            listEl.appendChild(row);
+        });
+    }
+
+    document.getElementById('m-bookmarks-drawer').style.display = 'flex';
+}
+
+function closeBookmarksDrawer() {
+    document.getElementById('m-bookmarks-drawer').style.display = 'none';
+}
+
+function jumpToBookmark(side, pageNum) {
+    closeBookmarksDrawer();
+    currentSide = side;
+    currentPage = pageNum;
+    updateBadgeUI();
+    if (!isReading) toggleReadingMode();
+    else renderPageMobile();
+    showToast(`Aller à : ${side.toUpperCase()} · Page ${pageNum}`);
+}
+
+function deleteBookmark(side, pageNum, event) {
+    event.stopPropagation();
+    const list = (side === 'terrain') ? sessionData.terrainBookmarks : sessionData.sommetBookmarks;
+    const idx = list.indexOf(pageNum);
+    if (idx !== -1) {
+        list.splice(idx, 1);
+        persistMobileSession();
+        openBookmarksDrawer();
+        updateBookmarkCounts();
+        checkBookmark();
+    }
+}
+
+function updateBookmarkCounts() {
+    const count = (sessionData.terrainBookmarks || []).length + (sessionData.sommetBookmarks || []).length;
+    document.getElementById('m-bm-count').innerText = `Mes Pages (${count})`;
+}
+
+window.onload = () => { initMobile3D(); checkResumeOnStartup(); };
 </script>
 </body>
 </html>
