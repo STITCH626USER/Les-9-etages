@@ -133,7 +133,7 @@ html, body {
 
 /* ZOOM TOOLBAR (UNE SEULE LIGNE HORIZONTALE) */
 #reader-zoom-bar {
-    position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
+    display: none; position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
     background: #0e1628;
     border: 1.5px solid rgba(255,255,255,0.25); border-radius: 25px;
     padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -158,7 +158,7 @@ html, body {
 
 /* DOCK INFÉRIEUR HARMONIEUX (FLUIDE SANS DÉBORDEMENT) */
 #m-bottom-dock {
-    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    display: none; position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
     width: 92%; max-width: 420px; height: 50px;
     background: #0c1220;
     border: 1.5px solid rgba(255,255,255,0.25); border-radius: 25px;
@@ -488,7 +488,7 @@ function initDockFadeListeners() {
     wakeBottomDock();
 }
 
-let displayMode = (window.innerWidth > 900) ? 'spread' : 'single'; // 'single' ou 'spread' (2 pages)
+let displayMode = (window.innerWidth > 900) ? 'spread' : 'single';
 let renderTaskLeft = null;
 let renderTaskRight = null;
 
@@ -511,6 +511,21 @@ function resetZoomDefault() {
     if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
 }
 
+async function openReader() {
+    isReading = true;
+    document.getElementById('live-reader-container').style.display = 'flex';
+    document.getElementById('home-3d-cta').style.display = 'none';
+    document.getElementById('reader-zoom-bar').style.display = 'flex';
+    document.getElementById('m-bottom-dock').style.display = 'flex';
+    
+    if (!docTerrain || !docSommet) {
+        document.getElementById('page-indicator-txt').innerText = "Chargement...";
+        if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
+        if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
+    }
+    renderUniversalReader();
+}
+
 async function renderUniversalReader() {
     if (renderTaskLeft) { try { renderTaskLeft.cancel(); } catch(e){} renderTaskLeft = null; }
     if (renderTaskRight) { try { renderTaskRight.cancel(); } catch(e){} renderTaskRight = null; }
@@ -525,12 +540,18 @@ async function renderUniversalReader() {
     const isMobile = window.innerWidth <= 768;
     const effectiveMode = isMobile ? 'single' : displayMode;
 
+    // Dual page spread applies when: not on mobile, spread mode selected, and not on cover (page 1)
     const isTwoPage = (effectiveMode === 'spread' && currentPage > 1 && currentPage < totalPages);
     
     let pLabel = "";
-    if (currentPage === 1) pLabel = "Couverture";
-    else if (isTwoPage) pLabel = `p. ${currentPage - 1}-${currentPage} / ${totalPages - 1}`;
-    else pLabel = `p. ${currentPage - 1} / ${totalPages - 1}`;
+    if (currentPage === 1) {
+        pLabel = "Couverture";
+    } else if (isTwoPage) {
+        const rightP = Math.min(currentPage + 1, totalPages);
+        pLabel = `p. ${currentPage - 1}-${rightP - 1} / ${totalPages - 1}`;
+    } else {
+        pLabel = `p. ${currentPage - 1} / ${totalPages - 1}`;
+    }
 
     if (document.getElementById('page-scrubber')) document.getElementById('page-scrubber').value = currentPage;
     if (document.getElementById('page-indicator-txt')) document.getElementById('page-indicator-txt').innerText = pLabel;
@@ -543,33 +564,32 @@ async function renderUniversalReader() {
 
     try {
         const screenW = window.innerWidth;
-        const availH = window.innerHeight - 58 - 50; // header - dock
+        const availH = window.innerHeight - 58 - 50;
 
         const pageL = await activeDoc.getPage(currentPage);
-        const unscaledVp = pageL.getViewport({ scale: 1.0 });
-
+        const unscaledVpL = pageL.getViewport({ scale: 1.0 });
         const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
 
         if (!isTwoPage) {
-            // MODE 1 SEULE PAGE
+            // MODE 1 PAGE
             cRight.style.display = 'none';
             cLeft.style.display = 'block';
 
-            const maxFitW = screenW * 0.94;
-            const maxFitH = availH * 0.92;
+            const maxFitW = screenW * 0.92;
+            const maxFitH = availH * 0.90;
 
             let displayW = maxFitW;
-            let displayH = displayW * (unscaledVp.height / unscaledVp.width);
+            let displayH = displayW * (unscaledVpL.height / unscaledVpL.width);
 
             if (displayH > maxFitH) {
                 displayH = maxFitH;
-                displayW = displayH * (unscaledVp.width / unscaledVp.height);
+                displayW = displayH * (unscaledVpL.width / unscaledVpL.height);
             }
 
             displayW = displayW * zoomFactor;
             displayH = displayH * zoomFactor;
 
-            const renderScale = (displayW / unscaledVp.width) * dpr;
+            const renderScale = (displayW / unscaledVpL.width) * dpr;
             const vp = pageL.getViewport({ scale: renderScale });
 
             cLeft.width = vp.width;
@@ -587,29 +607,33 @@ async function renderUniversalReader() {
             await renderTaskLeft.promise;
 
         } else {
-            // MODE 2 PAGES (DIPTYQUE WEB / DESKTOP)
+            // MODE 2 PAGES (DIPTYQUE PARFAIT)
             cRight.style.display = 'block';
             cLeft.style.display = 'block';
 
-            const pageR = await activeDoc.getPage(currentPage + 1);
+            const rightPageNum = Math.min(currentPage + 1, totalPages);
+            const pageR = await activeDoc.getPage(rightPageNum);
+            const unscaledVpR = pageR.getViewport({ scale: 1.0 });
 
             const maxFitW = screenW * 0.92;
-            const maxFitH = availH * 0.90;
+            const maxFitH = availH * 0.88;
 
             let displayH = maxFitH;
-            let displaySingleW = displayH * (unscaledVp.width / unscaledVp.height);
+            let displaySingleW = displayH * (unscaledVpL.width / unscaledVpL.height);
 
             if (displaySingleW * 2 > maxFitW) {
                 displaySingleW = maxFitW / 2;
-                displayH = displaySingleW * (unscaledVp.height / unscaledVp.width);
+                displayH = displaySingleW * (unscaledVpL.height / unscaledVpL.width);
             }
 
             displaySingleW = displaySingleW * zoomFactor;
             displayH = displayH * zoomFactor;
 
-            const renderScale = (displaySingleW / unscaledVp.width) * dpr;
-            const vpL = pageL.getViewport({ scale: renderScale });
-            const vpR = pageR.getViewport({ scale: renderScale });
+            const scaleL = (displaySingleW / unscaledVpL.width) * dpr;
+            const scaleR = (displaySingleW / unscaledVpR.width) * dpr;
+
+            const vpL = pageL.getViewport({ scale: scaleL });
+            const vpR = pageR.getViewport({ scale: scaleR });
 
             cLeft.width = vpL.width;
             cLeft.height = vpL.height;
@@ -621,7 +645,7 @@ async function renderUniversalReader() {
             cRight.style.width = `${Math.round(displaySingleW)}px`;
             cRight.style.height = `${Math.round(displayH)}px`;
 
-            wrapper.style.width = `${Math.round(displaySingleW * 2 + 4)}px`;
+            wrapper.style.width = `${Math.round(displaySingleW * 2)}px`;
             wrapper.style.height = `${Math.round(displayH)}px`;
 
             const ctxL = cLeft.getContext('2d');
@@ -649,13 +673,14 @@ function nextStep() {
     const effectiveMode = isMobile ? 'single' : displayMode;
     const step = (effectiveMode === 'spread' && currentPage > 1 && currentPage < maxP - 1) ? 2 : 1;
     
-    if (currentPage + step <= maxP) {
+    if (currentPage === 1) {
+        currentPage = 2;
+    } else if (currentPage + step <= maxP) {
         currentPage += step;
-        renderUniversalReader();
-    } else if (currentPage < maxP) {
+    } else {
         currentPage = maxP;
-        renderUniversalReader();
     }
+    renderUniversalReader();
 }
 
 function prevStep() {
@@ -663,13 +688,12 @@ function prevStep() {
     const effectiveMode = isMobile ? 'single' : displayMode;
     const step = (effectiveMode === 'spread' && currentPage > 2) ? 2 : 1;
     
-    if (currentPage - step >= 1) {
+    if (currentPage - step >= 2) {
         currentPage -= step;
-        renderUniversalReader();
     } else if (currentPage > 1) {
         currentPage = 1;
-        renderUniversalReader();
     }
+    renderUniversalReader();
 }
 
 function onScrubPage(val) {
