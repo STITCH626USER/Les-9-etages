@@ -130,14 +130,15 @@ html, body {
     position: relative;
     margin: 0 auto;
     vertical-align: middle;
+    opacity: 0;
+    transition: opacity 0.25s ease;
 }
 .canvas-page {
     display: inline-block; width: auto; height: auto;
-    background: #ffffff;
-    box-shadow: 0 15px 45px rgba(0,0,0,0.9);
+    background: transparent;
 }
-#page-canvas-left { border-radius: 4px 0 0 4px; }
-#page-canvas-right { border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); }
+#page-canvas-left { border-radius: 4px; box-shadow: 0 15px 45px rgba(0,0,0,0.9); }
+#page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 15px 45px rgba(0,0,0,0.9); }
 
 /* ZOOM TOOLBAR DANS LA LISEUSE */
 #reader-zoom-bar {
@@ -595,7 +596,7 @@ async function renderUniversalReader() {
     const cLeft = document.getElementById('page-canvas-left');
     const cRight = document.getElementById('page-canvas-right');
     if (!wrapper || !cLeft || !cRight) {
-        hideCenteredLoader();
+        hideCenteredLoader(); if (wrapper) wrapper.style.opacity = '1';
         return;
     }
 
@@ -717,7 +718,7 @@ async function renderUniversalReader() {
             console.error("PDF Render Error:", err);
         }
     } finally {
-        hideCenteredLoader();
+        hideCenteredLoader(); if (wrapper) wrapper.style.opacity = '1';
     }
 
     saveUserStore();
