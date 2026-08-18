@@ -84,13 +84,21 @@ body, html {
     background: #080b13; z-index: 90; overflow: hidden;
 }
 
-/* SCROLLABLE VIEWPORT QUAND ZOOMÉ */
+/* SCROLLABLE VIEWPORT QUAND ZOOMÉ AVEC DÉPLACEMENT LIBRE & CURSEUR GRAB */
 #reader-scroll-viewport {
     width: 100%; height: 100%;
     overflow-y: auto; overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    display: flex; justify-content: center; align-items: center;
-    padding: 48px 10px 75px 10px;
+    display: flex;
+    padding: 60px 40px 90px 40px;
+    cursor: default;
+}
+#reader-scroll-viewport.is-zoomed {
+    cursor: grab;
+}
+#reader-scroll-viewport.is-dragging {
+    cursor: grabbing;
+    user-select: none;
 }
 
 /* CONTENEUR DE SPREAD (CENTRÉ & FLEX) */
@@ -150,10 +158,10 @@ body, html {
 .nav-arrow-left { left: 20px; }
 .nav-arrow-right { right: 20px; }
 
-/* TAP ZONES SUR MOBILE */
+/* TAP ZONES SUR MOBILE (POINTER-EVENTS NONE PAR DÉFAUT POUR LAISSER SCROLLER) */
 .tap-zones-layer {
     position: fixed; top: 100px; left: 0; width: 100%; height: calc(100% - 170px);
-    display: flex; z-index: 95; pointer-events: none;
+    display: none; z-index: 95; pointer-events: none;
 }
 .tap-zone-l { width: 25%; height: 100%; pointer-events: auto; }
 .tap-zone-r { width: 25%; height: 100%; pointer-events: auto; }
@@ -463,6 +471,7 @@ async function initAppCore() {
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     updateSideBadge();
     setupTouchGestures();
+    setupPanDrag();
 }
 
 // RENDU UNIVERSEL : AUTO-DÉTECTION (1 PAGE MOBILE OU 2 PAGES DESKTOP) + ZOOM 20% CENTRÉ
@@ -541,10 +550,79 @@ async function renderUniversalReader() {
         wrapper.style.height = (vp.height / 2.2) + 'px';
     }
 
+    const vp = document.getElementById('reader-scroll-viewport');
+    if (zoomFactor > 1.0) {
+        vp.classList.add('is-zoomed');
+    } else {
+        vp.classList.remove('is-zoomed');
+    }
     saveUserStore();
 }
 
 // ZOOM PAR PALIERS DE 20% (DE 60% À 220% AVEC CENTRAGE ABSOLU)
+
+// DRAG-TO-PAN (GLISSER-DÉPLACER À LA SOURIS / AU DOIGT SUR PAGE ZOOMÉE)
+let isPanning = false;
+let startPanX = 0, startPanY = 0;
+let scrollStartLeft = 0, scrollStartTop = 0;
+
+function setupPanDrag() {
+    const vp = document.getElementById('reader-scroll-viewport');
+
+    // Mouse Drag
+    vp.addEventListener('mousedown', (e) => {
+        // Only pan if zoomed or content exceeds viewport
+        if (vp.scrollHeight > vp.clientHeight || vp.scrollWidth > vp.clientWidth) {
+            isPanning = true;
+            vp.classList.add('is-dragging');
+            startPanX = e.pageX - vp.offsetLeft;
+            startPanY = e.pageY - vp.offsetTop;
+            scrollStartLeft = vp.scrollLeft;
+            scrollStartTop = vp.scrollTop;
+        }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        e.preventDefault();
+        const vp = document.getElementById('reader-scroll-viewport');
+        const x = e.pageX - vp.offsetLeft;
+        const y = e.pageY - vp.offsetTop;
+        const walkX = (x - startPanX) * 1.5;
+        const walkY = (y - startPanY) * 1.5;
+        vp.scrollLeft = scrollStartLeft - walkX;
+        vp.scrollTop = scrollStartTop - walkY;
+    });
+
+    window.addEventListener('mouseup', () => {
+        isPanning = false;
+        const vp = document.getElementById('reader-scroll-viewport');
+        if (vp) vp.classList.remove('is-dragging');
+    });
+
+    // Touch Drag (Sur Mobile/Tablette avec 1 doigt)
+    let touchStartX = 0, touchStartY = 0;
+    vp.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+            touchStartX = e.touches[0].pageX;
+            touchStartY = e.touches[0].pageY;
+            scrollStartLeft = vp.scrollLeft;
+            scrollStartTop = vp.scrollTop;
+        }
+    }, { passive: true });
+
+    vp.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1) {
+            const touchX = e.touches[0].pageX;
+            const touchY = e.touches[0].pageY;
+            const deltaX = touchX - touchStartX;
+            const deltaY = touchY - touchStartY;
+            vp.scrollLeft = scrollStartLeft - deltaX;
+            vp.scrollTop = scrollStartTop - deltaY;
+        }
+    }, { passive: true });
+}
+
 function stepZoom(delta) {
     zoomFactor = Math.max(0.60, Math.min(2.40, +(zoomFactor + delta).toFixed(2)));
     renderUniversalReader();
@@ -641,6 +719,12 @@ function toggleCurrentBookmark() {
     } else {
         list.splice(idx, 1);
         showToastAlert(`Marque-page retiré`);
+    }
+    const vp = document.getElementById('reader-scroll-viewport');
+    if (zoomFactor > 1.0) {
+        vp.classList.add('is-zoomed');
+    } else {
+        vp.classList.remove('is-zoomed');
     }
     saveUserStore();
 }
