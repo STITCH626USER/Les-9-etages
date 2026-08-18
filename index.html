@@ -122,10 +122,12 @@ html, body {
     overflow-x: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 12px 6px 60px 6px;
+    padding: 100px 100px 100px 100px;
     touch-action: pan-x pan-y pinch-zoom;
     box-sizing: border-box;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     white-space: nowrap;
 }
@@ -135,19 +137,22 @@ html, body {
     display: inline-flex;
     align-items: center; justify-content: center;
     position: relative;
-    margin: 0 auto;
-    vertical-align: top;
+    margin: auto;
+    vertical-align: middle;
     opacity: 1;
     transition: opacity 0.18s ease-in-out;
-    transform-origin: top center;
+    transform-origin: center center;
     will-change: transform;
+    flex-shrink: 0;
 }
+
 .canvas-page {
     display: inline-block; width: auto; height: auto;
     background: #ffffff;
 }
 #page-canvas-left { border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
+
 #m-bottom-dock {
     position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
     background: rgba(12, 18, 32, 0.92); backdrop-filter: blur(16px);
@@ -168,11 +173,12 @@ html, body {
 .dock-nav-btn:active { background: #dfb256; color: #111; }
 #page-indicator-txt { font-size: 12px; font-weight: 900; color: #f7eedb; min-width: 70px; text-align: center; white-space: nowrap; }
 
-@media (max-width: 768px) {
-    #reader-scroll-viewport { padding: 4px 2px 4px 2px; }
+/* CACHER COMPLÈTEMENT LA BARRE DE ZOOM ET LES BOUTONS SUR TOUT MOBILE (PORTRAIT & PAYSAGE) */
+@media (max-width: 1024px), (max-height: 500px), (hover: none) and (pointer: coarse) {
     #reader-zoom-bar { display: none !important; }
     #btn-page-mode { display: none !important; }
     #page-scrubber { display: none !important; }
+    #reader-scroll-viewport { padding: 40px 40px 60px 40px; }
 }
 
 /* MODAL MARQUE-PAGES */
