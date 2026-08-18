@@ -431,11 +431,14 @@ function init3DStage() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-    const lKey = new THREE.DirectionalLight(0xffffff, 1.1);
-    lKey.position.set(5, 8, 7); scene.add(lKey);
-    const lRim = new THREE.DirectionalLight(0xdfb256, 0.8);
-    lRim.position.set(-5, -4, 5); scene.add(lRim);
+    // Éclairage studio équilibré & chaleureux (contraste et saturation fidèles)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.60));
+    const lKey = new THREE.DirectionalLight(0xffffff, 0.50);
+    lKey.position.set(4, 6, 6); scene.add(lKey);
+    const lFill = new THREE.DirectionalLight(0xffeedd, 0.25);
+    lFill.position.set(-4, 3, 4); scene.add(lFill);
+    const lRim = new THREE.DirectionalLight(0xdfb256, 0.20);
+    lRim.position.set(0, -5, 4); scene.add(lRim);
 
     const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
     const loader = new THREE.TextureLoader();
@@ -471,8 +474,8 @@ function init3DStage() {
         new THREE.MeshStandardMaterial({ map: spineTex }),
         new THREE.MeshStandardMaterial({ map: pTex }),
         new THREE.MeshStandardMaterial({ map: pTex }),
-        new THREE.MeshStandardMaterial({ map: tCover, roughness: 0.35 }),
-        new THREE.MeshStandardMaterial({ map: sCover, roughness: 0.35 })
+        new THREE.MeshStandardMaterial({ map: tCover, roughness: 0.55, metalness: 0.05 }),
+        new THREE.MeshStandardMaterial({ map: sCover, roughness: 0.55, metalness: 0.05 })
     ];
 
     bookMesh = new THREE.Mesh(geometry, materials);
