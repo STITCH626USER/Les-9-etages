@@ -119,32 +119,30 @@ html, body {
 
 #reader-scroll-viewport {
     width: 100%; height: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 100px 100px 100px 100px;
-    touch-action: pan-x pan-y pinch-zoom;
+    overflow: hidden;
+    position: relative;
+    touch-action: none;
+    user-select: none;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    white-space: nowrap;
 }
 
 #spread-card-wrapper {
     background: transparent;
     display: inline-flex;
     align-items: center; justify-content: center;
-    position: relative;
-    margin: auto;
-    vertical-align: middle;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
     opacity: 1;
     transition: opacity 0.18s ease-in-out;
     transform-origin: center center;
     will-change: transform;
-    flex-shrink: 0;
+    cursor: grab;
 }
+#spread-card-wrapper:active { cursor: grabbing; }
 
 .canvas-page {
     display: inline-block; width: auto; height: auto;
@@ -929,9 +927,27 @@ let touchStartTime = 0;
 let isPinching = false;
 // Pinch-to-zoom mobile avec point focal précis (comme la galerie photo iOS/Android)
 let isPinching = false;
+// ===================================================
+// 🖐️ GESTES 2D LIBRES : PINCH-TO-ZOOM, PAN SANS BUTÉE & SWIPE
+// ===================================================
+let panX = 0, panY = 0;
+let isPanning = false;
+let startTouchX = 0, startTouchY = 0;
+let startPanX = 0, startPanY = 0;
+let touchStartTime = 0;
+
+// Pinch-to-zoom
+let isPinching = false;
 let initialPinchDist = 0;
 let initialPinchZoom = 1.0;
-let pinchCenterDocX = 0, pinchCenterDocY = 0;
+let pinchMidX = 0, pinchMidY = 0;
+
+function updateWrapperTransform() {
+    const wrapper = document.getElementById('spread-card-wrapper');
+    if (wrapper) {
+        wrapper.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomFactor})`;
+    }
+}
 
 function getDistanceBetweenTouches(t1, t2) {
     const dx = t1.clientX - t2.clientX;
@@ -954,36 +970,27 @@ function initTouchPan() {
     vp.addEventListener('touchstart', (e) => {
         if (!isReading) return;
         wakeBottomDock();
-
         const wrapper = document.getElementById('spread-card-wrapper');
 
         if (e.touches.length === 2) {
-            // Début du pincement centré sur le point de contact des deux doigts
+            // Début du pincement libre
             isPinching = true;
             isPanning = false;
             initialPinchDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
             initialPinchZoom = zoomFactor;
-
             const mid = getMidpointBetweenTouches(e.touches[0], e.touches[1]);
-            const vpRect = vp.getBoundingClientRect();
-            // Position absolue du point pincé dans le contenu défilable
-            pinchCenterDocX = (mid.x - vpRect.left) + vp.scrollLeft;
-            pinchCenterDocY = (mid.y - vpRect.top) + vp.scrollTop;
-
+            pinchMidX = mid.x;
+            pinchMidY = mid.y;
             if (wrapper) wrapper.style.transition = 'none';
         } else if (e.touches.length === 1) {
             isPinching = false;
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
+            isPanning = true;
+            startTouchX = e.touches[0].clientX;
+            startTouchY = e.touches[0].clientY;
+            startPanX = panX;
+            startPanY = panY;
             touchStartTime = Date.now();
-
-            if (zoomFactor > 1.05) {
-                isPanning = true;
-                startPanX = e.touches[0].clientX;
-                startPanY = e.touches[0].clientY;
-                startScrollLeft = vp.scrollLeft;
-                startScrollTop = vp.scrollTop;
-            }
+            if (wrapper) wrapper.style.transition = 'none';
         }
     }, { passive: true });
 
@@ -993,24 +1000,17 @@ function initTouchPan() {
 
         if (isPinching && e.touches.length === 2) {
             const currentDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
-            if (initialPinchDist > 0 && wrapper) {
+            if (initialPinchDist > 0) {
                 const scaleDelta = currentDist / initialPinchDist;
-                const mid = getMidpointBetweenTouches(e.touches[0], e.touches[1]);
-                const vpRect = vp.getBoundingClientRect();
-                
-                // Point d'origine de transformation calé sur la position relative dans le wrapper
-                const wrapRect = wrapper.getBoundingClientRect();
-                const originX = ((mid.x - wrapRect.left) / wrapRect.width) * 100;
-                const originY = ((mid.y - wrapRect.top) / wrapRect.height) * 100;
-                
-                wrapper.style.transformOrigin = `${originX}% ${originY}%`;
-                wrapper.style.transform = `scale(${scaleDelta})`;
+                zoomFactor = Math.max(0.70, Math.min(3.0, +(initialPinchZoom * scaleDelta).toFixed(2)));
+                updateWrapperTransform();
             }
-        } else if (isPanning && e.touches.length === 1 && zoomFactor > 1.05) {
-            const deltaX = e.touches[0].clientX - startPanX;
-            const deltaY = e.touches[0].clientY - startPanY;
-            vp.scrollLeft = startScrollLeft - deltaX;
-            vp.scrollTop = startScrollTop - deltaY;
+        } else if (isPanning && e.touches.length === 1) {
+            const deltaX = e.touches[0].clientX - startTouchX;
+            const deltaY = e.touches[0].clientY - startTouchY;
+            panX = startPanX + deltaX;
+            panY = startPanY + deltaY;
+            updateWrapperTransform();
         }
     }, { passive: true });
 
@@ -1020,55 +1020,29 @@ function initTouchPan() {
 
         if (isPinching && e.touches.length < 2) {
             isPinching = false;
-            if (wrapper) {
-                wrapper.style.transition = 'none';
-                const currentTransform = wrapper.style.transform;
-                const match = currentTransform.match(/scale\(([^)]+)\)/);
-                if (match) {
-                    const finalScale = parseFloat(match[1]);
-                    const newZoom = Math.max(0.70, Math.min(2.50, +(initialPinchZoom * finalScale).toFixed(2)));
-                    const zoomRatio = newZoom / initialPinchZoom;
-                    zoomFactor = newZoom;
-
-                    // Recentrer le viewport sur le point exact qui a été pincé
-                    const vpRect = vp.getBoundingClientRect();
-                    const viewMidX = vpRect.width / 2;
-                    const viewMidY = vpRect.height / 2;
-                    
-                    wrapper.style.transform = 'none';
-                    wrapper.style.transformOrigin = 'center center';
-                    
-                    renderUniversalReader().then(() => {
-                        // Ajustement précis du défilement vers le point focal
-                        vp.scrollLeft = Math.max(0, (pinchCenterDocX * zoomRatio) - viewMidX);
-                        vp.scrollTop = Math.max(0, (pinchCenterDocY * zoomRatio) - viewMidY);
-                    });
-                } else {
-                    wrapper.style.transform = 'none';
-                    wrapper.style.transformOrigin = 'center center';
-                    renderUniversalReader();
-                }
-            }
+            if (wrapper) wrapper.style.transition = 'opacity 0.18s ease-in-out';
+            renderUniversalReader();
             return;
         }
 
-        // Détection du Swipe gauche/droite pour tourner les pages
-        if (!isPinching && !isPanning && e.changedTouches.length === 1 && zoomFactor <= 1.15) {
-            const deltaX = e.changedTouches[0].clientX - touchStartX;
-            const deltaY = e.changedTouches[0].clientY - touchStartY;
+        if (isPanning && e.changedTouches.length === 1) {
+            const deltaX = e.changedTouches[0].clientX - startTouchX;
+            const deltaY = e.changedTouches[0].clientY - startTouchY;
             const elapsed = Date.now() - touchStartTime;
 
-            // Swipe horizontal : rapide et net
-            if (elapsed < 500 && Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
-                if (deltaX < 0) {
-                    nextStep(); // Page suivante
-                } else {
-                    prevStep(); // Page précédente
-                }
+            // Si c'est un balayage rapide horizontal à zoom normal -> changer de page
+            if (zoomFactor <= 1.15 && elapsed < 400 && Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+                panX = 0; panY = 0;
+                updateWrapperTransform();
+                if (deltaX < 0) nextStep();
+                else prevStep();
+            } else if (zoomFactor <= 1.05 && Math.abs(deltaX) < 15 && Math.abs(deltaY) < 15) {
+                // Recentrage si petit tap
+                panX = 0; panY = 0;
+                updateWrapperTransform();
             }
+            isPanning = false;
         }
-
-        isPanning = false;
     });
 
     vp.addEventListener('touchcancel', () => {
@@ -1076,66 +1050,65 @@ function initTouchPan() {
         isPinching = false;
     });
 
-    // 2. ZOOM À LA MOLETTE DE SOURIS / TRACKPAD (WEB & DESKTOP)
+    // 2. ZOOM MOLETTE SOURIS / TRACKPAD
     vp.addEventListener('wheel', (e) => {
         if (!isReading) return;
-        
-        // Si la touche Ctrl / Cmd est pressée OU si molette standard sur le viewport
-        if (e.ctrlKey || e.metaKey || e.altKey) {
-            e.preventDefault();
-            wakeBottomDock();
-            const delta = e.deltaY < 0 ? 0.10 : -0.10;
-            zoomFactor = Math.max(0.70, Math.min(2.50, +(zoomFactor + delta).toFixed(2)));
-            renderUniversalReader();
-        } else if (zoomFactor > 1.05) {
-            // Si zoomé, le défilement standard déplace le document
-            return;
+        e.preventDefault();
+        wakeBottomDock();
+
+        if (e.ctrlKey || e.metaKey || e.altKey || Math.abs(e.deltaY) < 40) {
+            const delta = e.deltaY < 0 ? 0.12 : -0.12;
+            zoomFactor = Math.max(0.70, Math.min(3.0, +(zoomFactor + delta).toFixed(2)));
+            updateWrapperTransform();
         } else {
-            // Si pas zoomé, une rotation rapide de molette haut/bas tourne les pages
-            if (Math.abs(e.deltaY) > 60) {
-                if (e.deltaY > 0) nextStep();
-                else prevStep();
-            }
+            // Déplacement vertical avec la molette
+            panY -= e.deltaY * 0.8;
+            updateWrapperTransform();
         }
     }, { passive: false });
 
-    // 3. NAVIGATION PAR CLIC & DRAG SOURIS (DESKTOP)
-    let mouseStartX = 0;
+    // 3. PAN & DRAG SOURIS (DESKTOP)
+    let isMouseDown = false;
+    let mouseStartX = 0, mouseStartY = 0;
+    let mouseStartPanX = 0, mouseStartPanY = 0;
     let mouseStartTime = 0;
 
     vp.addEventListener('mousedown', (e) => {
         if (!isReading) return;
+        isMouseDown = true;
         mouseStartX = e.clientX;
+        mouseStartY = e.clientY;
+        mouseStartPanX = panX;
+        mouseStartPanY = panY;
         mouseStartTime = Date.now();
-
-        if (zoomFactor > 1.05) {
-            isPanning = true;
-            startPanX = e.clientX;
-            startPanY = e.clientY;
-            startScrollLeft = vp.scrollLeft;
-            startScrollTop = vp.scrollTop;
-        }
+        const wrapper = document.getElementById('spread-card-wrapper');
+        if (wrapper) wrapper.style.transition = 'none';
     });
 
     window.addEventListener('mousemove', (e) => {
-        if (!isPanning || !isReading) return;
-        const deltaX = e.clientX - startPanX;
-        const deltaY = e.clientY - startPanY;
-        vp.scrollLeft = startScrollLeft - deltaX;
-        vp.scrollTop = startScrollTop - deltaY;
+        if (!isMouseDown || !isReading) return;
+        const deltaX = e.clientX - mouseStartX;
+        const deltaY = e.clientY - mouseStartY;
+        panX = mouseStartPanX + deltaX;
+        panY = mouseStartPanY + deltaY;
+        updateWrapperTransform();
     });
 
     window.addEventListener('mouseup', (e) => {
         if (!isReading) return;
-        if (!isPanning && zoomFactor <= 1.15) {
+        if (isMouseDown) {
             const deltaX = e.clientX - mouseStartX;
+            const deltaY = e.clientY - mouseStartY;
             const elapsed = Date.now() - mouseStartTime;
-            if (elapsed < 300 && Math.abs(deltaX) > 60) {
+
+            if (zoomFactor <= 1.15 && elapsed < 300 && Math.abs(deltaX) > 60) {
+                panX = 0; panY = 0;
+                updateWrapperTransform();
                 if (deltaX < 0) nextStep();
                 else prevStep();
             }
         }
-        isPanning = false;
+        isMouseDown = false;
     });
 }
 
