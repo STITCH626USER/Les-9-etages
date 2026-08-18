@@ -123,6 +123,32 @@ html, body {
 }
 .canvas-page-single { display: block; width: 100%; height: auto; border-radius: 6px; }
 
+/* =================================================== */
+/* MODE PLEIN ÉCRAN IMMERSIF (SEULE LA BARRE DE PAGE RESTE) */
+/* =================================================== */
+body.is-fullscreen #m-header {
+    display: none !important;
+}
+body.is-fullscreen #reader-zoom-bar {
+    display: none !important;
+}
+body.is-fullscreen #live-reader-container {
+    top: 0 !important;
+    height: 100vh !important;
+}
+body.is-fullscreen #reader-scroll-viewport {
+    padding: 30px 10px 95px 10px !important;
+}
+
+#btn-exit-fullscreen {
+    position: fixed; top: 16px; right: 16px;
+    background: rgba(12, 18, 32, 0.95); border: 2px solid rgba(255,255,255,0.25);
+    color: #f7eedb; font-size: 13px; font-weight: 800; padding: 8px 16px; border-radius: 20px;
+    cursor: pointer; z-index: 500; display: none; box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+}
+body.is-fullscreen #btn-exit-fullscreen {
+    display: block !important;
+}
 /* ZOOM TOOLBAR GÉANTE (HAUTEUR 56px) */
 #reader-zoom-bar {
     position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
@@ -236,6 +262,9 @@ html, body {
     </button>
 </div>
 
+<!-- BOUTON QUITTER PLEIN ÉCRAN -->
+<button id="btn-exit-fullscreen" onclick="toggleImmersiveFullscreen()">✕ Quitter Plein Écran</button>
+
 <!-- LISEUSE PLEIN ÉCRAN -->
 <div id="live-reader-container">
     
@@ -246,6 +275,7 @@ html, body {
         <span id="zoom-percentage-txt">100%</span>
         <button class="btn-zoom-step" onclick="stepZoom(0.15)">+</button>
         <button class="btn-mode-pill" onclick="resetZoomDefault()">1:1 Centré</button>
+        <button id="btn-fullscreen-toggle" class="btn-mode-pill" onclick="toggleImmersiveFullscreen()">⛶ Plein Écran</button>
     </div>
 
     <div id="reader-scroll-viewport">
@@ -509,6 +539,35 @@ async function renderUniversalReader() {
     cSingle.style.height = targetSingleH + 'px';
 
     saveUserStore();
+}
+
+
+// GESTION DU MODE PLEIN ÉCRAN IMMERSIF
+let isImmersiveFullscreen = false;
+
+function toggleImmersiveFullscreen() {
+    isImmersiveFullscreen = !isImmersiveFullscreen;
+    const body = document.body;
+    const docEl = document.documentElement;
+
+    if (isImmersiveFullscreen) {
+        body.classList.add('is-fullscreen');
+        if (docEl.requestFullscreen) {
+            docEl.requestFullscreen().catch(() => {});
+        } else if (docEl.webkitRequestFullscreen) {
+            docEl.webkitRequestFullscreen();
+        }
+    } else {
+        body.classList.remove('is-fullscreen');
+        if (document.exitFullscreen && document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+
+    renderUniversalReader();
+    wakeBottomDock();
 }
 
 function stepZoom(delta) {
