@@ -149,12 +149,31 @@ html, body {
 }
 #page-canvas-left { border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
+#m-bottom-dock {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    background: rgba(12, 18, 32, 0.92); backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 0.22); border-radius: 24px;
+    display: inline-flex; justify-content: center; align-items: center; gap: 8px;
+    padding: 4px 12px; z-index: 150;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.85);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+#m-bottom-dock.dock-awake { opacity: 1 !important; pointer-events: auto !important; }
+
+.dock-nav-btn {
+    background: #182236; border: 1px solid rgba(255,255,255,0.25);
+    color: #dfb256; padding: 6px 14px; border-radius: 14px; font-size: 14px; font-weight: 900;
+    cursor: pointer; min-width: 40px; min-height: 32px; display: flex; align-items: center; justify-content: center;
+}
+.dock-nav-btn:active { background: #dfb256; color: #111; }
+#page-indicator-txt { font-size: 12px; font-weight: 900; color: #f7eedb; min-width: 70px; text-align: center; white-space: nowrap; }
 
 @media (max-width: 768px) {
     #reader-scroll-viewport { padding: 4px 2px 4px 2px; }
     #reader-zoom-bar { display: none !important; }
     #btn-page-mode { display: none !important; }
-    #m-bottom-dock { display: none !important; }
+    #page-scrubber { display: none !important; }
 }
 
 /* MODAL MARQUE-PAGES */
@@ -480,7 +499,7 @@ function wakeBottomDock() {
     dockFadeTimeout = setTimeout(() => {
         if (dock) dock.classList.remove('dock-awake');
         if (zoom) zoom.classList.remove('dock-awake');
-    }, 600);
+    }, 1000);
 }
 
 function initDockFadeListeners() {
@@ -973,13 +992,13 @@ function initTouchPan() {
         if (isPinching && e.touches.length < 2) {
             isPinching = false;
             if (wrapper) {
-                wrapper.style.transition = 'transform 0.15s ease-out';
-                // Calcul du nouveau zoomFactor final
+                // Arrêt net et propre à l'arrêt du pincement sans effet rebond
+                wrapper.style.transition = 'none';
                 const currentTransform = wrapper.style.transform;
                 const match = currentTransform.match(/scale\(([^)]+)\)/);
                 if (match) {
                     const finalScale = parseFloat(match[1]);
-                    zoomFactor = Math.max(0.80, Math.min(2.50, +(initialPinchZoom * finalScale).toFixed(2)));
+                    zoomFactor = Math.max(0.70, Math.min(2.50, +(initialPinchZoom * finalScale).toFixed(2)));
                 }
                 wrapper.style.transform = 'none';
                 renderUniversalReader();
