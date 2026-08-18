@@ -510,7 +510,7 @@ window.BOOK_CONTENT = {
     },
     {
       "pageNumber": 20,
-      "text": "département fabrique — le spectacle, le soin, le service, le bâtiment — il ne\nl'a pas vu depuis des semaines. Peut-être des mois.\nIl gère une abstraction.\nLe remplacement du réel\nC'est ici, à l'étage 2, que se produit une transformation fondamentale : le\nréel est remplacé par sa représentation.\nÀ l'étage 0, le réel c'est : À l'étage 2, le réel c'est :\nUn projecteur qui grille Un taux de disponibilité technique\nUne équipe épuisée Un indicateur d'absentéisme\nUn client mécontent Un score de satisfaction\nUn collègue qui pleure en vestiaire Un « risque psychosocial à monitorer »\nUne idée brillante d'un technicien Rien. Elle n'est pas montée jusque-là.\nLe Manager de Managers ne ment pas quand il dit que « les indicateurs\nsont au vert ». Il lit ce qu'on lui donne. Le problème, c'est que ce qu'on lui\ndonne n'est pas la réalité.\nC'est un résumé de résumé de résumé de la réalité.\nLa réorganisation permanente\nIl y a un phénomène que tout le monde observe à l'étage 0 et que personne\nne comprend :\nPourquoi les réorgs sont-elles permanentes ?\nTous les 18 mois, parfois moins, l'organigramme change. Les équipes sont\nredécoupées. Les rattachements hiérarchiques bougent. Les noms des\n19",
+      "text": "département fabrique — le spectacle, le soin, le service, le bâtiment — il ne\nl'a pas vu depuis des semaines. Peut-être des mois.\nIl gère une abstraction.\nLe remplacement du réel\nC'est ici, à l'étage 2, que se produit une transformation fondamentale : le\nréel est remplacé par sa représentation.\nÀ l'étage 0, le réel c'est : À l'étage 2, le réel c'est :\nUn projecteur qui grille Un taux de disponibilité technique\nUne équipe épuisée Un indicateur d'absentéisme\nUn client mécontent Un score de satisfaction\nUn collègue qui pleure en vestiaire Un « risque psychosocial à monitorer »\nUne idée brillante d'un technicien Rien. Elle n'est pas montée jusque-là.\nLe Manager de Managers ne ment pas quand il dit que « les indicateurs\nsont au vert ». Il lit ce qu'on lui donne. Le problème, c'est que ce qu'on lui\ndonne n'est pas la réalité.\nC'est un résumé de résumé de résumé de la réalité.\nLa réorganisation permanente\nIl y a un phénomène que tout le monde observe à l'étage 0 et que personne\nne comprend :\nPourquoi les restructurations sont-elles permanentes ?\nTous les 18 mois, parfois moins, l'organigramme change. Les équipes sont\nredécoupées. Les rattachements hiérarchiques bougent. Les noms des\n19",
       "lines": [
         "département fabrique — le spectacle, le soin, le service, le bâtiment — il ne",
         "l'a pas vu depuis des semaines. Peut-être des mois.",
@@ -531,7 +531,7 @@ window.BOOK_CONTENT = {
         "La réorganisation permanente",
         "Il y a un phénomène que tout le monde observe à l'étage 0 et que personne",
         "ne comprend :",
-        "Pourquoi les réorgs sont-elles permanentes ?",
+        "Pourquoi les restructurations sont-elles permanentes ?",
         "Tous les 18 mois, parfois moins, l'organigramme change. Les équipes sont",
         "redécoupées. Les rattachements hiérarchiques bougent. Les noms des",
         "19"
@@ -539,7 +539,7 @@ window.BOOK_CONTENT = {
     },
     {
       "pageNumber": 21,
-      "text": "départements changent. On « fusionne des pôles », on « crée des directions\ntransverses », on « mutualise les fonctions support ».\nL'étage 0 ne voit aucune différence. Le spectacle est le même. Les patients\nsont les mêmes. Les plats sont les mêmes. Le béton est le même.\nAlors pourquoi ?\nParce que la réorganisation est le produit principal de l'étage 2.\nC'est par la réorg que le Manager de Managers justifie son existence. Il ne\nfait pas le produit — ça, c'est l'étage 0. Il ne gère pas les gens au quotidien\n— ça, c'est l'étage 1. Alors il restructure. Il réorganise. Il transforme.\nLa réorg est l'équivalent managérial de repeindre les murs quand la\nplomberie fuit. Ça se voit. Ça occupe. Ça donne l'impression d'agir. Et ça ne\nrésout rien.\nLe jeu politique\nC'est aussi à l'étage 2 que le jeu politique commence véritablement.\nÀ l'étage 0, la politique, c'est savoir avec qui on s'entend bien dans l'équipe.\nÀ l'étage 1, c'est gérer les conflits interpersonnels. À l'étage 2, c'est un sport\nde compétition.\nLes règles du jeu :\nVisibilité — être vu par l'étage 3. Présenter. Parler en comité.\nEnvoyer le bon mail au bon moment.\nTerritoire — protéger son périmètre. Chaque réorg est une guerre de\nterritoire. Gagner des effectifs, c'est gagner du pouvoir.\nNarration — contrôler l'histoire. Les chiffres ne mentent pas, mais\non peut choisir quels chiffres montrer. Et surtout, comment les\nprésenter.\nAlliances — savoir qui soutenir, qui éviter, qui suivre. Le Manager de\nManagers d'à côté est autant un concurrent qu'un collègue.\n20",
+      "text": "départements changent. On « fusionne des pôles », on « crée des directions\ntransverses », on « mutualise les fonctions support ».\nL'étage 0 ne voit aucune différence. Le spectacle est le même. Les patients\nsont les mêmes. Les plats sont les mêmes. Le béton est le même.\nAlors pourquoi ?\nParce que la réorganisation est le produit principal de l'étage 2.\nC'est par la restructuration que le Manager de Managers justifie son existence. Il ne\nfait pas le produit — ça, c'est l'étage 0. Il ne gère pas les gens au quotidien\n— ça, c'est l'étage 1. Alors il restructure. Il réorganise. Il transforme.\nLa restructuration est l'équivalent managérial de repeindre les murs quand la\nplomberie fuit. Ça se voit. Ça occupe. Ça donne l'impression d'agir. Et ça ne\nrésout rien.\nLe jeu politique\nC'est aussi à l'étage 2 que le jeu politique commence véritablement.\nÀ l'étage 0, la politique, c'est savoir avec qui on s'entend bien dans l'équipe.\nÀ l'étage 1, c'est gérer les conflits interpersonnels. À l'étage 2, c'est un sport\nde compétition.\nLes règles du jeu :\nVisibilité — être vu par l'étage 3. Présenter. Parler en comité.\nEnvoyer le bon mail au bon moment.\nTerritoire — protéger son périmètre. Chaque restructuration est une guerre de\nterritoire. Gagner des effectifs, c'est gagner du pouvoir.\nNarration — contrôler l'histoire. Les chiffres ne mentent pas, mais\non peut choisir quels chiffres montrer. Et surtout, comment les\nprésenter.\nAlliances — savoir qui soutenir, qui éviter, qui suivre. Le Manager de\nManagers d'à côté est autant un concurrent qu'un collègue.\n20",
       "lines": [
         "départements changent. On « fusionne des pôles », on « crée des directions",
         "transverses », on « mutualise les fonctions support ».",
@@ -547,10 +547,10 @@ window.BOOK_CONTENT = {
         "sont les mêmes. Les plats sont les mêmes. Le béton est le même.",
         "Alors pourquoi ?",
         "Parce que la réorganisation est le produit principal de l'étage 2.",
-        "C'est par la réorg que le Manager de Managers justifie son existence. Il ne",
+        "C'est par la restructuration que le Manager de Managers justifie son existence. Il ne",
         "fait pas le produit — ça, c'est l'étage 0. Il ne gère pas les gens au quotidien",
         "— ça, c'est l'étage 1. Alors il restructure. Il réorganise. Il transforme.",
-        "La réorg est l'équivalent managérial de repeindre les murs quand la",
+        "La restructuration est l'équivalent managérial de repeindre les murs quand la",
         "plomberie fuit. Ça se voit. Ça occupe. Ça donne l'impression d'agir. Et ça ne",
         "résout rien.",
         "Le jeu politique",
@@ -561,7 +561,7 @@ window.BOOK_CONTENT = {
         "Les règles du jeu :",
         "Visibilité — être vu par l'étage 3. Présenter. Parler en comité.",
         "Envoyer le bon mail au bon moment.",
-        "Territoire — protéger son périmètre. Chaque réorg est une guerre de",
+        "Territoire — protéger son périmètre. Chaque restructuration est une guerre de",
         "territoire. Gagner des effectifs, c'est gagner du pouvoir.",
         "Narration — contrôler l'histoire. Les chiffres ne mentent pas, mais",
         "on peut choisir quels chiffres montrer. Et surtout, comment les",
@@ -573,11 +573,11 @@ window.BOOK_CONTENT = {
     },
     {
       "pageNumber": 22,
-      "text": "L'étage 0 n'a aucune idée de ces jeux. Et quand une décision absurde\ntombe d'en haut — un changement de planning incompréhensible, une\nsuppression de poste illogique, une réorg qui sépare deux équipes qui\nfonctionnaient bien ensemble — il ne sait pas que cette décision est\nsouvent le résultat d'un jeu politique, pas d'une analyse rationnelle.\nLa solitude dorée\nQuelque chose de surprenant se passe à l'étage 2 : la solitude.\nLe Manager de Managers a un meilleur salaire, un meilleur bureau, un\nmeilleur statut. Mais il a aussi :\nMoins d'amis au travail (les relations deviennent stratégiques)\nMoins de feedback honnête (qui ose lui dire la vérité ?)\nMoins de fierté concrète (qu'a-t-il fait aujourd'hui ?)\nPlus de pression de l'étage au-dessus\nPlus de culpabilité quand les décisions qu'il transmet font souffrir en\nbas\nIl y a des Manager de Managers qui le vivent bien. Ils aiment le pouvoir, le\njeu, l'abstraction.\nEt il y en a qui, certains soirs, en rentrant chez eux, se demandent si la vue\ndepuis l'étage 2 valait vraiment le prix du ticket.\nLa bureaucratie horizontale — La tyrannie des fonctions support\nIl n'y a pas que la verticalité de la tour qui épuise le Terrain. Il y a aussi sa\nlargeur.\nAu fil des décennies, l'entreprise moderne a vu proliférer une armée de\nservices dits « fonctions support » : Qualité, RH, Compliance, Contrôle de\ngestion, Communication interne, RSE. En théorie, ces services existent\npour aider le Terrain à travailler. Dans la pratique, le rapport d'autorité\ns'est inversé : c'est désormais le Terrain qui passe une partie considérable\n21",
+      "text": "L'étage 0 n'a aucune idée de ces jeux. Et quand une décision absurde\ntombe d'en haut — un changement de planning incompréhensible, une\nsuppression de poste illogique, une restructuration qui sépare deux équipes qui\nfonctionnaient bien ensemble — il ne sait pas que cette décision est\nsouvent le résultat d'un jeu politique, pas d'une analyse rationnelle.\nLa solitude dorée\nQuelque chose de surprenant se passe à l'étage 2 : la solitude.\nLe Manager de Managers a un meilleur salaire, un meilleur bureau, un\nmeilleur statut. Mais il a aussi :\nMoins d'amis au travail (les relations deviennent stratégiques)\nMoins de feedback honnête (qui ose lui dire la vérité ?)\nMoins de fierté concrète (qu'a-t-il fait aujourd'hui ?)\nPlus de pression de l'étage au-dessus\nPlus de culpabilité quand les décisions qu'il transmet font souffrir en\nbas\nIl y a des Manager de Managers qui le vivent bien. Ils aiment le pouvoir, le\njeu, l'abstraction.\nEt il y en a qui, certains soirs, en rentrant chez eux, se demandent si la vue\ndepuis l'étage 2 valait vraiment le prix du ticket.\nLa bureaucratie horizontale — La tyrannie des fonctions support\nIl n'y a pas que la verticalité de la tour qui épuise le Terrain. Il y a aussi sa\nlargeur.\nAu fil des décennies, l'entreprise moderne a vu proliférer une armée de\nservices dits « fonctions support » : Qualité, RH, Compliance, Contrôle de\ngestion, Communication interne, RSE. En théorie, ces services existent\npour aider le Terrain à travailler. Dans la pratique, le rapport d'autorité\ns'est inversé : c'est désormais le Terrain qui passe une partie considérable\n21",
       "lines": [
         "L'étage 0 n'a aucune idée de ces jeux. Et quand une décision absurde",
         "tombe d'en haut — un changement de planning incompréhensible, une",
-        "suppression de poste illogique, une réorg qui sépare deux équipes qui",
+        "suppression de poste illogique, une restructuration qui sépare deux équipes qui",
         "fonctionnaient bien ensemble — il ne sait pas que cette décision est",
         "souvent le résultat d'un jeu politique, pas d'une analyse rationnelle.",
         "La solitude dorée",
@@ -3527,10 +3527,10 @@ window.BOOK_CONTENT = {
     },
     {
       "pageNumber": 128,
-      "text": "Choisissez une fiche. Une seule. Celle qui vous parle. Et essayez. Pas\ndemain. Pas après la prochaine réorg. Pas après le prochain Town Hall.\nLundi.\n[ L'ascenseur est remonté. Les portes sont ouvertes. C'est à vous de sortir. ]\nProchain chapitre — Le Hall. Là où les deux lectures se rejoignent.\n127",
+      "text": "Choisissez une fiche. Une seule. Celle qui vous parle. Et essayez. Pas\ndemain. Pas après la prochaine restructuration. Pas après le prochain Town Hall.\nLundi.\n[ L'ascenseur est remonté. Les portes sont ouvertes. C'est à vous de sortir. ]\nProchain chapitre — Le Hall. Là où les deux lectures se rejoignent.\n127",
       "lines": [
         "Choisissez une fiche. Une seule. Celle qui vous parle. Et essayez. Pas",
-        "demain. Pas après la prochaine réorg. Pas après le prochain Town Hall.",
+        "demain. Pas après la prochaine restructuration. Pas après le prochain Town Hall.",
         "Lundi.",
         "[ L'ascenseur est remonté. Les portes sont ouvertes. C'est à vous de sortir. ]",
         "Prochain chapitre — Le Hall. Là où les deux lectures se rejoignent.",

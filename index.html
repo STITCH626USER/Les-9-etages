@@ -232,6 +232,7 @@ html, body {
 #page-indicator-txt { font-size: 11.5px; font-weight: 900; color: #dfb256; min-width: 80px; text-align: center; white-space: nowrap; }
 
 @media (max-width: 768px) {
+    #reader-zoom-bar { display: none !important; }
     #btn-page-mode { display: none !important; }
 }
 
@@ -966,40 +967,152 @@ function showToastAlert(txt) {
     setTimeout(() => { t.style.display = 'none'; }, 2200);
 }
 
-// TOUCH PAN POUR LE DÉPLACEMENT LIBRE VERTICAL ET HORIZONTAL (360°)
+// ===================================================
+// 🖐️ GESTES FLUIDES : PINCH-TO-ZOOM, MOLETTE, SWIPE & PAN
+// ===================================================
 let isPanning = false;
 let startPanX = 0, startPanY = 0;
 let startScrollLeft = 0, startScrollTop = 0;
+
+// Swipe navigation
+let touchStartX = 0, touchStartY = 0;
+let touchStartTime = 0;
+
+// Pinch-to-zoom mobile
+let isPinching = false;
+let initialPinchDist = 0;
+let initialPinchZoom = 1.0;
+let pinchDebounceTimer = null;
+
+function getDistanceBetweenTouches(t1, t2) {
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
 
 function initTouchPan() {
     const vp = document.getElementById('reader-scroll-viewport');
     if (!vp) return;
 
-    // Écouteur tactile mobile
+    // 1. ÉCOUTEURS TACTILES (MOBILE & TABLETTE)
     vp.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1 && zoomFactor > 1.0) {
-            isPanning = true;
-            startPanX = e.touches[0].clientX;
-            startPanY = e.touches[0].clientY;
-            startScrollLeft = vp.scrollLeft;
-            startScrollTop = vp.scrollTop;
+        if (!isReading) return;
+        wakeBottomDock();
+
+        if (e.touches.length === 2) {
+            // Début du pincement (Pinch-to-zoom)
+            isPinching = true;
+            isPanning = false;
+            initialPinchDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
+            initialPinchZoom = zoomFactor;
+        } else if (e.touches.length === 1) {
+            // Touch simple : mémorisation pour Swipe ou Pan
+            isPinching = false;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+
+            if (zoomFactor > 1.05) {
+                isPanning = true;
+                startPanX = e.touches[0].clientX;
+                startPanY = e.touches[0].clientY;
+                startScrollLeft = vp.scrollLeft;
+                startScrollTop = vp.scrollTop;
+            }
         }
     }, { passive: true });
 
     vp.addEventListener('touchmove', (e) => {
-        if (!isPanning || e.touches.length !== 1) return;
-        const deltaX = e.touches[0].clientX - startPanX;
-        const deltaY = e.touches[0].clientY - startPanY;
-        vp.scrollLeft = startScrollLeft - deltaX;
-        vp.scrollTop = startScrollTop - deltaY;
+        if (!isReading) return;
+
+        if (isPinching && e.touches.length === 2) {
+            const currentDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
+            if (initialPinchDist > 0) {
+                const ratio = currentDist / initialPinchDist;
+                const newZoom = Math.max(0.70, Math.min(2.50, +(initialPinchZoom * ratio).toFixed(2)));
+                
+                if (Math.abs(newZoom - zoomFactor) >= 0.05) {
+                    zoomFactor = newZoom;
+                    clearTimeout(pinchDebounceTimer);
+                    pinchDebounceTimer = setTimeout(() => {
+                        renderUniversalReader();
+                    }, 40);
+                }
+            }
+        } else if (isPanning && e.touches.length === 1 && zoomFactor > 1.05) {
+            const deltaX = e.touches[0].clientX - startPanX;
+            const deltaY = e.touches[0].clientY - startPanY;
+            vp.scrollLeft = startScrollLeft - deltaX;
+            vp.scrollTop = startScrollTop - deltaY;
+        }
     }, { passive: true });
 
-    vp.addEventListener('touchend', () => { isPanning = false; });
-    vp.addEventListener('touchcancel', () => { isPanning = false; });
+    vp.addEventListener('touchend', (e) => {
+        if (!isReading) return;
 
-    // Écouteur souris / pointeur
+        if (isPinching && e.touches.length < 2) {
+            isPinching = false;
+            renderUniversalReader();
+            return;
+        }
+
+        // Détection du Swipe gauche/droite pour tourner les pages (quand on n'est pas trop zoomé)
+        if (!isPinching && !isPanning && e.changedTouches.length === 1 && zoomFactor <= 1.15) {
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            const deltaY = e.changedTouches[0].clientY - touchStartY;
+            const elapsed = Date.now() - touchStartTime;
+
+            // Swipe horizontal valide : > 50px de distance et geste rapide (< 450ms)
+            if (elapsed < 450 && Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+                if (deltaX < 0) {
+                    nextStep(); // Glissement vers la gauche -> Page suivante
+                } else {
+                    prevStep(); // Glissement vers la droite -> Page précédente
+                }
+            }
+        }
+
+        isPanning = false;
+    });
+
+    vp.addEventListener('touchcancel', () => {
+        isPanning = false;
+        isPinching = false;
+    });
+
+    // 2. ZOOM À LA MOLETTE DE SOURIS / TRACKPAD (WEB & DESKTOP)
+    vp.addEventListener('wheel', (e) => {
+        if (!isReading) return;
+        
+        // Si la touche Ctrl / Cmd est pressée OU si molette standard sur le viewport
+        if (e.ctrlKey || e.metaKey || e.altKey) {
+            e.preventDefault();
+            wakeBottomDock();
+            const delta = e.deltaY < 0 ? 0.10 : -0.10;
+            zoomFactor = Math.max(0.70, Math.min(2.50, +(zoomFactor + delta).toFixed(2)));
+            renderUniversalReader();
+        } else if (zoomFactor > 1.05) {
+            // Si zoomé, le défilement standard déplace le document
+            return;
+        } else {
+            // Si pas zoomé, une rotation rapide de molette haut/bas tourne les pages
+            if (Math.abs(e.deltaY) > 60) {
+                if (e.deltaY > 0) nextStep();
+                else prevStep();
+            }
+        }
+    }, { passive: false });
+
+    // 3. NAVIGATION PAR CLIC & DRAG SOURIS (DESKTOP)
+    let mouseStartX = 0;
+    let mouseStartTime = 0;
+
     vp.addEventListener('mousedown', (e) => {
-        if (zoomFactor > 1.0) {
+        if (!isReading) return;
+        mouseStartX = e.clientX;
+        mouseStartTime = Date.now();
+
+        if (zoomFactor > 1.05) {
             isPanning = true;
             startPanX = e.clientX;
             startPanY = e.clientY;
@@ -1009,14 +1122,25 @@ function initTouchPan() {
     });
 
     window.addEventListener('mousemove', (e) => {
-        if (!isPanning) return;
+        if (!isPanning || !isReading) return;
         const deltaX = e.clientX - startPanX;
         const deltaY = e.clientY - startPanY;
         vp.scrollLeft = startScrollLeft - deltaX;
         vp.scrollTop = startScrollTop - deltaY;
     });
 
-    window.addEventListener('mouseup', () => { isPanning = false; });
+    window.addEventListener('mouseup', (e) => {
+        if (!isReading) return;
+        if (!isPanning && zoomFactor <= 1.15) {
+            const deltaX = e.clientX - mouseStartX;
+            const elapsed = Date.now() - mouseStartTime;
+            if (elapsed < 300 && Math.abs(deltaX) > 60) {
+                if (deltaX < 0) nextStep();
+                else prevStep();
+            }
+        }
+        isPanning = false;
+    });
 }
 
 window.onload = () => {
