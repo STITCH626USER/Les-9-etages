@@ -501,7 +501,11 @@ async function renderUniversalReader() {
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     if (!activeDoc) return;
 
-    const pLabel = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / 167`;
+    const totalPages = activeDoc.numPages;
+    const scrubber = document.getElementById('page-scrubber');
+    if (scrubber) scrubber.max = totalPages;
+
+    const pLabel = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / ${totalPages - 1}`;
     
     document.getElementById('page-scrubber').value = currentPage;
     document.getElementById('page-indicator-txt').innerText = pLabel;
@@ -560,7 +564,9 @@ function resetZoomDefault() {
 
 function nextStep() {
     wakeBottomDock();
-    if (currentPage < 168) {
+    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
+    const maxP = activeDoc ? activeDoc.numPages : 170;
+    if (currentPage < maxP) {
         currentPage += 1;
         renderUniversalReader();
     }
