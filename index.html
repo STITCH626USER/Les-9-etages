@@ -26,14 +26,44 @@ body, html {
     color: #f7eedb; user-select: none; -webkit-tap-highlight-color: transparent;
 }
 
-/* =================================================== */
-/* RESPONSIVE HEADER & LARGE TOUCH BUTTONS */
-/* =================================================== */
+/* HIDE LAYOUT TOGGLE (AUTO/1/2 PAGES) ON MOBILE */
+#btn-toggle-layout {
+    display: none;
+}
+@media (min-width: 860px) {
+    #btn-toggle-layout {
+        display: flex;
+    }
+}
+
+/* COMPACT HEADER FIT FOR MOBILE (NO OVERFLOW/CLIPPING) */
 #m-header {
-    height: 56px; width: 100%; background: #0c101c;
+    height: 54px; width: 100%; background: #0c101c;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 10px; position: fixed; top: 0; left: 0; z-index: 200;
+    padding: 0 8px; position: fixed; top: 0; left: 0; z-index: 200;
+}
+.brand-zone { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.title-txt {
+    font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
+}
+.side-pill {
+    padding: 2px 6px; border-radius: 8px; font-size: 8px; font-weight: 800;
+    text-transform: uppercase;
+}
+
+.header-btns { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.btn-h {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    color: #f7eedb; padding: 5px 8px; border-radius: 12px; font-size: 10px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 2px; white-space: nowrap;
+}
+.btn-flip-act {
+    background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
+    color: #111; font-weight: 900; font-size: 10px; border: none;
+    padding: 6px 10px; border-radius: 12px; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(223, 178, 86, 0.3);
 }
 .brand-zone { display: flex; align-items: center; gap: 6px; }
 .title-txt {
