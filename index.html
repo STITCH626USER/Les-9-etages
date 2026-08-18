@@ -245,7 +245,7 @@ html, body {
 
     <div class="header-btns">
         <button id="btn-save-bm" class="btn-h" onclick="toggleCurrentBookmark()">🔖 <span id="txt-bm-label">Marquer</span></button>
-        <button class="btn-h" onclick="openBookmarksList()">📂 <span id="txt-bm-total">Pages (0)</span></button>
+        <button class="btn-h" onclick="openBookmarksList()">📂 Marque-pages</button>
         <button class="btn-flip-act" onclick="flip3DTeteBeche()">🔄 RETOURNER</button>
     </div>
 </div>
@@ -646,9 +646,6 @@ function updateBookmarkUI() {
         btn.classList.remove('active-bm');
         label.innerText = "Marquer";
     }
-
-    const total = (userStore.terrainBookmarks || []).length + (userStore.sommetBookmarks || []).length;
-    document.getElementById('txt-bm-total').innerText = `Pages (${total})`;
 }
 
 function openBookmarksList() {
