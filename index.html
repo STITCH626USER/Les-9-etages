@@ -538,7 +538,11 @@ function loadUserStore() {
             currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
             zoomFactor = userStore.zoom || 1.0;
         } catch(e) {}
+    } else {
+        currentSide = 'terrain';
+        currentPage = 1;
     }
+}
 }
 
 function saveUserStore() {
@@ -615,7 +619,11 @@ function init3DStage() {
     ];
 
     bookMesh = new THREE.Mesh(geometry, materials);
-    bookMesh.rotation.set(0.15, -0.35, 0);
+    if (currentSide === 'sommet') {
+        bookMesh.rotation.set(0.15, Math.PI - 0.35, Math.PI);
+    } else {
+        bookMesh.rotation.set(0.15, -0.35, 0);
+    }
     scene.add(bookMesh);
 
     // FREE TOUCH TRACKBALL (360° SANS BLOCAGE)
