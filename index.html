@@ -3,29 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="title" content="LES 9 ÉTAGES DE LA TOUR — Alexandre R.">
-<meta name="description" content="Découvrez le livre tête-bêche « Les 9 Étages de la Tour » par Alexandre R. Deux perspectives opposées : Côté Terrain et Côté Sommet.">
-<meta name="author" content="Alexandre R.">
+<title>LES 9 ÉTAGES DE LA TOUR — Alexandre R.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- Open Graph / Facebook / WhatsApp -->
+<meta name="title" content="LES 9 ÉTAGES DE LA TOUR — Alexandre R.">
+<meta name="description" content="Découvrez le livre tête-bêche « Les 9 Étages de la Tour » par Alexandre R.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://stitch626user.github.io/Les-9-etages/">
 <meta property="og:title" content="LES 9 ÉTAGES DE LA TOUR — Alexandre R.">
-<meta property="og:description" content="Découvrez le livre tête-bêche « Les 9 Étages de la Tour » par Alexandre R. Deux perspectives opposées : Côté Terrain et Côté Sommet.">
+<meta property="og:description" content="Découvrez le livre tête-bêche « Les 9 Étages de la Tour » par Alexandre R. Deux perspectives : Côté Terrain et Côté Sommet.">
 <meta property="og:image" content="https://stitch626user.github.io/Les-9-etages/preview_cover.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://stitch626user.github.io/Les-9-etages/">
-<meta property="twitter:title" content="LES 9 ÉTAGES DE LA TOUR — Alexandre R.">
-<meta property="twitter:description" content="Découvrez le livre tête-bêche « Les 9 Étages de la Tour » par Alexandre R.">
-<meta property="twitter:image" content="https://stitch626user.github.io/Les-9-etages/preview_cover.jpg">
-<title>LES 9 ÉTAGES DE LA TOUR — Alexandre R.</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=League+Spartan:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-
-<!-- Three.js for 3D Stage -->
+<!-- Three.js & Animation Engines -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
 
@@ -40,157 +29,176 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
-    width: 100%; height: 100%; overflow: hidden;
-    background: #060911; font-family: 'Plus Jakarta Sans', sans-serif;
+    width: 100vw; height: 100vh; overflow: hidden;
+    background: #040711; font-family: 'Plus Jakarta Sans', sans-serif;
     color: #f7eedb; user-select: none; -webkit-tap-highlight-color: transparent;
 }
 
 /* =================================================== */
-/* 🚀 SUPER ERGONOMIC NATIVE MOBILE UI (2X SCALE BOOST) */
+/* TOP HEADER TRÈS GRAND & LISIBLE (HAUTEUR 76px) */
 /* =================================================== */
-
 #m-header {
-    height: 72px; width: 100%; background: #0c101c;
+    height: 76px; width: 100%; background: #0c1220;
     border-bottom: 2px solid rgba(255,255,255,0.18);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 12px; position: fixed; top: 0; left: 0; z-index: 300;
+    padding: 0 16px; position: fixed; top: 0; left: 0; z-index: 500;
 }
-.brand-zone { display: flex; flex-direction: column; justify-content: center; gap: 2px; flex-shrink: 0; }
-.title-row { display: flex; align-items: center; gap: 6px; }
+.brand-zone { display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+.title-row { display: flex; align-items: center; gap: 8px; }
 .title-txt {
-    font-family: 'Cinzel', serif; font-size: 16px; font-weight: 900;
-    letter-spacing: 1px; color: #f7eedb; white-space: nowrap;
+    font-family: 'Cinzel', serif; font-size: 18px; font-weight: 900;
+    letter-spacing: 1px; color: #f7eedb;
 }
-.author-pill-tag {
-    font-size: 11px; font-weight: 700; color: #dfb256; opacity: 0.95;
+.author-txt {
+    font-size: 12px; font-weight: 700; color: #dfb256; letter-spacing: 0.5px;
 }
 .side-pill {
-    padding: 4px 9px; border-radius: 12px; font-size: 10px; font-weight: 900;
-    text-transform: uppercase; letter-spacing: 0.5px; display: inline-block;
+    padding: 5px 12px; border-radius: 14px; font-size: 11px; font-weight: 900;
+    text-transform: uppercase;
 }
-.pill-terrain { background: #c35936; color: #fff; box-shadow: 0 0 10px rgba(195,89,54,0.5); }
-.pill-sommet { background: #133968; color: #dfb256; box-shadow: 0 0 10px rgba(223,178,86,0.5); }
+.pill-terrain { background: #c35936; color: #fff; box-shadow: 0 0 12px rgba(195,89,54,0.6); }
+.pill-sommet { background: #133968; color: #dfb256; box-shadow: 0 0 12px rgba(223,178,86,0.6); }
 
-.header-btns { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-btns { display: flex; align-items: center; gap: 10px; }
 .btn-h {
-    background: rgba(255,255,255,0.14); border: 2px solid rgba(255,255,255,0.28);
-    color: #f7eedb; padding: 10px 14px; border-radius: 20px; font-size: 14px; font-weight: 800;
-    cursor: pointer; display: flex; align-items: center; gap: 5px; min-height: 46px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    background: #182236; border: 2px solid rgba(255,255,255,0.3);
+    color: #f7eedb; padding: 12px 18px; border-radius: 24px; font-size: 15px; font-weight: 800;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 48px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 .btn-h.active-bm { background: #dfb256; color: #111; font-weight: 900; border-color: #dfb256; }
 .btn-flip-act {
     background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
-    color: #111; font-weight: 900; font-size: 14px; border: none;
-    padding: 10px 16px; border-radius: 20px; cursor: pointer; min-height: 46px;
-    box-shadow: 0 4px 16px rgba(223, 178, 86, 0.55); white-space: nowrap;
-    letter-spacing: 0.5px;
+    color: #111; font-weight: 900; font-size: 15px; border: none;
+    padding: 12px 20px; border-radius: 24px; cursor: pointer; min-height: 48px;
+    box-shadow: 0 4px 18px rgba(223, 178, 86, 0.6); white-space: nowrap;
 }
 
-/* ZOOM TOOLBAR GÉANTE & FACILE À CLIQUER */
-#reader-zoom-bar {
-    position: fixed; top: 82px; left: 50%; transform: translateX(-50%);
-    background: #0f1523;
-    border: 2px solid rgba(255,255,255,0.28); border-radius: 35px;
-    padding: 8px 20px; display: flex; align-items: center; gap: 14px;
-    z-index: 120; font-size: 15px; font-weight: 800;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.9);
-}
-.btn-zoom-step {
-    background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.35);
-    color: #dfb256; width: 44px; height: 44px; border-radius: 12px; font-size: 22px; font-weight: 900;
-    display: flex; align-items: center; justify-content: center; cursor: pointer;
-}
-.btn-zoom-step:hover { background: #dfb256; color: #111; }
-#zoom-percentage-txt {
-    color: #dfb256; font-size: 16px; font-weight: 900; min-width: 52px; text-align: center;
-}
-.btn-mode-pill {
-    background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.28);
-    color: #f7eedb; font-size: 13px; font-weight: 800; padding: 8px 16px; border-radius: 18px;
-    cursor: pointer; min-height: 40px; display: flex; align-items: center;
+/* =================================================== */
+/* 3D STAGE BOX (PLEIN ÉCRAN & GARANTI VISIBLE) */
+/* =================================================== */
+#stage-3d-box {
+    width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 10;
+    touch-action: none; background: radial-gradient(circle at center, #10192e 0%, #040711 85%);
 }
 
-/* LISEUSE VIEWPORT & CENTRAGE */
+#home-3d-cta {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 380px; z-index: 50; text-align: center;
+    display: flex; flex-direction: column; gap: 12px;
+}
+.cta-info-bubble {
+    font-size: 13px; font-weight: 700; color: #889bb8;
+    background: rgba(12,18,32,0.92); padding: 9px 18px; border-radius: 20px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+}
+.cta-btn-main {
+    background: #dfb256; color: #111; font-size: 18px; font-weight: 900;
+    padding: 18px 36px; border-radius: 36px; border: none; cursor: pointer;
+    box-shadow: 0 10px 30px rgba(223, 178, 86, 0.6); width: 100%;
+}
+
+/* =================================================== */
+/* LISEUSE HAUTE FIDÉLITÉ (SANS FLÈCHES LATÉRALES) */
+/* =================================================== */
 #live-reader-container {
-    position: fixed; top: 72px; left: 0; width: 100%; height: calc(100% - 72px);
+    position: fixed; top: 76px; left: 0; width: 100vw; height: calc(100vh - 76px);
     display: none; justify-content: center; align-items: center;
-    background: #060911; z-index: 90; overflow: hidden;
+    background: #040711; z-index: 90; overflow: hidden;
 }
+
 #reader-scroll-viewport {
     width: 100%; height: 100%;
     overflow-y: auto; overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     display: flex; justify-content: center; align-items: center;
-    padding: 85px 10px 105px 10px;
+    padding: 95px 12px 115px 12px;
 }
 
-/* BOTTOM DOCK GÉANT (CONFORT NATIVE APP) */
-#m-bottom-dock {
-    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
-    width: 95%; max-width: 480px; height: 68px;
-    background: #0c101c;
-    border: 2px solid rgba(255,255,255,0.28); border-radius: 35px;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0 18px; z-index: 150;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.95);
+#spread-card-wrapper {
+    background: #ffffff; border-radius: 6px;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.95);
+    position: relative; margin: auto;
+    flex-shrink: 0;
 }
+.canvas-page-single { display: block; width: 100%; height: auto; border-radius: 6px; }
+
+/* ZOOM TOOLBAR GÉANTE (HAUTEUR 56px) */
+#reader-zoom-bar {
+    position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
+    background: #0e1628;
+    border: 2px solid rgba(255,255,255,0.3); border-radius: 40px;
+    padding: 8px 24px; display: flex; align-items: center; gap: 16px;
+    z-index: 120; font-size: 16px; font-weight: 800;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.9);
+    opacity: 0.20; transition: opacity 0.4s ease;
+}
+#reader-zoom-bar:hover, #reader-zoom-bar.dock-awake { opacity: 1 !important; }
+
+.btn-zoom-step {
+    background: #1b263e; border: 2px solid rgba(255,255,255,0.35);
+    color: #dfb256; width: 48px; height: 48px; border-radius: 14px; font-size: 24px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+#zoom-percentage-txt { color: #dfb256; font-size: 17px; font-weight: 900; min-width: 58px; text-align: center; }
+.btn-mode-pill {
+    background: #1b263e; border: 2px solid rgba(255,255,255,0.3);
+    color: #f7eedb; font-size: 14px; font-weight: 800; padding: 10px 18px; border-radius: 20px;
+    cursor: pointer; min-height: 44px; display: flex; align-items: center;
+}
+
+/* BOTTOM DOCK GÉANT (HAUTEUR 72px) - AUCUN BOUTON SUR LES CÔTÉS */
+#m-bottom-dock {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 94%; max-width: 500px; height: 72px;
+    background: #0c1220;
+    border: 2px solid rgba(255,255,255,0.3); border-radius: 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 20px; z-index: 150;
+    box-shadow: 0 16px 45px rgba(0,0,0,0.95);
+    opacity: 0.20; transition: opacity 0.4s ease;
+}
+#m-bottom-dock:hover, #m-bottom-dock.dock-awake { opacity: 1 !important; }
+
 .dock-nav-btn {
-    background: rgba(255,255,255,0.18); border: 2px solid rgba(255,255,255,0.3);
-    color: #f7eedb; padding: 12px 20px; border-radius: 20px; font-size: 18px; font-weight: 900;
-    cursor: pointer; min-width: 58px; min-height: 48px; display: flex; align-items: center; justify-content: center;
+    background: #1b263e; border: 2px solid rgba(255,255,255,0.35);
+    color: #f7eedb; padding: 12px 22px; border-radius: 22px; font-size: 20px; font-weight: 900;
+    cursor: pointer; min-width: 64px; min-height: 52px; display: flex; align-items: center; justify-content: center;
 }
 .dock-slider-bar {
-    flex: 1; margin: 0 16px; -webkit-appearance: none; appearance: none;
-    height: 8px; border-radius: 8px; background: rgba(255,255,255,0.3); outline: none;
+    flex: 1; margin: 0 18px; -webkit-appearance: none; appearance: none;
+    height: 10px; border-radius: 10px; background: rgba(255,255,255,0.3); outline: none;
 }
 .dock-slider-bar::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 28px; height: 28px;
+    -webkit-appearance: none; appearance: none; width: 32px; height: 32px;
     border-radius: 50%; background: #dfb256; cursor: pointer;
-    box-shadow: 0 0 14px rgba(223, 178, 86, 0.9);
+    box-shadow: 0 0 16px rgba(223, 178, 86, 1);
 }
-#page-indicator-txt { font-size: 15px; font-weight: 900; color: #dfb256; min-width: 110px; text-align: center; }
+#page-indicator-txt { font-size: 16px; font-weight: 900; color: #dfb256; min-width: 120px; text-align: center; }
 
-/* 3D HOME CTA (OUVRIR LE LIVRE) TOUJOURS ACCESSIBLE SUR MOBILE */
-#home-3d-cta {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 360px; z-index: 50; text-align: center;
-    display: flex; flex-direction: column; gap: 10px;
-}
-.cta-btn-main {
-    background: #dfb256; color: #111; font-size: 16px; font-weight: 900;
-    padding: 15px 30px; border-radius: 30px; border: none; cursor: pointer;
-    box-shadow: 0 8px 25px rgba(223, 178, 86, 0.55); width: 100%;
-    letter-spacing: 0.5px;
-}
-
-/* BOOKMARKS MODAL */
+/* MODAL MARQUE-PAGES */
 #bookmarks-dialog-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(4, 6, 12, 0.85); backdrop-filter: blur(20px);
-    display: none; justify-content: center; align-items: center; z-index: 400;
+    background: rgba(4, 6, 12, 0.88); backdrop-filter: blur(25px);
+    display: none; justify-content: center; align-items: center; z-index: 600;
     padding: 20px;
 }
 .dialog-box {
-    background: #111726; border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 18px; padding: 24px 20px; width: 100%; max-width: 340px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.9); text-align: center;
+    background: #101728; border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 24px; padding: 28px 22px; width: 100%; max-width: 360px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.95); text-align: center;
 }
-.dialog-list {
-    max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
-    margin: 15px 0; text-align: left;
-}
+.dialog-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin: 18px 0; text-align: left; }
 .dialog-item {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-    padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between;
-    align-items: center; cursor: pointer;
+    background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+    padding: 12px 16px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
 }
 
 #toast-box {
-    position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
-    background: #dfb256; color: #111; font-weight: 800; font-size: 12px;
-    padding: 8px 20px; border-radius: 20px; display: none; z-index: 450;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    position: fixed; top: 88px; left: 50%; transform: translateX(-50%);
+    background: #dfb256; color: #111; font-weight: 900; font-size: 14px;
+    padding: 10px 24px; border-radius: 25px; display: none; z-index: 700;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 </style>
 </head>
@@ -205,7 +213,7 @@ html, body {
             <span class="title-txt">9 ÉTAGES</span>
             <span id="badge-side" class="side-pill pill-terrain">TERRAIN</span>
         </div>
-        <span class="author-pill-tag">Alexandre R.</span>
+        <span class="author-txt">Alexandre R.</span>
     </div>
 
     <div class="header-btns">
@@ -218,9 +226,9 @@ html, body {
 <!-- 3D STAGE BOX -->
 <div id="stage-3d-box"></div>
 
-<!-- 3D HOME CTA -->
+<!-- 3D HOME CTA (OUVRIR LE LIVRE) -->
 <div id="home-3d-cta">
-    <div style="font-size:12px; color:#889bb8; background:rgba(12,16,28,0.9); padding:7px 16px; border-radius:15px; border:1px solid rgba(255,255,255,0.15);">
+    <div class="cta-info-bubble">
         👆 Touchez & glissez pour manipuler à 360°
     </div>
     <button class="cta-btn-main" onclick="openReader()">
@@ -228,21 +236,25 @@ html, body {
     </button>
 </div>
 
-<!-- LISEUSE HAUTE FIDÉLITÉ UNIVERSELLE -->
+<!-- LISEUSE PLEIN ÉCRAN -->
 <div id="live-reader-container">
     
-    <!-- ZOOM TOOLBAR LISIBLE -->
+    <!-- ZOOM TOOLBAR GÉANTE -->
     <div id="reader-zoom-bar">
         <span>Zoom :</span>
-        <button class="btn-zoom-step" onclick="stepZoom(-0.20)">−</button>
-        <span id="zoom-percentage-txt" style="color:#dfb256; min-width:44px; text-align:center;">100%</span>
-        <button class="btn-zoom-step" onclick="stepZoom(0.20)">+</button>
+        <button class="btn-zoom-step" onclick="stepZoom(-0.25)">−</button>
+        <span id="zoom-percentage-txt">100%</span>
+        <button class="btn-zoom-step" onclick="stepZoom(0.25)">+</button>
         <button class="btn-mode-pill" onclick="resetZoomDefault()">1:1 Centré</button>
     </div>
 
-    <!-- SIDE ARROWS REMOVED: NAVIGATION UNIQUEMENT VIA CURSEUR BAS -->
+    <div id="reader-scroll-viewport">
+        <div id="spread-card-wrapper">
+            <canvas id="page-canvas-single" class="canvas-page-single"></canvas>
+        </div>
+    </div>
 
-    <!-- FIXED BOTTOM DOCK -->
+    <!-- BOTTOM DOCK GÉANT -->
     <div id="m-bottom-dock">
         <button class="dock-nav-btn" onclick="prevStep()">◀</button>
         <input type="range" id="page-scrubber" class="dock-slider-bar" min="1" max="168" value="1" oninput="onScrubPage(this.value)" />
@@ -254,19 +266,19 @@ html, body {
 <!-- BOOKMARKS MODAL -->
 <div id="bookmarks-dialog-overlay">
     <div class="dialog-box">
-        <div style="font-size:30px; margin-bottom:6px;">🔖</div>
-        <h3 style="font-size:17px; color:#dfb256; text-transform:uppercase;">Mes Marque-Pages</h3>
-        <p style="font-size:12px; color:#889bb8; margin-bottom:14px;">Accédez instantanément à vos pages</p>
+        <div style="font-size:36px; margin-bottom:8px;">🔖</div>
+        <h3 style="font-size:19px; color:#dfb256; text-transform:uppercase;">Mes Marque-Pages</h3>
+        <p style="font-size:13px; color:#889bb8; margin-bottom:16px;">Accédez instantanément à vos pages</p>
         <div class="dialog-list" id="dialog-bm-items"></div>
-        <button onclick="closeBookmarksList()" style="background:#dfb256; color:#111; font-weight:800; font-size:13px; padding:10px 24px; border-radius:20px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
+        <button onclick="closeBookmarksList()" style="background:#dfb256; color:#111; font-weight:900; font-size:15px; padding:12px 28px; border-radius:25px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
     </div>
 </div>
 
 <script>
-const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V1";
+const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V2";
 
 let currentSide = 'terrain'; // 'terrain' or 'sommet'
-let currentPage = 1; // 1 to 168 (1 = Couverture, 2 = Page 1)
+let currentPage = 1; // 1 to 168
 let isReading = false;
 let zoomFactor = 1.0;
 
@@ -278,11 +290,8 @@ let scene, camera, renderer, bookMesh;
 let isFlipping3D = false;
 let isTouchDragging = false;
 let prevTouchPos = { x: 0, y: 0 };
-
-let renderTaskLeft = null;
-let renderTaskRight = null;
 let renderTaskSingle = null;
-let resizeDebounceTimer = null;
+let dockFadeTimeout = null;
 
 let userStore = {
     terrainLastPage: 1,
@@ -314,11 +323,6 @@ function saveUserStore() {
     updateBookmarkUI();
 }
 
-function isDoublePageMode() {
-    return (window.innerWidth >= 860 && window.innerWidth > window.innerHeight);
-}
-
-// 3D STAGE INITIALIZATION
 function init3DStage() {
     const container = document.getElementById('stage-3d-box');
     if (!container) return;
@@ -334,16 +338,16 @@ function init3DStage() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.95));
-    const lKey = new THREE.DirectionalLight(0xffffff, 0.95);
+    scene.add(new THREE.AmbientLight(0xffffff, 1.1));
+    const lKey = new THREE.DirectionalLight(0xffffff, 1.0);
     lKey.position.set(5, 8, 7); scene.add(lKey);
-    const lRim = new THREE.DirectionalLight(0xdfb256, 0.6);
+    const lRim = new THREE.DirectionalLight(0xdfb256, 0.7);
     lRim.position.set(-5, -4, 5); scene.add(lRim);
 
     const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
     const loader = new THREE.TextureLoader();
-    const tCover = loader.load(window.BOOK_DATA.terrainCover, () => { renderer.render(scene, camera); });
-    const sCover = loader.load(window.BOOK_DATA.sommetCover, () => { renderer.render(scene, camera); });
+    const tCover = loader.load(window.BOOK_DATA.terrainCover, () => { if (renderer && scene && camera) renderer.render(scene, camera); });
+    const sCover = loader.load(window.BOOK_DATA.sommetCover, () => { if (renderer && scene && camera) renderer.render(scene, camera); });
     sCover.center.set(0.5, 0.5);
     sCover.rotation = Math.PI;
 
@@ -410,7 +414,12 @@ function init3DStage() {
 
     window.addEventListener('pointerup', () => { isTouchDragging = false; });
 
-    window.addEventListener('resize', handleWindowResize);
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        if (isReading) renderUniversalReader();
+    });
 
     animate3DLoop();
     initAppCore();
@@ -427,27 +436,7 @@ function animate3DLoop(time) {
     }
 }
 
-async function cancelPendingRenders() {
-    if (renderTaskLeft) { try { renderTaskLeft.cancel(); } catch(e){} renderTaskLeft = null; }
-    if (renderTaskRight) { try { renderTaskRight.cancel(); } catch(e){} renderTaskRight = null; }
-    if (renderTaskSingle) { try { renderTaskSingle.cancel(); } catch(e){} renderTaskSingle = null; }
-}
-
-function handleWindowResize() {
-    if (camera && renderer) {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-    if (isReading) {
-        clearTimeout(resizeDebounceTimer);
-        resizeDebounceTimer = setTimeout(() => {
-            renderUniversalReader();
-        }, 120);
-    }
-}
-
-async async function initAppCore() {
+async function initAppCore() {
     loadUserStore();
     updateSideBadge();
     docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
@@ -456,136 +445,6 @@ async async function initAppCore() {
     initDockFadeListeners();
 }
 
-// RENDU HAUTE FIDÉLITÉ UNIVERSEL
-async function renderUniversalReader() {
-    await cancelPendingRenders();
-    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
-    if (!activeDoc) return;
-
-    const isDouble = isDoublePageMode();
-    const pLabel = (currentPage === 1) ? "Couverture" : (isDouble ? `p. ${currentPage - 1}-${currentPage} / 167` : `p. ${currentPage - 1} / 167`);
-    
-    document.getElementById('page-scrubber').value = currentPage;
-    document.getElementById('page-indicator-txt').innerText = pLabel;
-    document.getElementById('zoom-percentage-txt').innerText = `${Math.round(zoomFactor * 100)}%`;
-
-    const wrapper = document.getElementById('spread-card-wrapper');
-    const cLeft = document.getElementById('page-canvas-left');
-    const cRight = document.getElementById('page-canvas-right');
-    const cSingle = document.getElementById('page-canvas-single');
-    const shadow = document.getElementById('binding-shadow');
-
-    const screenW = window.innerWidth;
-    const availH = window.innerHeight - 56 - 65;
-
-    if (isDouble && currentPage > 1) {
-        // --- MODE DOUBLE PAGE DESKTOP ---
-        cSingle.style.display = 'none';
-        cLeft.style.display = 'block';
-        cRight.style.display = 'block';
-        shadow.style.display = 'block';
-
-        const pLeftNum = (currentPage % 2 === 0) ? currentPage : currentPage - 1;
-        const pRightNum = pLeftNum + 1;
-
-        const pageLeft = await activeDoc.getPage(Math.max(1, pLeftNum));
-        const pageRight = (pRightNum <= activeDoc.numPages) ? await activeDoc.getPage(pRightNum) : null;
-
-        const targetDoubleH = availH * 0.90 * zoomFactor;
-        const targetDoubleW = targetDoubleH * (2 * 148 / 210);
-        const singleW = targetDoubleW / 2;
-
-        const scale = (singleW / (pageLeft.view[2] - pageLeft.view[0])) * 2.0;
-
-        const vpL = pageLeft.getViewport({ scale: scale });
-        cLeft.width = vpL.width; cLeft.height = vpL.height;
-        renderTaskLeft = pageLeft.render({ canvasContext: cLeft.getContext('2d'), viewport: vpL });
-        try { await renderTaskLeft.promise; } catch(e){}
-
-        if (pageRight) {
-            const vpR = pageRight.getViewport({ scale: scale });
-            cRight.width = vpR.width; cRight.height = vpR.height;
-            renderTaskRight = pageRight.render({ canvasContext: cRight.getContext('2d'), viewport: vpR });
-            try { await renderTaskRight.promise; } catch(e){}
-        }
-
-        wrapper.style.width = targetDoubleW + 'px';
-        wrapper.style.height = targetDoubleH + 'px';
-        cLeft.style.width = (targetDoubleW / 2) + 'px';
-        cLeft.style.height = targetDoubleH + 'px';
-        cRight.style.width = (targetDoubleW / 2) + 'px';
-        cRight.style.height = targetDoubleH + 'px';
-    } else {
-        // --- MODE PAGE SIMPLE MOBILE (CENTRAGE PARFAIT HAUT & BAS) ---
-        cLeft.style.display = 'none';
-        cRight.style.display = 'none';
-        shadow.style.display = 'none';
-        cSingle.style.display = 'block';
-
-        const page = await activeDoc.getPage(currentPage);
-        
-        // Calculate ideal dimensions that fit within both width and height cleanly
-        const maxH = (availH * 0.94) * zoomFactor;
-        const maxW = (screenW * 0.92) * zoomFactor;
-
-        let targetSingleW = maxW;
-        let targetSingleH = targetSingleW * (210 / 148);
-
-        if (targetSingleH > maxH && zoomFactor <= 1.0) {
-            targetSingleH = maxH;
-            targetSingleW = targetSingleH * (148 / 210);
-        }
-
-        const scale = (targetSingleW / (page.view[2] - page.view[0])) * 2.2;
-        const vp = page.getViewport({ scale: scale });
-
-        cSingle.width = vp.width; cSingle.height = vp.height;
-        renderTaskSingle = page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp });
-        try { await renderTaskSingle.promise; } catch(e){}
-
-        wrapper.style.width = targetSingleW + 'px';
-        wrapper.style.height = targetSingleH + 'px';
-        cSingle.style.width = targetSingleW + 'px';
-        cSingle.style.height = targetSingleH + 'px';
-    }
-
-    saveUserStore();
-}
-
-function stepZoom(delta) {
-    zoomFactor = Math.max(0.75, Math.min(1.25, +(zoomFactor + delta).toFixed(2)));
-    renderUniversalReader();
-}
-
-function resetZoomDefault() {
-    zoomFactor = 1.0;
-    renderUniversalReader();
-    document.getElementById('reader-scroll-viewport').scrollTop = 0;
-    document.getElementById('reader-scroll-viewport').scrollLeft = 0;
-}
-
-function nextStep() {
-    const step = (isDoublePageMode() && currentPage > 1) ? 2 : 1;
-    if (currentPage + step <= 168) {
-        currentPage += step;
-    } else if (currentPage < 168) {
-        currentPage = 168;
-    }
-    renderUniversalReader();
-}
-
-function prevStep() {
-    const step = (isDoublePageMode() && currentPage > 2) ? 2 : 1;
-    if (currentPage - step >= 1) {
-        currentPage -= step;
-    } else {
-        currentPage = 1;
-    }
-    renderUniversalReader();
-}
-
-
-let dockFadeTimeout = null;
 function wakeBottomDock() {
     const dock = document.getElementById('m-bottom-dock');
     const zoom = document.getElementById('reader-zoom-bar');
@@ -607,10 +466,85 @@ function initDockFadeListeners() {
     wakeBottomDock();
 }
 
-function onScrubPage(val) {
+async function renderUniversalReader() {
+    if (renderTaskSingle) { try { renderTaskSingle.cancel(); } catch(e){} renderTaskSingle = null; }
+    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
+    if (!activeDoc) return;
+
+    const pLabel = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / 167`;
+    
+    document.getElementById('page-scrubber').value = currentPage;
+    document.getElementById('page-indicator-txt').innerText = pLabel;
+    document.getElementById('zoom-percentage-txt').innerText = `${Math.round(zoomFactor * 100)}%`;
+
+    const wrapper = document.getElementById('spread-card-wrapper');
+    const cSingle = document.getElementById('page-canvas-single');
+
+    const screenW = window.innerWidth;
+    const availH = window.innerHeight - 76 - 72;
+
+    const page = await activeDoc.getPage(currentPage);
+    
+    const maxH = (availH * 0.94) * zoomFactor;
+    const maxW = (screenW * 0.92) * zoomFactor;
+
+    let targetSingleW = maxW;
+    let targetSingleH = targetSingleW * (210 / 148);
+
+    if (targetSingleH > maxH && zoomFactor <= 1.0) {
+        targetSingleH = maxH;
+        targetSingleW = targetSingleH * (148 / 210);
+    }
+
+    const scale = (targetSingleW / (page.view[2] - page.view[0])) * 2.2;
+    const vp = page.getViewport({ scale: scale });
+
+    cSingle.width = vp.width; cSingle.height = vp.height;
+    renderTaskSingle = page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp });
+    try { await renderTaskSingle.promise; } catch(e){}
+
+    wrapper.style.width = targetSingleW + 'px';
+    wrapper.style.height = targetSingleH + 'px';
+    cSingle.style.width = targetSingleW + 'px';
+    cSingle.style.height = targetSingleH + 'px';
+
+    saveUserStore();
+}
+
+function stepZoom(delta) {
     wakeBottomDock();
+    zoomFactor = Math.max(0.75, Math.min(1.25, +(zoomFactor + delta).toFixed(2)));
+    renderUniversalReader();
+}
+
+function resetZoomDefault() {
+    wakeBottomDock();
+    zoomFactor = 1.0;
+    renderUniversalReader();
+    document.getElementById('reader-scroll-viewport').scrollTop = 0;
+    document.getElementById('reader-scroll-viewport').scrollLeft = 0;
+}
+
+function nextStep() {
+    wakeBottomDock();
+    if (currentPage < 168) {
+        currentPage += 1;
+        renderUniversalReader();
+    }
+}
+
+function prevStep() {
+    wakeBottomDock();
+    if (currentPage > 1) {
+        currentPage -= 1;
+        renderUniversalReader();
+    }
+}
+
+function onScrubPage(val) {
     currentPage = parseInt(val);
     renderUniversalReader();
+    wakeBottomDock();
 }
 
 function flip3DTeteBeche() {
@@ -693,7 +627,7 @@ function openBookmarksList() {
     (userStore.sommetBookmarks || []).forEach(p => all.push({ side: 'sommet', page: p }));
 
     if (all.length === 0) {
-        c.innerHTML = '<div style="font-size:12px; color:#888; text-align:center; padding:15px;">Aucun marque-page enregistré.</div>';
+        c.innerHTML = '<div style="font-size:14px; color:#888; text-align:center; padding:15px;">Aucun marque-page enregistré.</div>';
     } else {
         all.forEach(item => {
             const row = document.createElement('div');
@@ -701,11 +635,11 @@ function openBookmarksList() {
             const badgeBg = (item.side === 'terrain') ? '#c35936' : '#133968';
             const pTxt = (item.page === 1) ? "Couverture" : `Page ${item.page - 1}`;
             row.innerHTML = `
-                <div onclick="jumpToBm('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:8px; flex:1;">
-                    <span style="background:${badgeBg}; color:#fff; font-size:10px; font-weight:800; padding:3px 7px; border-radius:8px; text-transform:uppercase;">${item.side}</span>
-                    <span style="font-size:13px; font-weight:700; color:#f7eedb;">${pTxt}</span>
+                <div onclick="jumpToBm('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:10px; flex:1;">
+                    <span style="background:${badgeBg}; color:#fff; font-size:11px; font-weight:900; padding:4px 8px; border-radius:10px; text-transform:uppercase;">${item.side}</span>
+                    <span style="font-size:15px; font-weight:800; color:#f7eedb;">${pTxt}</span>
                 </div>
-                <button onclick="delBmItem('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#e74c3c; font-size:14px; cursor:pointer;">🗑️</button>
+                <button onclick="delBmItem('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#e74c3c; font-size:18px; cursor:pointer;">🗑️</button>
             `;
             c.appendChild(row);
         });
@@ -742,10 +676,6 @@ function showToastAlert(txt) {
     const t = document.getElementById('toast-box');
     t.innerText = txt; t.style.display = 'block';
     setTimeout(() => { t.style.display = 'none'; }, 2200);
-}
-
-function setupTouchGestures() {
-    // Navigation réservée EXCLUSIVEMENT aux boutons pour éviter les changements de page intempestifs lors du zoom/déplacement
 }
 
 window.onload = () => {
