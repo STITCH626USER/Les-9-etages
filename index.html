@@ -26,12 +26,96 @@ body, html {
     color: #f7eedb; user-select: none; -webkit-tap-highlight-color: transparent;
 }
 
-/* TOP HEADER ÉLÉGANT & RESPONSIVE */
+/* =================================================== */
+/* RESPONSIVE HEADER & LARGE TOUCH BUTTONS */
+/* =================================================== */
 #m-header {
-    height: 56px; width: 100%; background: rgba(10, 14, 23, 0.94);
-    backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255,255,255,0.08);
+    height: 56px; width: 100%; background: #0c101c;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 16px; position: fixed; top: 0; left: 0; z-index: 200;
+    padding: 0 10px; position: fixed; top: 0; left: 0; z-index: 200;
+}
+.brand-zone { display: flex; align-items: center; gap: 6px; }
+.title-txt {
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; color: #f7eedb; white-space: nowrap;
+}
+.side-pill {
+    padding: 3px 7px; border-radius: 10px; font-size: 9px; font-weight: 800;
+    text-transform: uppercase;
+}
+.pill-terrain { background: #c35936; color: #fff; }
+.pill-sommet { background: #133968; color: #dfb256; }
+
+.header-btns { display: flex; align-items: center; gap: 5px; }
+.btn-h {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    color: #f7eedb; padding: 6px 9px; border-radius: 14px; font-size: 11px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 3px; min-height: 32px;
+}
+.btn-h.active-bm { background: #dfb256; color: #111; font-weight: 800; }
+.btn-flip-act {
+    background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
+    color: #111; font-weight: 900; font-size: 11px; border: none;
+    padding: 7px 11px; border-radius: 14px; cursor: pointer; min-height: 32px;
+}
+
+/* ZOOM TOOLBAR BIEN LISIBLE ET CENTRÉE */
+#reader-zoom-bar {
+    position: fixed; top: 62px; left: 50%; transform: translateX(-50%);
+    background: rgba(14, 20, 32, 0.95); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 25px;
+    padding: 6px 16px; display: flex; align-items: center; gap: 10px;
+    z-index: 120; font-size: 12px; font-weight: 800;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    opacity: 0.9 !important; /* Always readable */
+}
+.btn-zoom-step {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+    color: #dfb256; width: 28px; height: 28px; border-radius: 8px; font-size: 14px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.btn-mode-pill {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: #f7eedb; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;
+    cursor: pointer;
+}
+
+/* LISEUSE VIEWPORT & SPREAD CARD */
+#live-reader-container {
+    position: fixed; top: 56px; left: 0; width: 100%; height: calc(100% - 56px);
+    display: none; justify-content: center; align-items: center;
+    background: #080b13; z-index: 90; overflow: hidden;
+}
+#reader-scroll-viewport {
+    width: 100%; height: 100%;
+    overflow-y: auto; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 56px 8px 75px 8px;
+}
+#spread-card-wrapper {
+    background: #ffffff; border-radius: 6px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.85);
+    position: relative; margin: 0 auto;
+    flex-shrink: 0;
+}
+
+/* BOTTOM DOCK BIEN LISIBLE */
+#m-bottom-dock {
+    position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+    width: 94%; max-width: 440px; height: 48px;
+    background: rgba(12, 16, 28, 0.96); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 14px; z-index: 150;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    opacity: 0.9 !important; /* Always readable */
+}
+.dock-nav-btn {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: #f7eedb; padding: 6px 14px; border-radius: 15px; font-size: 12px; font-weight: 800;
+    cursor: pointer;
 }
 .brand-zone { display: flex; align-items: center; gap: 8px; }
 .title-txt {
@@ -553,7 +637,7 @@ async function initAppCore() {
     setupAutoFadeListeners();
 }
 
-// RENDU UNIVERSEL : AUTO-DÉTECTION (1 PAGE MOBILE OU 2 PAGES DESKTOP) + ZOOM 20% CENTRÉ
+// RENDU HAUTE FIDÉLITÉ UNIVERSEL SANS RATATINAGE
 async function renderUniversalReader() {
     await cancelPendingRenders();
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
@@ -573,72 +657,69 @@ async function renderUniversalReader() {
     const shadow = document.getElementById('binding-shadow');
 
     const screenW = window.innerWidth;
-    const screenH = window.innerHeight - 56 - 65;
+    const availH = window.innerHeight - 56 - 65; // Available height inside viewport
 
     if (isDouble && currentPage > 1) {
-        // --- MODE DOUBLE PAGE DESKTOP ---
+        // --- MODE DOUBLE PAGE SUR PC / TABLETTE PAYSAGE ---
         cSingle.style.display = 'none';
         cLeft.style.display = 'block';
         cRight.style.display = 'block';
         shadow.style.display = 'block';
 
-        // Page left (even) and right (odd)
         const pLeftNum = (currentPage % 2 === 0) ? currentPage : currentPage - 1;
         const pRightNum = pLeftNum + 1;
 
         const pageLeft = await activeDoc.getPage(Math.max(1, pLeftNum));
         const pageRight = (pRightNum <= activeDoc.numPages) ? await activeDoc.getPage(pRightNum) : null;
 
-        const baseDoubleWidth = Math.min(screenW * 0.92, (screenH * 0.92) * (2 * 148 / 210));
-        const finalWidth = baseDoubleWidth * zoomFactor;
-        const singleWidth = finalWidth / 2;
+        // Calculate double page width based on height
+        const targetDoubleH = availH * 0.90 * zoomFactor;
+        const targetDoubleW = targetDoubleH * (2 * 148 / 210);
+        const singleW = targetDoubleW / 2;
 
-        const scale = (singleWidth / (pageLeft.view[2] - pageLeft.view[0])) * 2.0;
+        const scale = (singleW / (pageLeft.view[2] - pageLeft.view[0])) * 2.0;
 
-        // Render Left Page
         const vpL = pageLeft.getViewport({ scale: scale });
         cLeft.width = vpL.width; cLeft.height = vpL.height;
-        renderTaskLeft = pageLeft.render({ canvasContext: cLeft.getContext('2d'), viewport: vpL });
-        try { await renderTaskLeft.promise; } catch(e){ if (e.name !== 'RenderingCancelledException') console.error(e); }
+        await pageLeft.render({ canvasContext: cLeft.getContext('2d'), viewport: vpL }).promise;
 
-        // Render Right Page
         if (pageRight) {
             const vpR = pageRight.getViewport({ scale: scale });
             cRight.width = vpR.width; cRight.height = vpR.height;
-            renderTaskRight = pageRight.render({ canvasContext: cRight.getContext('2d'), viewport: vpR });
-            try { await renderTaskRight.promise; } catch(e){ if (e.name !== 'RenderingCancelledException') console.error(e); }
+            await pageRight.render({ canvasContext: cRight.getContext('2d'), viewport: vpR }).promise;
         }
 
-        wrapper.style.width = finalWidth + 'px';
-        wrapper.style.height = (vpL.height / 2.0) + 'px';
+        wrapper.style.width = targetDoubleW + 'px';
+        wrapper.style.height = targetDoubleH + 'px';
+        cLeft.style.width = (targetDoubleW / 2) + 'px';
+        cLeft.style.height = targetDoubleH + 'px';
+        cRight.style.width = (targetDoubleW / 2) + 'px';
+        cRight.style.height = targetDoubleH + 'px';
     } else {
-        // --- MODE PAGE SIMPLE MOBILE (OU COUVERTURE) ---
+        // --- MODE PAGE SIMPLE SUR MOBILE PORTRAIT ---
         cLeft.style.display = 'none';
         cRight.style.display = 'none';
         shadow.style.display = 'none';
         cSingle.style.display = 'block';
 
         const page = await activeDoc.getPage(currentPage);
-        const baseSingleWidth = Math.min(screenW * 0.94, (screenH * 0.94) * (148 / 210));
-        const finalWidth = baseSingleWidth * zoomFactor;
+        
+        // Fit width on smartphone (92% of screen width) multiplied by zoomFactor
+        const targetSingleW = (screenW * 0.92) * zoomFactor;
+        const targetSingleH = targetSingleW * (210 / 148); // A5 Aspect ratio (148 x 210 mm)
 
-        const scale = (finalWidth / (page.view[2] - page.view[0])) * 2.2;
+        const scale = (targetSingleW / (page.view[2] - page.view[0])) * 2.2;
         const vp = page.getViewport({ scale: scale });
 
         cSingle.width = vp.width; cSingle.height = vp.height;
-        renderTaskSingle = page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp });
-        try { await renderTaskSingle.promise; } catch(e){ if (e.name !== 'RenderingCancelledException') console.error(e); }
+        await page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp }).promise;
 
-        wrapper.style.width = finalWidth + 'px';
-        wrapper.style.height = (vp.height / 2.2) + 'px';
+        wrapper.style.width = targetSingleW + 'px';
+        wrapper.style.height = targetSingleH + 'px';
+        cSingle.style.width = targetSingleW + 'px';
+        cSingle.style.height = targetSingleH + 'px';
     }
 
-    const vp = document.getElementById('reader-scroll-viewport');
-    if (zoomFactor > 1.0) {
-        vp.classList.add('is-zoomed');
-    } else {
-        vp.classList.remove('is-zoomed');
-    }
     saveUserStore();
 }
 
@@ -741,19 +822,13 @@ function setupPanDrag() {
 
 function stepZoom(delta) {
     wakeControls();
-    zoomFactor = Math.max(0.60, Math.min(2.50, +(zoomFactor + delta).toFixed(2)));
-    const wrapper = document.getElementById('spread-card-wrapper');
-    if (wrapper) wrapper.style.transform = `scale(${zoomFactor})`;
-    document.getElementById('zoom-percentage-txt').innerText = `${Math.round(zoomFactor * 100)}%`;
-    saveUserStore();
+    zoomFactor = Math.max(0.70, Math.min(2.40, +(zoomFactor + delta).toFixed(2)));
+    renderUniversalReader();
 }
 
 function resetZoomDefault() {
     zoomFactor = 1.0;
-    const wrapper = document.getElementById('spread-card-wrapper');
-    if (wrapper) wrapper.style.transform = `scale(1.0)`;
-    document.getElementById('zoom-percentage-txt').innerText = `100%`;
-    saveUserStore();
+    renderUniversalReader();
     document.getElementById('reader-scroll-viewport').scrollTop = 0;
     document.getElementById('reader-scroll-viewport').scrollLeft = 0;
 }
