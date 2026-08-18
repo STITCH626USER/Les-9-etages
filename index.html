@@ -140,19 +140,62 @@ html, body {
 #page-canvas-left { border-radius: 4px; box-shadow: 0 15px 45px rgba(0,0,0,0.9); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 15px 45px rgba(0,0,0,0.9); }
 
-/* ZOOM TOOLBAR DANS LA LISEUSE */
+/* =================================================== */
+/* 💎 BARRE DE ZOOM LUXE & BOUTONS PARFAITEMENT STYLISÉS */
+/* =================================================== */
 #reader-zoom-bar {
-    position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
-    background: rgba(14, 22, 40, 0.90); backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(255, 255, 255, 0.28); border-radius: 24px;
-    padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
-    z-index: 600; font-size: 13px; font-weight: 800;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.85);
-    white-space: nowrap; width: auto; max-width: 96%;
-    opacity: 0.08; transition: opacity 0.25s ease;
+    position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
+    background: rgba(12, 18, 32, 0.94); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 24px;
+    padding: 4px 12px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    z-index: 600; font-size: 12px; font-weight: 700;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+    white-space: nowrap; width: auto; max-width: 95%;
+    opacity: 0.20; transition: opacity 0.3s ease;
     pointer-events: auto;
 }
 #reader-zoom-bar.dock-awake, #reader-zoom-bar:hover { opacity: 1 !important; }
+
+.zoom-label-txt {
+    color: #9ab0d0; font-size: 11.5px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-right: 2px;
+}
+
+#reader-zoom-bar button, .btn-zoom-step, .btn-mode-pill {
+    background: #182236 !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #f7eedb !important;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+}
+
+.btn-zoom-step {
+    width: 28px !important; height: 28px !important;
+    border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important;
+    color: #dfb256 !important;
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    padding: 0 !important;
+}
+.btn-zoom-step:active, .btn-zoom-step:hover {
+    background: #dfb256 !important; color: #111111 !important; border-color: #dfb256 !important;
+}
+
+#zoom-percentage-txt {
+    color: #dfb256; font-size: 13px; font-weight: 900; min-width: 44px; text-align: center;
+}
+
+.btn-mode-pill {
+    font-size: 11px !important; font-weight: 800 !important;
+    padding: 5px 12px !important; border-radius: 12px !important;
+    min-height: 28px !important;
+    display: inline-flex !important; align-items: center !important; gap: 4px !important;
+}
+.btn-mode-pill:active, .btn-mode-pill:hover {
+    background: rgba(223, 178, 86, 0.25) !important; border-color: #dfb256 !important; color: #dfb256 !important;
+}
 
 #m-bottom-dock {
     position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
