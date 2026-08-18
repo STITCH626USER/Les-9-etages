@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>LES 9 ÉTAGES DE LA TOUR — Édition d'Art Interactive Universelle</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=League+Spartan:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<title>LES 9 ÉTAGES DE LA TOUR — Édition d'Art Interactive</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=League+Spartan:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-<!-- Three.js & Animation Engines -->
+<!-- Three.js for 3D Stage -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
 
@@ -20,268 +20,96 @@
 
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body, html {
+html, body {
     width: 100%; height: 100%; overflow: hidden;
     background: #060911; font-family: 'Plus Jakarta Sans', sans-serif;
     color: #f7eedb; user-select: none; -webkit-tap-highlight-color: transparent;
 }
 
-/* HIDE LAYOUT TOGGLE (AUTO/1/2 PAGES) ON MOBILE */
-#btn-toggle-layout {
-    display: none;
-}
-@media (min-width: 860px) {
-    #btn-toggle-layout {
-        display: flex;
-    }
-}
-
-/* COMPACT HEADER FIT FOR MOBILE (NO OVERFLOW/CLIPPING) */
+/* =================================================== */
+/* 1. TOP HEADER PROPORTIONNÉ & TRÈS LISIBLE SUR SMARTPHONE */
+/* =================================================== */
 #m-header {
-    height: 54px; width: 100%; background: #0c101c;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    height: 56px; width: 100%; background: rgba(10, 14, 23, 0.96);
+    backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.12);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 8px; position: fixed; top: 0; left: 0; z-index: 200;
+    padding: 0 12px; position: fixed; top: 0; left: 0; z-index: 300;
 }
-.brand-zone { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.brand-zone { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .title-txt {
-    font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
-}
-.side-pill {
-    padding: 2px 6px; border-radius: 8px; font-size: 8px; font-weight: 800;
-    text-transform: uppercase;
-}
-
-.header-btns { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.btn-h {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
-    color: #f7eedb; padding: 5px 8px; border-radius: 12px; font-size: 10px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; gap: 2px; white-space: nowrap;
-}
-.btn-flip-act {
-    background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
-    color: #111; font-weight: 900; font-size: 10px; border: none;
-    padding: 6px 10px; border-radius: 12px; cursor: pointer; white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(223, 178, 86, 0.3);
-}
-.brand-zone { display: flex; align-items: center; gap: 6px; }
-.title-txt {
-    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
     letter-spacing: 1px; color: #f7eedb; white-space: nowrap;
 }
 .side-pill {
-    padding: 3px 7px; border-radius: 10px; font-size: 9px; font-weight: 800;
+    padding: 4px 9px; border-radius: 10px; font-size: 10px; font-weight: 800;
     text-transform: uppercase;
-}
-.pill-terrain { background: #c35936; color: #fff; }
-.pill-sommet { background: #133968; color: #dfb256; }
-
-.header-btns { display: flex; align-items: center; gap: 5px; }
-.btn-h {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
-    color: #f7eedb; padding: 6px 9px; border-radius: 14px; font-size: 11px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; gap: 3px; min-height: 32px;
-}
-.btn-h.active-bm { background: #dfb256; color: #111; font-weight: 800; }
-.btn-flip-act {
-    background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
-    color: #111; font-weight: 900; font-size: 11px; border: none;
-    padding: 7px 11px; border-radius: 14px; cursor: pointer; min-height: 32px;
-}
-
-/* ZOOM TOOLBAR BIEN LISIBLE ET CENTRÉE */
-#reader-zoom-bar {
-    position: fixed; top: 62px; left: 50%; transform: translateX(-50%);
-    background: rgba(14, 20, 32, 0.95); backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.2); border-radius: 25px;
-    padding: 6px 16px; display: flex; align-items: center; gap: 10px;
-    z-index: 120; font-size: 12px; font-weight: 800;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
-    opacity: 0.9 !important; /* Always readable */
-}
-.btn-zoom-step {
-    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
-    color: #dfb256; width: 28px; height: 28px; border-radius: 8px; font-size: 14px; font-weight: 900;
-    display: flex; align-items: center; justify-content: center; cursor: pointer;
-}
-.btn-mode-pill {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    color: #f7eedb; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;
-    cursor: pointer;
-}
-
-/* LISEUSE VIEWPORT & SPREAD CARD */
-#live-reader-container {
-    position: fixed; top: 56px; left: 0; width: 100%; height: calc(100% - 56px);
-    display: none; justify-content: center; align-items: center;
-    background: #080b13; z-index: 90; overflow: hidden;
-}
-#reader-scroll-viewport {
-    width: 100%; height: 100%;
-    overflow-y: auto; overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 56px 8px 75px 8px;
-}
-#spread-card-wrapper {
-    background: #ffffff; border-radius: 6px;
-    box-shadow: 0 15px 45px rgba(0,0,0,0.85);
-    position: relative; margin: 0 auto;
-    flex-shrink: 0;
-}
-
-/* BOTTOM DOCK BIEN LISIBLE */
-#m-bottom-dock {
-    position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
-    width: 94%; max-width: 440px; height: 48px;
-    background: rgba(12, 16, 28, 0.96); backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.2); border-radius: 25px;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0 14px; z-index: 150;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    opacity: 0.9 !important; /* Always readable */
-}
-.dock-nav-btn {
-    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-    color: #f7eedb; padding: 6px 14px; border-radius: 15px; font-size: 12px; font-weight: 800;
-    cursor: pointer;
-}
-.brand-zone { display: flex; align-items: center; gap: 8px; }
-.title-txt {
-    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase; color: #f7eedb;
-}
-.side-pill {
-    padding: 4px 10px; border-radius: 12px; font-size: 9px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.5px;
 }
 .pill-terrain { background: #c35936; color: #fff; box-shadow: 0 0 10px rgba(195,89,54,0.4); }
 .pill-sommet { background: #133968; color: #dfb256; box-shadow: 0 0 10px rgba(223,178,86,0.4); }
 
-.header-btns { display: flex; align-items: center; gap: 8px; }
+.header-btns { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .btn-h {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
-    color: #f7eedb; padding: 6px 12px; border-radius: 18px; font-size: 11px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22);
+    color: #f7eedb; padding: 7px 12px; border-radius: 16px; font-size: 12px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 4px; min-height: 36px;
+    transition: all 0.2s ease;
 }
-.btn-h.active-bm { background: #dfb256; color: #111; font-weight: 800; }
+.btn-h.active-bm { background: #dfb256; color: #111; font-weight: 800; border-color: #dfb256; }
 .btn-flip-act {
     background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
-    color: #111; font-weight: 900; font-size: 11px; border: none;
-    padding: 7px 14px; border-radius: 18px; cursor: pointer;
-    box-shadow: 0 2px 10px rgba(223, 178, 86, 0.35);
+    color: #111; font-weight: 900; font-size: 12px; border: none;
+    padding: 8px 14px; border-radius: 16px; cursor: pointer; min-height: 36px;
+    box-shadow: 0 2px 10px rgba(223, 178, 86, 0.4); white-space: nowrap;
 }
 
-/* 3D HOME STAGE FULLSCREEN */
+/* =================================================== */
+/* 2. 3D WEBGL STAGE (VISIBLE ET CENTRÉ) */
+/* =================================================== */
 #stage-3d-box {
-    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 5;
+    width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 10;
     touch-action: none;
 }
 #home-3d-cta {
-    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 340px; z-index: 20; text-align: center;
-    display: flex; flex-direction: column; gap: 12px;
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 340px; z-index: 50; text-align: center;
+    display: flex; flex-direction: column; gap: 10px;
 }
 .cta-btn-main {
     background: #dfb256; color: #111; font-size: 15px; font-weight: 900;
-    padding: 13px 25px; border-radius: 30px; border: none; cursor: pointer;
+    padding: 14px 28px; border-radius: 30px; border: none; cursor: pointer;
     box-shadow: 0 8px 25px rgba(223, 178, 86, 0.5); width: 100%;
 }
 
 /* =================================================== */
-/* LISEUSE UNIVERSELLE RESPONSIVE (1 PAGE OU 2 PAGES) */
+/* 3. LISEUSE PLEIN ÉCRAN UNIVERSELLE (PC / MOBILE) */
 /* =================================================== */
 #live-reader-container {
     position: fixed; top: 56px; left: 0; width: 100%; height: calc(100% - 56px);
     display: none; justify-content: center; align-items: center;
-    background: #080b13; z-index: 90; overflow: hidden;
+    background: #060911; z-index: 90; overflow: hidden;
 }
 
-
-/* AUTO-FADE INTÉLIGENT DES COMMANDES (QUASI INVISIBLE AU REPOS, SE RALLUME À L'ACTIVITÉ) */
-.auto-fade-ui {
-    opacity: 0.15 !important;
-    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease, box-shadow 0.3s ease !important;
-}
-.auto-fade-ui:hover, .auto-fade-ui.ui-active {
-    opacity: 1 !important;
-}
-
-#m-header {
-    opacity: 0.85;
-    transition: opacity 0.4s ease;
-}
-#m-header:hover, #m-header.ui-active {
-    opacity: 1;
-}
-
-#reader-zoom-bar {
-    opacity: 0.15;
-    transition: opacity 0.45s ease, transform 0.3s ease;
-}
-#reader-zoom-bar:hover, #reader-zoom-bar.ui-active {
-    opacity: 1;
-    transform: translateX(-50%) translateY(2px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.85), 0 0 20px rgba(223, 178, 86, 0.25);
-}
-
-#m-bottom-dock {
-    opacity: 0.15;
-    transition: opacity 0.45s ease, transform 0.3s ease;
-}
-#m-bottom-dock:hover, #m-bottom-dock.ui-active {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.9), 0 0 25px rgba(223, 178, 86, 0.25);
-}
-
-.nav-side-arrow {
-    opacity: 0.2;
-    transition: opacity 0.4s ease, transform 0.2s ease;
-}
-.nav-side-arrow:hover, .nav-side-arrow.ui-active {
-    opacity: 1;
-}
-
-/* SCROLLABLE VIEWPORT ZOOM FIX AVEC TRANSFORM SCALE 100% CENTRÉ */
 #reader-scroll-viewport {
     width: 100%; height: 100%;
     overflow-y: auto; overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     display: flex; flex-direction: column; align-items: center;
-    padding: 60px 10px 90px 10px;
-    touch-action: pan-x pan-y;
+    padding: 58px 10px 80px 10px;
 }
 
 #spread-card-wrapper {
-    display: flex; justify-content: center; align-items: center;
     background: #ffffff; border-radius: 6px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-    position: relative;
-    transform-origin: top center;
-    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
-    margin: 0 auto;
+    position: relative; margin: 0 auto;
     flex-shrink: 0;
 }
-#reader-scroll-viewport.is-zoomed {
-    cursor: grab;
-}
-#reader-scroll-viewport.is-dragging {
-    cursor: grabbing;
-    user-select: none;
-}
 
-/* CONTENEUR DE SPREAD (CENTRÉ & FLEX) */
-#spread-card-wrapper {
-    display: flex; justify-content: center; align-items: center;
-    background: #ffffff; border-radius: 6px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-    position: relative; margin: auto;
-    transition: width 0.2s ease, height 0.2s ease;
+.canvas-page-single {
+    display: block; width: 100%; height: auto; border-radius: 6px;
 }
-
-/* OMBRE CENTRALE DU PLI DE RELIURE SUR GRAND ÉCRAN (2 PAGES) */
+.canvas-page-half {
+    display: block; width: 50%; height: auto;
+}
 .spread-binding-shadow {
     position: absolute; top: 0; left: 50%; transform: translateX(-50%);
     width: 26px; height: 100%;
@@ -289,67 +117,54 @@ body, html {
     pointer-events: none; z-index: 25;
 }
 
-.canvas-page-half {
-    display: block; width: 50%; height: auto;
-}
-.canvas-page-single {
-    display: block; width: 100%; height: auto;
-}
-
-/* TOP ZOOM & DISPLAY TOOLBAR (20% STEPS, 100% CENTRÉ) */
+/* ZOOM TOOLBAR LISIBLE & GRANDE */
 #reader-zoom-bar {
-    position: fixed; top: 62px; left: 50%; transform: translateX(-50%);
-    background: rgba(14, 20, 32, 0.94); backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.18); border-radius: 25px;
-    padding: 5px 16px; display: flex; align-items: center; gap: 10px;
-    z-index: 120; font-size: 11px; font-weight: 800;
+    position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
+    background: rgba(14, 20, 32, 0.96); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.22); border-radius: 25px;
+    padding: 6px 16px; display: flex; align-items: center; gap: 10px;
+    z-index: 120; font-size: 13px; font-weight: 800;
     box-shadow: 0 8px 25px rgba(0,0,0,0.7);
 }
 .btn-zoom-step {
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25);
+    color: #dfb256; width: 30px; height: 30px; border-radius: 8px; font-size: 15px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.btn-mode-pill {
     background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    color: #dfb256; padding: 3px 9px; border-radius: 8px; font-size: 12px; font-weight: 900;
+    color: #f7eedb; font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 12px;
     cursor: pointer;
 }
-.btn-zoom-step:hover { background: #dfb256; color: #111; }
-.btn-mode-pill {
-    background: transparent; border: none; color: #f7eedb; font-size: 10px; font-weight: 800;
-    cursor: pointer; text-decoration: underline;
-}
 
-/* SIDE ARROWS SUR DESKTOP */
+/* SIDE ARROWS SUR GRAND ÉCRAN */
 .nav-side-arrow {
     position: fixed; top: 50%; transform: translateY(-50%);
     width: 48px; height: 48px; border-radius: 50%;
     background: rgba(14, 20, 32, 0.85); border: 1px solid rgba(255,255,255,0.2);
     color: #dfb256; font-size: 20px; font-weight: 900;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 110; transition: all 0.2s;
+    display: none; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 110;
 }
-.nav-side-arrow:hover { background: #dfb256; color: #111; transform: translateY(-50%) scale(1.1); }
+@media (min-width: 860px) {
+    .nav-side-arrow { display: flex; }
+}
 .nav-arrow-left { left: 20px; }
 .nav-arrow-right { right: 20px; }
 
-/* TAP ZONES SUR MOBILE (POINTER-EVENTS NONE PAR DÉFAUT POUR LAISSER SCROLLER) */
-.tap-zones-layer {
-    position: fixed; top: 100px; left: 0; width: 100%; height: calc(100% - 170px);
-    display: none; z-index: 95; pointer-events: none;
-}
-.tap-zone-l { width: 25%; height: 100%; pointer-events: auto; }
-.tap-zone-r { width: 25%; height: 100%; pointer-events: auto; }
-
-/* BOTTOM FIXED DOCK (SANS GLITCH) */
+/* FIXED BOTTOM DOCK */
 #m-bottom-dock {
     position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
-    width: 94%; max-width: 440px; height: 48px;
+    width: 94%; max-width: 440px; height: 50px;
     background: rgba(12, 16, 28, 0.96); backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.18); border-radius: 25px;
+    border: 1px solid rgba(255,255,255,0.22); border-radius: 25px;
     display: flex; justify-content: space-between; align-items: center;
     padding: 0 14px; z-index: 150;
     box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 .dock-nav-btn {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-    color: #f7eedb; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: 800;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: #f7eedb; padding: 7px 15px; border-radius: 15px; font-size: 13px; font-weight: 800;
     cursor: pointer;
 }
 .dock-slider-bar {
@@ -357,21 +172,21 @@ body, html {
     height: 4px; border-radius: 4px; background: rgba(255,255,255,0.2); outline: none;
 }
 .dock-slider-bar::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 15px; height: 15px;
+    -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
     border-radius: 50%; background: #dfb256; cursor: pointer;
 }
-#page-indicator-txt { font-size: 11px; font-weight: 800; color: #dfb256; min-width: 90px; text-align: center; }
+#page-indicator-txt { font-size: 12px; font-weight: 800; color: #dfb256; min-width: 90px; text-align: center; }
 
 /* BOOKMARKS MODAL */
 #bookmarks-dialog-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(4, 6, 12, 0.85); backdrop-filter: blur(20px);
-    display: none; justify-content: center; align-items: center; z-index: 350;
+    display: none; justify-content: center; align-items: center; z-index: 400;
     padding: 20px;
 }
 .dialog-box {
-    background: #111726; border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 16px; padding: 22px 18px; width: 100%; max-width: 340px;
+    background: #111726; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 18px; padding: 24px 20px; width: 100%; max-width: 340px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.9); text-align: center;
 }
 .dialog-list {
@@ -380,14 +195,14 @@ body, html {
 }
 .dialog-item {
     background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-    padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between;
+    padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between;
     align-items: center; cursor: pointer;
 }
 
 #toast-box {
     position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
-    background: #dfb256; color: #111; font-weight: 800; font-size: 11px;
-    padding: 7px 18px; border-radius: 20px; display: none; z-index: 400;
+    background: #dfb256; color: #111; font-weight: 800; font-size: 12px;
+    padding: 8px 20px; border-radius: 20px; display: none; z-index: 450;
     box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 </style>
@@ -406,17 +221,16 @@ body, html {
     <div class="header-btns">
         <button id="btn-save-bm" class="btn-h" onclick="toggleCurrentBookmark()">🔖 <span id="txt-bm-label">Marquer</span></button>
         <button class="btn-h" onclick="openBookmarksList()">📂 <span id="txt-bm-total">Pages (0)</span></button>
-        <button id="btn-toggle-layout" class="btn-h" onclick="manualToggleLayout()">📐 Auto</button>
         <button class="btn-flip-act" onclick="flip3DTeteBeche()">🔄 RETOURNER</button>
     </div>
 </div>
 
-<!-- 3D WEBGL STAGE -->
+<!-- 3D STAGE BOX -->
 <div id="stage-3d-box"></div>
 
 <!-- 3D HOME CTA -->
 <div id="home-3d-cta">
-    <div style="font-size:11px; color:#889bb8; background:rgba(12,16,28,0.85); padding:6px 14px; border-radius:15px; border:1px solid rgba(255,255,255,0.1);">
+    <div style="font-size:12px; color:#889bb8; background:rgba(12,16,28,0.9); padding:7px 16px; border-radius:15px; border:1px solid rgba(255,255,255,0.15);">
         👆 Touchez & glissez pour manipuler à 360°
     </div>
     <button class="cta-btn-main" onclick="openReader()">
@@ -424,10 +238,10 @@ body, html {
     </button>
 </div>
 
-<!-- LISEUSE UNIVERSELLE RESPONSIVE -->
+<!-- LISEUSE HAUTE FIDÉLITÉ UNIVERSELLE -->
 <div id="live-reader-container">
     
-    <!-- ZOOM BAR 20% STEP AVEC CENTRAGE ABSOLU -->
+    <!-- ZOOM TOOLBAR LISIBLE -->
     <div id="reader-zoom-bar">
         <span>Zoom :</span>
         <button class="btn-zoom-step" onclick="stepZoom(-0.20)">−</button>
@@ -436,7 +250,7 @@ body, html {
         <button class="btn-mode-pill" onclick="resetZoomDefault()">1:1 Centré</button>
     </div>
 
-    <!-- SIDE ARROWS SUR GRAND ÉCRAN -->
+    <!-- ARROWS SUR PC -->
     <div class="nav-side-arrow nav-arrow-left" onclick="prevStep()" title="Page précédente">❮</div>
     <div class="nav-side-arrow nav-arrow-right" onclick="nextStep()" title="Page suivante">❯</div>
 
@@ -447,13 +261,6 @@ body, html {
             <canvas id="page-canvas-right" class="canvas-page-half" style="display:none;"></canvas>
             <canvas id="page-canvas-single" class="canvas-page-single"></canvas>
         </div>
-    </div>
-
-    <!-- TAP ZONES POUR MOBILE -->
-    <div class="tap-zones-layer">
-        <div class="tap-zone-l" onclick="prevStep()"></div>
-        <div style="flex:1;"></div>
-        <div class="tap-zone-r" onclick="nextStep()"></div>
     </div>
 
     <!-- FIXED BOTTOM DOCK -->
@@ -468,25 +275,178 @@ body, html {
 <!-- BOOKMARKS MODAL -->
 <div id="bookmarks-dialog-overlay">
     <div class="dialog-box">
-        <div style="font-size:28px; margin-bottom:6px;">🔖</div>
-        <h3 style="font-size:16px; color:#dfb256; text-transform:uppercase;">Mes Marque-Pages</h3>
-        <p style="font-size:11px; color:#889bb8; margin-bottom:12px;">Accédez instantanément à vos pages</p>
+        <div style="font-size:30px; margin-bottom:6px;">🔖</div>
+        <h3 style="font-size:17px; color:#dfb256; text-transform:uppercase;">Mes Marque-Pages</h3>
+        <p style="font-size:12px; color:#889bb8; margin-bottom:14px;">Accédez instantanément à vos pages</p>
         <div class="dialog-list" id="dialog-bm-items"></div>
-        <button onclick="closeBookmarksList()" style="background:#dfb256; color:#111; font-weight:800; font-size:12px; padding:9px 22px; border-radius:20px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
+        <button onclick="closeBookmarksList()" style="background:#dfb256; color:#111; font-weight:800; font-size:13px; padding:10px 24px; border-radius:20px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
     </div>
 </div>
 
 <script>
-const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_UNIVERSAL_V1";
+const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V1";
 
 let currentSide = 'terrain'; // 'terrain' or 'sommet'
 let currentPage = 1; // 1 to 168 (1 = Couverture, 2 = Page 1)
 let isReading = false;
+let zoomFactor = 1.0;
+
+let docTerrain = null;
+let docSommet = null;
+
+// Three.js
+let scene, camera, renderer, bookMesh;
+let isFlipping3D = false;
+let isTouchDragging = false;
+let prevTouchPos = { x: 0, y: 0 };
 
 let renderTaskLeft = null;
 let renderTaskRight = null;
 let renderTaskSingle = null;
 let resizeDebounceTimer = null;
+
+let userStore = {
+    terrainLastPage: 1,
+    sommetLastPage: 1,
+    terrainBookmarks: [],
+    sommetBookmarks: [],
+    lastSide: 'terrain'
+};
+
+function loadUserStore() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        try {
+            userStore = JSON.parse(saved);
+            currentSide = userStore.lastSide || 'terrain';
+            currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
+        } catch(e) {}
+    } else {
+        currentSide = 'terrain';
+        currentPage = 1;
+    }
+}
+
+function saveUserStore() {
+    if (currentSide === 'terrain') userStore.terrainLastPage = currentPage;
+    else userStore.sommetLastPage = currentPage;
+    userStore.lastSide = currentSide;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userStore));
+    updateBookmarkUI();
+}
+
+function isDoublePageMode() {
+    return (window.innerWidth >= 860 && window.innerWidth > window.innerHeight);
+}
+
+// 3D STAGE INITIALIZATION
+function init3DStage() {
+    const container = document.getElementById('stage-3d-box');
+    if (!container) return;
+    container.innerHTML = '';
+
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 9.2);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.95));
+    const lKey = new THREE.DirectionalLight(0xffffff, 0.95);
+    lKey.position.set(5, 8, 7); scene.add(lKey);
+    const lRim = new THREE.DirectionalLight(0xdfb256, 0.6);
+    lRim.position.set(-5, -4, 5); scene.add(lRim);
+
+    const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
+    const loader = new THREE.TextureLoader();
+    const tCover = loader.load(window.BOOK_DATA.terrainCover, () => { renderer.render(scene, camera); });
+    const sCover = loader.load(window.BOOK_DATA.sommetCover, () => { renderer.render(scene, camera); });
+    sCover.center.set(0.5, 0.5);
+    sCover.rotation = Math.PI;
+
+    const canvasP = document.createElement('canvas');
+    canvasP.width = 128; canvasP.height = 512;
+    const ctxP = canvasP.getContext('2d');
+    ctxP.fillStyle = '#f6f0df'; ctxP.fillRect(0,0,128,512);
+    ctxP.fillStyle = '#d8cca8';
+    for(let i=0; i<512; i+=4) ctxP.fillRect(0, i, 128, 1.5);
+    const pTex = new THREE.CanvasTexture(canvasP);
+
+    const canvasS = document.createElement('canvas');
+    canvasS.width = 256; canvasS.height = 1024;
+    const ctxS = canvasS.getContext('2d');
+    ctxS.fillStyle = '#111a2d'; ctxS.fillRect(0,0,256,512);
+    ctxS.fillStyle = '#c35936'; ctxS.fillRect(0,512,256,512);
+    ctxS.fillStyle = '#dfb256'; ctxS.font = 'bold 36px sans-serif'; ctxS.textAlign = 'center';
+    
+    ctxS.save(); ctxS.translate(128, 256); ctxS.rotate(Math.PI/2);
+    ctxS.fillText("▲ SOMMET · 9 ÉTAGES", 0, 12); ctxS.restore();
+
+    ctxS.save(); ctxS.translate(128, 768); ctxS.rotate(-Math.PI/2);
+    ctxS.fillStyle = '#f7eedb'; ctxS.fillText("▲ TERRAIN · 9 ÉTAGES", 0, 12); ctxS.restore();
+    const spineTex = new THREE.CanvasTexture(canvasS);
+
+    const materials = [
+        new THREE.MeshStandardMaterial({ map: pTex }),
+        new THREE.MeshStandardMaterial({ map: spineTex }),
+        new THREE.MeshStandardMaterial({ map: pTex }),
+        new THREE.MeshStandardMaterial({ map: pTex }),
+        new THREE.MeshStandardMaterial({ map: tCover, roughness: 0.35 }),
+        new THREE.MeshStandardMaterial({ map: sCover, roughness: 0.35 })
+    ];
+
+    bookMesh = new THREE.Mesh(geometry, materials);
+    if (currentSide === 'sommet') {
+        bookMesh.rotation.set(0.15, Math.PI - 0.35, Math.PI);
+    } else {
+        bookMesh.rotation.set(0.15, -0.35, 0);
+    }
+    scene.add(bookMesh);
+
+    // FREE TOUCH TRACKBALL (360° SANS BLOCAGE)
+    const dom = renderer.domElement;
+    dom.addEventListener('pointerdown', (e) => {
+        isTouchDragging = true;
+        prevTouchPos = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('pointermove', (e) => {
+        if (!isTouchDragging || !bookMesh) return;
+        const deltaX = e.clientX - prevTouchPos.x;
+        const deltaY = e.clientY - prevTouchPos.y;
+
+        const deltaQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+            deltaY * 0.008,
+            deltaX * 0.008,
+            0,
+            'XYZ'
+        ));
+        bookMesh.quaternion.multiplyQuaternions(deltaQuat, bookMesh.quaternion);
+        prevTouchPos = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('pointerup', () => { isTouchDragging = false; });
+
+    window.addEventListener('resize', handleWindowResize);
+
+    animate3DLoop();
+    initAppCore();
+}
+
+function animate3DLoop(time) {
+    requestAnimationFrame(animate3DLoop);
+    TWEEN.update(time);
+    if (!isFlipping3D && bookMesh && !isReading) {
+        bookMesh.position.y = Math.sin(time * 0.0015) * 0.08;
+    }
+    if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+    }
+}
 
 async function cancelPendingRenders() {
     if (renderTaskLeft) { try { renderTaskLeft.cancel(); } catch(e){} renderTaskLeft = null; }
@@ -508,179 +468,16 @@ function handleWindowResize() {
     }
 }
 
-let zoomFactor = 1.0; // 1.0 = 100%, 1.2 = 120%, 0.8 = 80%, etc.
-let forceLayout = 'auto'; // 'auto', 'single', 'double'
-
-let docTerrain = null;
-let docSommet = null;
-
-// Three.js
-let scene, camera, renderer, bookMesh;
-let isFlipping3D = false;
-let isTouchDragging = false;
-let prevTouchPos = { x: 0, y: 0 };
-
-let userStore = {
-    terrainLastPage: 1,
-    sommetLastPage: 1,
-    terrainBookmarks: [],
-    sommetBookmarks: [],
-    zoom: 1.0,
-    lastSide: 'terrain'
-};
-
-function loadUserStore() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        try {
-            userStore = JSON.parse(saved);
-            currentSide = userStore.lastSide || 'terrain';
-            currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
-            zoomFactor = userStore.zoom || 1.0;
-        } catch(e) {}
-    } else {
-        currentSide = 'terrain';
-        currentPage = 1;
-    }
-}
-}
-
-function saveUserStore() {
-    if (currentSide === 'terrain') userStore.terrainLastPage = currentPage;
-    else userStore.sommetLastPage = currentPage;
-    userStore.lastSide = currentSide;
-    userStore.zoom = zoomFactor;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(userStore));
-    updateBookmarkUI();
-}
-
-function isDoublePageMode() {
-    if (forceLayout === 'double') return true;
-    if (forceLayout === 'single') return false;
-    // Auto detection: Double page if screen width >= 860px and window is landscape
-    return (window.innerWidth >= 860 && window.innerWidth > window.innerHeight);
-}
-
-function init3DStage() {
-    try {
-        const container = document.getElementById('stage-3d-box');
-        if (!container) return;
-        container.innerHTML = '';
-
-        scene = new THREE.Scene();
-
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 9.2);
-
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
-
-        scene.add(new THREE.AmbientLight(0xffffff, 0.95));
-        const lKey = new THREE.DirectionalLight(0xffffff, 0.95);
-        lKey.position.set(5, 8, 7); scene.add(lKey);
-        const lRim = new THREE.DirectionalLight(0xdfb256, 0.6);
-        lRim.position.set(-5, -4, 5); scene.add(lRim);
-
-        const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
-        const loader = new THREE.TextureLoader();
-        const tCover = loader.load(window.BOOK_DATA.terrainCover, () => { renderer.render(scene, camera); });
-        const sCover = loader.load(window.BOOK_DATA.sommetCover, () => { renderer.render(scene, camera); });
-        sCover.center.set(0.5, 0.5);
-        sCover.rotation = Math.PI;
-
-        const canvasP = document.createElement('canvas');
-        canvasP.width = 128; canvasP.height = 512;
-        const ctxP = canvasP.getContext('2d');
-        ctxP.fillStyle = '#f6f0df'; ctxP.fillRect(0,0,128,512);
-        ctxP.fillStyle = '#d8cca8';
-        for(let i=0; i<512; i+=4) ctxP.fillRect(0, i, 128, 1.5);
-        const pTex = new THREE.CanvasTexture(canvasP);
-
-        const canvasS = document.createElement('canvas');
-        canvasS.width = 256; canvasS.height = 1024;
-        const ctxS = canvasS.getContext('2d');
-        ctxS.fillStyle = '#111a2d'; ctxS.fillRect(0,0,256,512);
-        ctxS.fillStyle = '#c35936'; ctxS.fillRect(0,512,256,512);
-        ctxS.fillStyle = '#dfb256'; ctxS.font = 'bold 36px sans-serif'; ctxS.textAlign = 'center';
-        
-        ctxS.save(); ctxS.translate(128, 256); ctxS.rotate(Math.PI/2);
-        ctxS.fillText("▲ SOMMET · 9 ÉTAGES", 0, 12); ctxS.restore();
-
-        ctxS.save(); ctxS.translate(128, 768); ctxS.rotate(-Math.PI/2);
-        ctxS.fillStyle = '#f7eedb'; ctxS.fillText("▲ TERRAIN · 9 ÉTAGES", 0, 12); ctxS.restore();
-        const spineTex = new THREE.CanvasTexture(canvasS);
-
-        const materials = [
-            new THREE.MeshStandardMaterial({ map: pTex }),
-            new THREE.MeshStandardMaterial({ map: spineTex }),
-            new THREE.MeshStandardMaterial({ map: pTex }),
-            new THREE.MeshStandardMaterial({ map: pTex }),
-            new THREE.MeshStandardMaterial({ map: tCover, roughness: 0.35 }),
-            new THREE.MeshStandardMaterial({ map: sCover, roughness: 0.35 })
-        ];
-
-        bookMesh = new THREE.Mesh(geometry, materials);
-        bookMesh.rotation.set(0.15, -0.35, 0);
-        scene.add(bookMesh);
-
-        // TRACKBALL TOUCH ET SOURIS
-        const dom = renderer.domElement;
-        dom.addEventListener('pointerdown', (e) => {
-            isTouchDragging = true;
-            prevTouchPos = { x: e.clientX, y: e.clientY };
-        });
-
-        window.addEventListener('pointermove', (e) => {
-            if (!isTouchDragging || !bookMesh) return;
-            const deltaX = e.clientX - prevTouchPos.x;
-            const deltaY = e.clientY - prevTouchPos.y;
-
-            const deltaQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(
-                deltaY * 0.008,
-                deltaX * 0.008,
-                0,
-                'XYZ'
-            ));
-            bookMesh.quaternion.multiplyQuaternions(deltaQuat, bookMesh.quaternion);
-            prevTouchPos = { x: e.clientX, y: e.clientY };
-        });
-
-        window.addEventListener('pointerup', () => { isTouchDragging = false; });
-
-        window.addEventListener('resize', handleWindowResize);
-
-        animate3DLoop();
-        initAppCore();
-    } catch(err) {
-        console.error("3D Init Error:", err);
-    }
-} catch(err) {
-        console.error("3D Init Error:", err);
-    }
-}
-
-function animate3DLoop(time) {
-    requestAnimationFrame(animate3DLoop);
-    TWEEN.update(time);
-    if (!isFlipping3D && bookMesh && !isReading) {
-        bookMesh.position.y = Math.sin(time * 0.0015) * 0.08;
-    }
-    renderer.render(scene, camera);
-}
-
 async function initAppCore() {
     loadUserStore();
+    updateSideBadge();
     docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     updateSideBadge();
     setupTouchGestures();
-    setupPanDrag();
-    setupAutoFadeListeners();
 }
 
-// RENDU HAUTE FIDÉLITÉ UNIVERSEL SANS RATATINAGE
+// RENDU HAUTE FIDÉLITÉ UNIVERSEL
 async function renderUniversalReader() {
     await cancelPendingRenders();
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
@@ -700,10 +497,10 @@ async function renderUniversalReader() {
     const shadow = document.getElementById('binding-shadow');
 
     const screenW = window.innerWidth;
-    const availH = window.innerHeight - 56 - 65; // Available height inside viewport
+    const availH = window.innerHeight - 56 - 65;
 
     if (isDouble && currentPage > 1) {
-        // --- MODE DOUBLE PAGE SUR PC / TABLETTE PAYSAGE ---
+        // --- MODE DOUBLE PAGE DESKTOP ---
         cSingle.style.display = 'none';
         cLeft.style.display = 'block';
         cRight.style.display = 'block';
@@ -715,7 +512,6 @@ async function renderUniversalReader() {
         const pageLeft = await activeDoc.getPage(Math.max(1, pLeftNum));
         const pageRight = (pRightNum <= activeDoc.numPages) ? await activeDoc.getPage(pRightNum) : null;
 
-        // Calculate double page width based on height
         const targetDoubleH = availH * 0.90 * zoomFactor;
         const targetDoubleW = targetDoubleH * (2 * 148 / 210);
         const singleW = targetDoubleW / 2;
@@ -724,12 +520,14 @@ async function renderUniversalReader() {
 
         const vpL = pageLeft.getViewport({ scale: scale });
         cLeft.width = vpL.width; cLeft.height = vpL.height;
-        await pageLeft.render({ canvasContext: cLeft.getContext('2d'), viewport: vpL }).promise;
+        renderTaskLeft = pageLeft.render({ canvasContext: cLeft.getContext('2d'), viewport: vpL });
+        try { await renderTaskLeft.promise; } catch(e){}
 
         if (pageRight) {
             const vpR = pageRight.getViewport({ scale: scale });
             cRight.width = vpR.width; cRight.height = vpR.height;
-            await pageRight.render({ canvasContext: cRight.getContext('2d'), viewport: vpR }).promise;
+            renderTaskRight = pageRight.render({ canvasContext: cRight.getContext('2d'), viewport: vpR });
+            try { await renderTaskRight.promise; } catch(e){}
         }
 
         wrapper.style.width = targetDoubleW + 'px';
@@ -739,7 +537,7 @@ async function renderUniversalReader() {
         cRight.style.width = (targetDoubleW / 2) + 'px';
         cRight.style.height = targetDoubleH + 'px';
     } else {
-        // --- MODE PAGE SIMPLE SUR MOBILE PORTRAIT ---
+        // --- MODE PAGE SIMPLE MOBILE (FORMAT A5 PLEINE HAUTEUR) ---
         cLeft.style.display = 'none';
         cRight.style.display = 'none';
         shadow.style.display = 'none';
@@ -747,15 +545,16 @@ async function renderUniversalReader() {
 
         const page = await activeDoc.getPage(currentPage);
         
-        // Fit width on smartphone (92% of screen width) multiplied by zoomFactor
+        // Largeur adaptée à 92% de l'écran mobile x zoomFactor
         const targetSingleW = (screenW * 0.92) * zoomFactor;
-        const targetSingleH = targetSingleW * (210 / 148); // A5 Aspect ratio (148 x 210 mm)
+        const targetSingleH = targetSingleW * (210 / 148);
 
         const scale = (targetSingleW / (page.view[2] - page.view[0])) * 2.2;
         const vp = page.getViewport({ scale: scale });
 
         cSingle.width = vp.width; cSingle.height = vp.height;
-        await page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp }).promise;
+        renderTaskSingle = page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp });
+        try { await renderTaskSingle.promise; } catch(e){}
 
         wrapper.style.width = targetSingleW + 'px';
         wrapper.style.height = targetSingleH + 'px';
@@ -766,105 +565,7 @@ async function renderUniversalReader() {
     saveUserStore();
 }
 
-// ZOOM PAR PALIERS DE 20% (DE 60% À 220% AVEC CENTRAGE ABSOLU)
-
-// DRAG-TO-PAN (GLISSER-DÉPLACER À LA SOURIS / AU DOIGT SUR PAGE ZOOMÉE)
-let isPanning = false;
-let startPanX = 0, startPanY = 0;
-let scrollStartLeft = 0, scrollStartTop = 0;
-
-
-// GESTION DU REPOS ET DU RÉVEIL DES BOUTONS DE COMMANDE
-let idleFadeTimer = null;
-
-function wakeControls() {
-    const zoomBar = document.getElementById('reader-zoom-bar');
-    const bottomDock = document.getElementById('m-bottom-dock');
-    const sideArrows = document.querySelectorAll('.nav-side-arrow');
-    const header = document.getElementById('m-header');
-
-    if (zoomBar) zoomBar.classList.add('ui-active');
-    if (bottomDock) bottomDock.classList.add('ui-active');
-    if (header) header.classList.add('ui-active');
-    sideArrows.forEach(a => a.classList.add('ui-active'));
-
-    clearTimeout(idleFadeTimer);
-    idleFadeTimer = setTimeout(() => {
-        if (zoomBar) zoomBar.classList.remove('ui-active');
-        if (bottomDock) bottomDock.classList.remove('ui-active');
-        if (header) header.classList.remove('ui-active');
-        sideArrows.forEach(a => a.classList.remove('ui-active'));
-    }, 2800); // Se rend quasi invisible après 2.8s d'inactivité
-}
-
-function setupAutoFadeListeners() {
-    window.addEventListener('mousemove', wakeControls);
-    window.addEventListener('touchstart', wakeControls, { passive: true });
-    window.addEventListener('touchmove', wakeControls, { passive: true });
-    window.addEventListener('scroll', wakeControls, { passive: true });
-    window.addEventListener('keydown', wakeControls);
-    wakeControls();
-}
-
-function setupPanDrag() {
-    const vp = document.getElementById('reader-scroll-viewport');
-
-    // Mouse Drag
-    vp.addEventListener('mousedown', (e) => {
-        // Only pan if zoomed or content exceeds viewport
-        if (vp.scrollHeight > vp.clientHeight || vp.scrollWidth > vp.clientWidth) {
-            isPanning = true;
-            vp.classList.add('is-dragging');
-            startPanX = e.pageX - vp.offsetLeft;
-            startPanY = e.pageY - vp.offsetTop;
-            scrollStartLeft = vp.scrollLeft;
-            scrollStartTop = vp.scrollTop;
-        }
-    });
-
-    window.addEventListener('mousemove', (e) => {
-        if (!isPanning) return;
-        e.preventDefault();
-        const vp = document.getElementById('reader-scroll-viewport');
-        const x = e.pageX - vp.offsetLeft;
-        const y = e.pageY - vp.offsetTop;
-        const walkX = (x - startPanX) * 1.5;
-        const walkY = (y - startPanY) * 1.5;
-        vp.scrollLeft = scrollStartLeft - walkX;
-        vp.scrollTop = scrollStartTop - walkY;
-    });
-
-    window.addEventListener('mouseup', () => {
-        isPanning = false;
-        const vp = document.getElementById('reader-scroll-viewport');
-        if (vp) vp.classList.remove('is-dragging');
-    });
-
-    // Touch Drag (Sur Mobile/Tablette avec 1 doigt)
-    let touchStartX = 0, touchStartY = 0;
-    vp.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-            touchStartX = e.touches[0].pageX;
-            touchStartY = e.touches[0].pageY;
-            scrollStartLeft = vp.scrollLeft;
-            scrollStartTop = vp.scrollTop;
-        }
-    }, { passive: true });
-
-    vp.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 1) {
-            const touchX = e.touches[0].pageX;
-            const touchY = e.touches[0].pageY;
-            const deltaX = touchX - touchStartX;
-            const deltaY = touchY - touchStartY;
-            vp.scrollLeft = scrollStartLeft - deltaX;
-            vp.scrollTop = scrollStartTop - deltaY;
-        }
-    }, { passive: true });
-}
-
 function stepZoom(delta) {
-    wakeControls();
     zoomFactor = Math.max(0.70, Math.min(2.40, +(zoomFactor + delta).toFixed(2)));
     renderUniversalReader();
 }
@@ -876,18 +577,7 @@ function resetZoomDefault() {
     document.getElementById('reader-scroll-viewport').scrollLeft = 0;
 }
 
-function manualToggleLayout() {
-    if (forceLayout === 'auto') forceLayout = 'single';
-    else if (forceLayout === 'single') forceLayout = 'double';
-    else forceLayout = 'auto';
-
-    const btn = document.getElementById('btn-toggle-layout');
-    btn.innerText = (forceLayout === 'auto') ? '📐 Auto' : (forceLayout === 'double' ? '📖 2 Pages' : '📄 1 Page');
-    renderUniversalReader();
-}
-
 function nextStep() {
-    wakeControls();
     const step = (isDoublePageMode() && currentPage > 1) ? 2 : 1;
     if (currentPage + step <= 168) {
         currentPage += step;
@@ -898,7 +588,6 @@ function nextStep() {
 }
 
 function prevStep() {
-    wakeControls();
     const step = (isDoublePageMode() && currentPage > 2) ? 2 : 1;
     if (currentPage - step >= 1) {
         currentPage -= step;
@@ -963,12 +652,6 @@ function toggleCurrentBookmark() {
         list.splice(idx, 1);
         showToastAlert(`Marque-page retiré`);
     }
-    const vp = document.getElementById('reader-scroll-viewport');
-    if (zoomFactor > 1.0) {
-        vp.classList.add('is-zoomed');
-    } else {
-        vp.classList.remove('is-zoomed');
-    }
     saveUserStore();
 }
 
@@ -1008,7 +691,7 @@ function openBookmarksList() {
             const pTxt = (item.page === 1) ? "Couverture" : `Page ${item.page - 1}`;
             row.innerHTML = `
                 <div onclick="jumpToBm('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:8px; flex:1;">
-                    <span style="background:${badgeBg}; color:#fff; font-size:9px; font-weight:800; padding:2px 6px; border-radius:8px; text-transform:uppercase;">${item.side}</span>
+                    <span style="background:${badgeBg}; color:#fff; font-size:10px; font-weight:800; padding:3px 7px; border-radius:8px; text-transform:uppercase;">${item.side}</span>
                     <span style="font-size:13px; font-weight:700; color:#f7eedb;">${pTxt}</span>
                 </div>
                 <button onclick="delBmItem('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#e74c3c; font-size:14px; cursor:pointer;">🗑️</button>
@@ -1065,7 +748,9 @@ function setupTouchGestures() {
     }, { passive: true });
 }
 
-window.onload = () => { init3DStage(); }; };
+window.onload = () => {
+    init3DStage();
+};
 </script>
 </body>
 </html>
