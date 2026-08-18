@@ -564,7 +564,7 @@ async function renderUniversalReader() {
 }
 
 function stepZoom(delta) {
-    zoomFactor = Math.max(0.70, Math.min(2.40, +(zoomFactor + delta).toFixed(2)));
+    zoomFactor = Math.max(0.75, Math.min(1.25, +(zoomFactor + delta).toFixed(2)));
     renderUniversalReader();
 }
 
