@@ -143,29 +143,17 @@ html, body {
 /* ZOOM TOOLBAR DANS LA LISEUSE */
 #reader-zoom-bar {
     position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
-    background: rgba(14, 22, 40, 0.88); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(255, 255, 255, 0.22); border-radius: 22px;
-    padding: 4px 12px; display: flex; align-items: center; justify-content: center; gap: 8px;
-    z-index: 120; font-size: 12.5px; font-weight: 800;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.75);
+    background: rgba(14, 22, 40, 0.90); backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(255, 255, 255, 0.28); border-radius: 24px;
+    padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    z-index: 600; font-size: 13px; font-weight: 800;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.85);
     white-space: nowrap; width: auto; max-width: 96%;
-    opacity: 0.25; transition: opacity 0.3s ease;
+    opacity: 0.08; transition: opacity 0.25s ease;
+    pointer-events: auto;
 }
 #reader-zoom-bar.dock-awake, #reader-zoom-bar:hover { opacity: 1 !important; }
 
-.btn-zoom-step {
-    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.28);
-    color: #dfb256; width: 28px; height: 28px; border-radius: 6px; font-size: 16px; font-weight: 900;
-    display: flex; align-items: center; justify-content: center; cursor: pointer;
-}
-#zoom-percentage-txt { color: #dfb256; font-size: 12px; font-weight: 900; min-width: 40px; text-align: center; }
-.btn-mode-pill {
-    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.22);
-    color: #f7eedb; font-size: 11px; font-weight: 800; padding: 5px 10px; border-radius: 12px;
-    cursor: pointer; min-height: 28px; display: flex; align-items: center;
-}
-
-/* DOCK INFÉRIEUR DANS LA LISEUSE */
 #m-bottom-dock {
     position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
     width: 92%; max-width: 420px; height: 46px;
@@ -174,7 +162,7 @@ html, body {
     display: flex; justify-content: space-between; align-items: center;
     padding: 0 12px; z-index: 150;
     box-shadow: 0 8px 30px rgba(0,0,0,0.75);
-    opacity: 0.25; transition: opacity 0.3s ease;
+    opacity: 0.08; transition: opacity 0.25s ease;
 }
 #m-bottom-dock.dock-awake, #m-bottom-dock:hover { opacity: 1 !important; }
 
@@ -518,7 +506,7 @@ function wakeBottomDock() {
     dockFadeTimeout = setTimeout(() => {
         if (dock) dock.classList.remove('dock-awake');
         if (zoom) zoom.classList.remove('dock-awake');
-    }, 1000);
+    }, 600);
 }
 
 function initDockFadeListeners() {
