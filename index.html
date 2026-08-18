@@ -927,14 +927,23 @@ let touchStartTime = 0;
 
 // Pinch-to-zoom mobile
 let isPinching = false;
+// Pinch-to-zoom mobile avec point focal précis (comme la galerie photo iOS/Android)
+let isPinching = false;
 let initialPinchDist = 0;
 let initialPinchZoom = 1.0;
-let pinchDebounceTimer = null;
+let pinchCenterDocX = 0, pinchCenterDocY = 0;
 
 function getDistanceBetweenTouches(t1, t2) {
     const dx = t1.clientX - t2.clientX;
     const dy = t1.clientY - t2.clientY;
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+function getMidpointBetweenTouches(t1, t2) {
+    return {
+        x: (t1.clientX + t2.clientX) / 2,
+        y: (t1.clientY + t2.clientY) / 2
+    };
 }
 
 function initTouchPan() {
@@ -949,11 +958,18 @@ function initTouchPan() {
         const wrapper = document.getElementById('spread-card-wrapper');
 
         if (e.touches.length === 2) {
-            // Début du pincement fluide (Pinch-to-zoom matériel)
+            // Début du pincement centré sur le point de contact des deux doigts
             isPinching = true;
             isPanning = false;
             initialPinchDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
             initialPinchZoom = zoomFactor;
+
+            const mid = getMidpointBetweenTouches(e.touches[0], e.touches[1]);
+            const vpRect = vp.getBoundingClientRect();
+            // Position absolue du point pincé dans le contenu défilable
+            pinchCenterDocX = (mid.x - vpRect.left) + vp.scrollLeft;
+            pinchCenterDocY = (mid.y - vpRect.top) + vp.scrollTop;
+
             if (wrapper) wrapper.style.transition = 'none';
         } else if (e.touches.length === 1) {
             isPinching = false;
@@ -979,7 +995,15 @@ function initTouchPan() {
             const currentDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
             if (initialPinchDist > 0 && wrapper) {
                 const scaleDelta = currentDist / initialPinchDist;
-                // Transformation CSS directe à 60 FPS sans glitch
+                const mid = getMidpointBetweenTouches(e.touches[0], e.touches[1]);
+                const vpRect = vp.getBoundingClientRect();
+                
+                // Point d'origine de transformation calé sur la position relative dans le wrapper
+                const wrapRect = wrapper.getBoundingClientRect();
+                const originX = ((mid.x - wrapRect.left) / wrapRect.width) * 100;
+                const originY = ((mid.y - wrapRect.top) / wrapRect.height) * 100;
+                
+                wrapper.style.transformOrigin = `${originX}% ${originY}%`;
                 wrapper.style.transform = `scale(${scaleDelta})`;
             }
         } else if (isPanning && e.touches.length === 1 && zoomFactor > 1.05) {
@@ -997,16 +1021,33 @@ function initTouchPan() {
         if (isPinching && e.touches.length < 2) {
             isPinching = false;
             if (wrapper) {
-                // Arrêt net et propre à l'arrêt du pincement sans effet rebond
                 wrapper.style.transition = 'none';
                 const currentTransform = wrapper.style.transform;
                 const match = currentTransform.match(/scale\(([^)]+)\)/);
                 if (match) {
                     const finalScale = parseFloat(match[1]);
-                    zoomFactor = Math.max(0.70, Math.min(2.50, +(initialPinchZoom * finalScale).toFixed(2)));
+                    const newZoom = Math.max(0.70, Math.min(2.50, +(initialPinchZoom * finalScale).toFixed(2)));
+                    const zoomRatio = newZoom / initialPinchZoom;
+                    zoomFactor = newZoom;
+
+                    // Recentrer le viewport sur le point exact qui a été pincé
+                    const vpRect = vp.getBoundingClientRect();
+                    const viewMidX = vpRect.width / 2;
+                    const viewMidY = vpRect.height / 2;
+                    
+                    wrapper.style.transform = 'none';
+                    wrapper.style.transformOrigin = 'center center';
+                    
+                    renderUniversalReader().then(() => {
+                        // Ajustement précis du défilement vers le point focal
+                        vp.scrollLeft = Math.max(0, (pinchCenterDocX * zoomRatio) - viewMidX);
+                        vp.scrollTop = Math.max(0, (pinchCenterDocY * zoomRatio) - viewMidY);
+                    });
+                } else {
+                    wrapper.style.transform = 'none';
+                    wrapper.style.transformOrigin = 'center center';
+                    renderUniversalReader();
                 }
-                wrapper.style.transform = 'none';
-                renderUniversalReader();
             }
             return;
         }
