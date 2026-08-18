@@ -357,6 +357,32 @@ const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_UNIVERSAL_V1";
 let currentSide = 'terrain'; // 'terrain' or 'sommet'
 let currentPage = 1; // 1 to 168 (1 = Couverture, 2 = Page 1)
 let isReading = false;
+
+let renderTaskLeft = null;
+let renderTaskRight = null;
+let renderTaskSingle = null;
+let resizeDebounceTimer = null;
+
+async function cancelPendingRenders() {
+    if (renderTaskLeft) { try { renderTaskLeft.cancel(); } catch(e){} renderTaskLeft = null; }
+    if (renderTaskRight) { try { renderTaskRight.cancel(); } catch(e){} renderTaskRight = null; }
+    if (renderTaskSingle) { try { renderTaskSingle.cancel(); } catch(e){} renderTaskSingle = null; }
+}
+
+function handleWindowResize() {
+    if (camera && renderer) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    if (isReading) {
+        clearTimeout(resizeDebounceTimer);
+        resizeDebounceTimer = setTimeout(() => {
+            renderUniversalReader();
+        }, 120);
+    }
+}
+
 let zoomFactor = 1.0; // 1.0 = 100%, 1.2 = 120%, 0.8 = 80%, etc.
 let forceLayout = 'auto'; // 'auto', 'single', 'double'
 
@@ -491,12 +517,7 @@ function init3DStage() {
 
     window.addEventListener('pointerup', () => { isTouchDragging = false; });
 
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        if (isReading) renderUniversalReader();
-    });
+    window.addEventListener('resize', handleWindowResize);
 
     animate3DLoop();
     initAppCore();
@@ -523,6 +544,7 @@ async function initAppCore() {
 
 // RENDU UNIVERSEL : AUTO-DÉTECTION (1 PAGE MOBILE OU 2 PAGES DESKTOP) + ZOOM 20% CENTRÉ
 async function renderUniversalReader() {
+    await cancelPendingRenders();
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     if (!activeDoc) return;
 
@@ -565,13 +587,15 @@ async function renderUniversalReader() {
         // Render Left Page
         const vpL = pageLeft.getViewport({ scale: scale });
         cLeft.width = vpL.width; cLeft.height = vpL.height;
-        await pageLeft.render({ canvasContext: cLeft.getContext('2d'), viewport: vpL }).promise;
+        renderTaskLeft = pageLeft.render({ canvasContext: cLeft.getContext('2d'), viewport: vpL });
+        try { await renderTaskLeft.promise; } catch(e){ if (e.name !== 'RenderingCancelledException') console.error(e); }
 
         // Render Right Page
         if (pageRight) {
             const vpR = pageRight.getViewport({ scale: scale });
             cRight.width = vpR.width; cRight.height = vpR.height;
-            await pageRight.render({ canvasContext: cRight.getContext('2d'), viewport: vpR }).promise;
+            renderTaskRight = pageRight.render({ canvasContext: cRight.getContext('2d'), viewport: vpR });
+            try { await renderTaskRight.promise; } catch(e){ if (e.name !== 'RenderingCancelledException') console.error(e); }
         }
 
         wrapper.style.width = finalWidth + 'px';
@@ -591,7 +615,8 @@ async function renderUniversalReader() {
         const vp = page.getViewport({ scale: scale });
 
         cSingle.width = vp.width; cSingle.height = vp.height;
-        await page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp }).promise;
+        renderTaskSingle = page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp });
+        try { await renderTaskSingle.promise; } catch(e){ if (e.name !== 'RenderingCancelledException') console.error(e); }
 
         wrapper.style.width = finalWidth + 'px';
         wrapper.style.height = (vp.height / 2.2) + 'px';
