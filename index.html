@@ -30,7 +30,7 @@ html, body {
 }
 
 /* =================================================== */
-/* 📱 HEADER SUPÉRIEUR HAUTE FIDÉLITÉ (PROPRE & PRO) */
+/* 📱 HEADER SUPÉRIEUR HAUTE FIDÉLITÉ */
 /* =================================================== */
 #m-header {
     height: 56px; width: 100%; background: #0c1220;
@@ -85,7 +85,7 @@ html, body {
 }
 
 /* =================================================== */
-/* 🧊 SCÈNE 3D DE L'ACCUEIL (PERFORMANCE 60FPS) */
+/* 🧊 SCÈNE 3D DE L'ACCUEIL */
 /* =================================================== */
 #stage-3d-box {
     width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 10;
@@ -119,13 +119,13 @@ html, body {
 
 #reader-scroll-viewport {
     width: 100%; height: 100%;
-    overflow: hidden;
-    position: relative;
-    touch-action: none;
-    user-select: none;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 20px 80px 20px;
+    touch-action: pan-x pan-y pinch-zoom;
     box-sizing: border-box;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
@@ -133,16 +133,15 @@ html, body {
     background: transparent;
     display: inline-flex;
     align-items: center; justify-content: center;
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    margin: 0 auto;
+    vertical-align: middle;
     opacity: 1;
     transition: opacity 0.18s ease-in-out;
     transform-origin: center center;
     will-change: transform;
-    cursor: grab;
+    flex-shrink: 0;
 }
-#spread-card-wrapper:active { cursor: grabbing; }
 
 .canvas-page {
     display: inline-block; width: auto; height: auto;
@@ -151,12 +150,13 @@ html, body {
 #page-canvas-left { border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 
+/* BARRE DE CONTRÔLE FLOTTANTE CENTRÉE (FADE 1S) */
 #m-bottom-dock {
     position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
-    background: rgba(12, 18, 32, 0.92); backdrop-filter: blur(16px);
+    background: rgba(12, 18, 32, 0.94); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(255, 255, 255, 0.22); border-radius: 24px;
-    display: inline-flex; justify-content: center; align-items: center; gap: 8px;
-    padding: 4px 12px; z-index: 150;
+    display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+    padding: 6px 14px; z-index: 150;
     box-shadow: 0 8px 30px rgba(0,0,0,0.85);
     opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
@@ -165,19 +165,14 @@ html, body {
 
 .dock-nav-btn {
     background: #182236; border: 1px solid rgba(255,255,255,0.25);
-    color: #dfb256; padding: 6px 14px; border-radius: 14px; font-size: 14px; font-weight: 900;
-    cursor: pointer; min-width: 40px; min-height: 32px; display: flex; align-items: center; justify-content: center;
+    color: #dfb256; padding: 6px 16px; border-radius: 14px; font-size: 15px; font-weight: 900;
+    cursor: pointer; min-width: 44px; min-height: 34px; display: flex; align-items: center; justify-content: center;
 }
 .dock-nav-btn:active { background: #dfb256; color: #111; }
-#page-indicator-txt { font-size: 12px; font-weight: 900; color: #f7eedb; min-width: 70px; text-align: center; white-space: nowrap; }
+#page-indicator-txt { font-size: 12.5px; font-weight: 900; color: #f7eedb; min-width: 75px; text-align: center; white-space: nowrap; }
 
-/* CACHER COMPLÈTEMENT LA BARRE DE ZOOM ET LES BOUTONS SUR TOUT MOBILE (PORTRAIT & PAYSAGE) */
-@media (max-width: 1024px), (max-height: 500px), (hover: none) and (pointer: coarse) {
-    #reader-zoom-bar { display: none !important; }
-    #btn-page-mode { display: none !important; }
-    #page-scrubber { display: none !important; }
-    #reader-scroll-viewport { padding: 40px 40px 60px 40px; }
-}
+/* CACHER LA BARRE DE ZOOM SUR TOUT MOBILE/TABLETTE */
+#reader-zoom-bar { display: none !important; }
 
 /* MODAL MARQUE-PAGES */
 #bookmarks-dialog-overlay {
@@ -213,9 +208,8 @@ html, body {
     padding: 9px 22px; border-radius: 25px; display: none; z-index: 1000;
     box-shadow: 0 8px 25px rgba(0,0,0,0.7);
 }
-/* =================================================== */
-/* ⏳ SPINNER & CHARGEMENT NOBLE CENTRÉ AU MILIEU */
-/* =================================================== */
+
+/* SPINNER CHARGEMENT */
 #reader-loading-spinner {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     background: rgba(12, 18, 32, 0.94); backdrop-filter: blur(20px);
@@ -238,7 +232,7 @@ html, body {
 
 <div id="toast-box">Page mémorisée !</div>
 
-<!-- TOP HEADER FLUIDE AVEC DÉFILEMENT TACTILE (SWIPABLE) -->
+<!-- TOP HEADER -->
 <div id="m-header">
     <div class="header-inner-track">
         <div class="brand-zone" onclick="goToHome3D()" title="Accueil 3D">
@@ -270,21 +264,10 @@ html, body {
 
 <!-- LISEUSE NUMÉRIQUE -->
 <div id="live-reader-container">
-<!-- SPINNER DE CHARGEMENT CENTRÉ AU MILIEU DE L'ÉCRAN -->
     <div id="reader-loading-spinner">
         <div class="spinner-ring"></div>
         <div class="loading-txt-main">CHARGEMENT DU MANUSCRIT</div>
         <div class="loading-txt-sub" id="loading-sub-progress">Préparation des pages haute définition...</div>
-    </div>
-    
-    <!-- ZOOM TOOLBAR ÉPURÉE & HAUT DE GAMME -->
-    <div id="reader-zoom-bar">
-        <button id="btn-page-mode" class="btn-mode-pill" onclick="toggleDisplayMode()">📖 2 Pages</button>
-        <span class="zoom-label-txt">Zoom</span>
-        <button class="btn-zoom-step" onclick="stepZoom(-0.15)">−</button>
-        <span id="zoom-percentage-txt">100%</span>
-        <button class="btn-zoom-step" onclick="stepZoom(0.15)">+</button>
-        <button class="btn-mode-pill" onclick="resetZoomDefault()">1:1 Centré</button>
     </div>
 
     <!-- VIEWPORT DE LECTURE -->
@@ -295,10 +278,9 @@ html, body {
         </div>
     </div>
 
-    <!-- DOCK INFÉRIEUR -->
+    <!-- COMMANDES FLOTTANTES DE NAVIGATION -->
     <div id="m-bottom-dock">
         <button class="dock-nav-btn" onclick="prevStep()">◀</button>
-        <input type="range" id="page-scrubber" class="dock-slider-bar" min="1" max="170" value="1" oninput="onScrubPage(this.value)" />
         <span id="page-indicator-txt">Couverture</span>
         <button class="dock-nav-btn" onclick="nextStep()">▶</button>
     </div>
@@ -381,7 +363,6 @@ function init3DStage() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Éclairage studio équilibré & chaleureux (contraste et saturation fidèles)
     scene.add(new THREE.AmbientLight(0xffffff, 0.60));
     const lKey = new THREE.DirectionalLight(0xffffff, 0.50);
     lKey.position.set(4, 6, 6); scene.add(lKey);
@@ -494,14 +475,11 @@ async function initAppCore() {
 
 function wakeBottomDock() {
     const dock = document.getElementById('m-bottom-dock');
-    const zoom = document.getElementById('reader-zoom-bar');
     if (dock) dock.classList.add('dock-awake');
-    if (zoom) zoom.classList.add('dock-awake');
     
     clearTimeout(dockFadeTimeout);
     dockFadeTimeout = setTimeout(() => {
         if (dock) dock.classList.remove('dock-awake');
-        if (zoom) zoom.classList.remove('dock-awake');
     }, 1000);
 }
 
@@ -516,7 +494,6 @@ function initDockFadeListeners() {
 let isInitialOpen = true;
 
 function showCenteredLoader(msg) {
-    // Only show big loader on cold boot / first document load
     if (!isInitialOpen) return;
     const sp = document.getElementById('reader-loading-spinner');
     const sub = document.getElementById('loading-sub-progress');
@@ -530,20 +507,6 @@ function hideCenteredLoader() {
     const sp = document.getElementById('reader-loading-spinner');
     if (sp) sp.style.display = 'none';
     isInitialOpen = false;
-}
-
-function stepZoom(delta) {
-    wakeBottomDock();
-    zoomFactor = Math.max(0.70, Math.min(1.50, +(zoomFactor + delta).toFixed(2)));
-    renderUniversalReader();
-}
-
-function resetZoomDefault() {
-    wakeBottomDock();
-    zoomFactor = 1.0;
-    renderUniversalReader();
-    const vp = document.getElementById('reader-scroll-viewport');
-    if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
 }
 
 function goToHome3D() {
@@ -597,12 +560,9 @@ async function renderUniversalReader() {
     if (isInitialOpen) showCenteredLoader();
 
     const totalPages = activeDoc.numPages;
-    const scrubber = document.getElementById('page-scrubber');
-    if (scrubber) scrubber.max = totalPages;
 
     const isMobile = window.innerWidth <= 768;
     const effectiveMode = isMobile ? 'single' : displayMode;
-
     const isTwoPage = (effectiveMode === 'spread' && currentPage > 1 && currentPage < totalPages);
     
     let pLabel = "";
@@ -615,9 +575,7 @@ async function renderUniversalReader() {
         pLabel = `p. ${currentPage - 1} / ${totalPages - 1}`;
     }
 
-    if (document.getElementById('page-scrubber')) document.getElementById('page-scrubber').value = currentPage;
     if (document.getElementById('page-indicator-txt')) document.getElementById('page-indicator-txt').innerText = pLabel;
-    if (document.getElementById('zoom-percentage-txt')) document.getElementById('zoom-percentage-txt').innerText = `${Math.round(zoomFactor * 100)}%`;
 
     const wrapper = document.getElementById('spread-card-wrapper');
     const cLeft = document.getElementById('page-canvas-left');
@@ -628,23 +586,21 @@ async function renderUniversalReader() {
     }
 
     try {
-        const isMobile = window.innerWidth <= 768;
         const screenW = window.innerWidth;
-        // On mobile, full height without bottom dock; on desktop, account for bottom dock
-        const availH = isMobile ? (window.innerHeight - 56) : (window.innerHeight - 56 - 45);
+        const availH = window.innerHeight - 56 - 20;
 
         const pageL = await activeDoc.getPage(currentPage);
         const unscaledVpL = pageL.getViewport({ scale: 1.0 });
         const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
 
         if (!isTwoPage) {
-            // MODE 1 PAGE : Adaptation parfaite à la hauteur et à la largeur de l'écran
+            // MODE 1 PAGE
             cRight.style.display = 'none';
             cLeft.style.display = 'block';
             cLeft.style.borderRadius = '4px';
 
             const maxFitW = isMobile ? (screenW - 16) : (screenW * 0.90);
-            const maxFitH = isMobile ? (availH - 24) : (availH * 0.90);
+            const maxFitH = availH * 0.96;
 
             let displayW = maxFitW;
             let displayH = displayW * (unscaledVpL.height / unscaledVpL.width);
@@ -660,7 +616,6 @@ async function renderUniversalReader() {
             const renderScale = (displayW / unscaledVpL.width) * dpr;
             const vp = pageL.getViewport({ scale: renderScale });
 
-            // Render seamlessly offscreen first
             const offL = document.createElement('canvas');
             offL.width = vp.width;
             offL.height = vp.height;
@@ -670,7 +625,6 @@ async function renderUniversalReader() {
             renderTaskLeft = pageL.render({ canvasContext: ctxOffL, viewport: vp });
             await renderTaskLeft.promise;
 
-            // Direct smooth swap without blank flash
             cLeft.width = vp.width;
             cLeft.height = vp.height;
             cLeft.style.width = `${Math.round(displayW)}px`;
@@ -693,7 +647,7 @@ async function renderUniversalReader() {
             const unscaledVpR = pageR.getViewport({ scale: 1.0 });
 
             const maxFitW = screenW * 0.92;
-            const maxFitH = availH * 0.88;
+            const maxFitH = availH * 0.90;
 
             let displayH = maxFitH;
             let displaySingleW = displayH * (unscaledVpL.width / unscaledVpL.height);
@@ -712,7 +666,6 @@ async function renderUniversalReader() {
             const vpL = pageL.getViewport({ scale: scaleL });
             const vpR = pageR.getViewport({ scale: scaleR });
 
-            // Offscreen render
             const offL = document.createElement('canvas');
             offL.width = vpL.width; offL.height = vpL.height;
             const offR = document.createElement('canvas');
@@ -785,12 +738,6 @@ function prevStep() {
     renderUniversalReader();
 }
 
-function onScrubPage(val) {
-    currentPage = parseInt(val);
-    renderUniversalReader();
-    wakeBottomDock();
-}
-
 function flip3DTeteBeche() {
     if (isFlipping3D) return;
     isFlipping3D = true;
@@ -843,12 +790,14 @@ function updateBookmarkUI() {
     
     const btn = document.getElementById('btn-save-bm');
     const label = document.getElementById('txt-bm-label');
-    if (isBm) {
-        btn.classList.add('active-bm');
-        label.innerText = "Mémorisée ★";
-    } else {
-        btn.classList.remove('active-bm');
-        label.innerText = "Marquer";
+    if (btn && label) {
+        if (isBm) {
+            btn.classList.add('active-bm');
+            label.innerText = "Mémorisée ★";
+        } else {
+            btn.classList.remove('active-bm');
+            label.innerText = "Marquer";
+        }
     }
 }
 
@@ -912,42 +861,13 @@ function showToastAlert(txt) {
     setTimeout(() => { t.style.display = 'none'; }, 2200);
 }
 
-// ===================================================
-// 🖐️ GESTES FLUIDES : PINCH-TO-ZOOM, MOLETTE, SWIPE & PAN
-// ===================================================
-let isPanning = false;
-let startPanX = 0, startPanY = 0;
-let startScrollLeft = 0, startScrollTop = 0;
-
-// Swipe navigation
-let touchStartX = 0, touchStartY = 0;
-let touchStartTime = 0;
-
-// Pinch-to-zoom mobile
-let isPinching = false;
-// Pinch-to-zoom mobile avec point focal précis (comme la galerie photo iOS/Android)
-let isPinching = false;
-// ===================================================
-// 🖐️ GESTES 2D LIBRES : PINCH-TO-ZOOM, PAN SANS BUTÉE & SWIPE
-// ===================================================
-let panX = 0, panY = 0;
-let isPanning = false;
-let startTouchX = 0, startTouchY = 0;
-let startPanX = 0, startPanY = 0;
-let touchStartTime = 0;
-
-// Pinch-to-zoom
+// GESTES FLUIDES : SWIPE & PINCH SANS BUTÉE
 let isPinching = false;
 let initialPinchDist = 0;
 let initialPinchZoom = 1.0;
-let pinchMidX = 0, pinchMidY = 0;
 
-function updateWrapperTransform() {
-    const wrapper = document.getElementById('spread-card-wrapper');
-    if (wrapper) {
-        wrapper.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomFactor})`;
-    }
-}
+let touchStartX = 0, touchStartY = 0;
+let touchStartTime = 0;
 
 function getDistanceBetweenTouches(t1, t2) {
     const dx = t1.clientX - t2.clientX;
@@ -955,161 +875,78 @@ function getDistanceBetweenTouches(t1, t2) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
-function getMidpointBetweenTouches(t1, t2) {
-    return {
-        x: (t1.clientX + t2.clientX) / 2,
-        y: (t1.clientY + t2.clientY) / 2
-    };
-}
-
 function initTouchPan() {
     const vp = document.getElementById('reader-scroll-viewport');
     if (!vp) return;
 
-    // 1. ÉCOUTEURS TACTILES (MOBILE & TABLETTE)
+    // 1. ÉCOUTEURS TACTILES
     vp.addEventListener('touchstart', (e) => {
         if (!isReading) return;
         wakeBottomDock();
-        const wrapper = document.getElementById('spread-card-wrapper');
 
         if (e.touches.length === 2) {
-            // Début du pincement libre
             isPinching = true;
-            isPanning = false;
             initialPinchDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
             initialPinchZoom = zoomFactor;
-            const mid = getMidpointBetweenTouches(e.touches[0], e.touches[1]);
-            pinchMidX = mid.x;
-            pinchMidY = mid.y;
-            if (wrapper) wrapper.style.transition = 'none';
         } else if (e.touches.length === 1) {
             isPinching = false;
-            isPanning = true;
-            startTouchX = e.touches[0].clientX;
-            startTouchY = e.touches[0].clientY;
-            startPanX = panX;
-            startPanY = panY;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
             touchStartTime = Date.now();
-            if (wrapper) wrapper.style.transition = 'none';
         }
     }, { passive: true });
 
     vp.addEventListener('touchmove', (e) => {
         if (!isReading) return;
-        const wrapper = document.getElementById('spread-card-wrapper');
 
         if (isPinching && e.touches.length === 2) {
             const currentDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
             if (initialPinchDist > 0) {
                 const scaleDelta = currentDist / initialPinchDist;
-                zoomFactor = Math.max(0.70, Math.min(3.0, +(initialPinchZoom * scaleDelta).toFixed(2)));
-                updateWrapperTransform();
+                const newZ = Math.max(0.80, Math.min(2.50, +(initialPinchZoom * scaleDelta).toFixed(2)));
+                if (Math.abs(newZ - zoomFactor) > 0.05) {
+                    zoomFactor = newZ;
+                    renderUniversalReader();
+                }
             }
-        } else if (isPanning && e.touches.length === 1) {
-            const deltaX = e.touches[0].clientX - startTouchX;
-            const deltaY = e.touches[0].clientY - startTouchY;
-            panX = startPanX + deltaX;
-            panY = startPanY + deltaY;
-            updateWrapperTransform();
         }
     }, { passive: true });
 
     vp.addEventListener('touchend', (e) => {
         if (!isReading) return;
-        const wrapper = document.getElementById('spread-card-wrapper');
 
         if (isPinching && e.touches.length < 2) {
             isPinching = false;
-            if (wrapper) wrapper.style.transition = 'opacity 0.18s ease-in-out';
-            renderUniversalReader();
             return;
         }
 
-        if (isPanning && e.changedTouches.length === 1) {
-            const deltaX = e.changedTouches[0].clientX - startTouchX;
-            const deltaY = e.changedTouches[0].clientY - startTouchY;
+        if (!isPinching && e.changedTouches.length === 1 && zoomFactor <= 1.15) {
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            const deltaY = e.changedTouches[0].clientY - touchStartY;
             const elapsed = Date.now() - touchStartTime;
 
-            // Si c'est un balayage rapide horizontal à zoom normal -> changer de page
-            if (zoomFactor <= 1.15 && elapsed < 400 && Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-                panX = 0; panY = 0;
-                updateWrapperTransform();
+            if (elapsed < 450 && Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
                 if (deltaX < 0) nextStep();
                 else prevStep();
-            } else if (zoomFactor <= 1.05 && Math.abs(deltaX) < 15 && Math.abs(deltaY) < 15) {
-                // Recentrage si petit tap
-                panX = 0; panY = 0;
-                updateWrapperTransform();
             }
-            isPanning = false;
         }
     });
 
     vp.addEventListener('touchcancel', () => {
-        isPanning = false;
         isPinching = false;
     });
 
-    // 2. ZOOM MOLETTE SOURIS / TRACKPAD
+    // 2. ZOOM MOLETTE SOURIS
     vp.addEventListener('wheel', (e) => {
         if (!isReading) return;
-        e.preventDefault();
-        wakeBottomDock();
-
-        if (e.ctrlKey || e.metaKey || e.altKey || Math.abs(e.deltaY) < 40) {
-            const delta = e.deltaY < 0 ? 0.12 : -0.12;
-            zoomFactor = Math.max(0.70, Math.min(3.0, +(zoomFactor + delta).toFixed(2)));
-            updateWrapperTransform();
-        } else {
-            // Déplacement vertical avec la molette
-            panY -= e.deltaY * 0.8;
-            updateWrapperTransform();
+        if (e.ctrlKey || e.metaKey || e.altKey) {
+            e.preventDefault();
+            wakeBottomDock();
+            const delta = e.deltaY < 0 ? 0.10 : -0.10;
+            zoomFactor = Math.max(0.80, Math.min(2.50, +(zoomFactor + delta).toFixed(2)));
+            renderUniversalReader();
         }
     }, { passive: false });
-
-    // 3. PAN & DRAG SOURIS (DESKTOP)
-    let isMouseDown = false;
-    let mouseStartX = 0, mouseStartY = 0;
-    let mouseStartPanX = 0, mouseStartPanY = 0;
-    let mouseStartTime = 0;
-
-    vp.addEventListener('mousedown', (e) => {
-        if (!isReading) return;
-        isMouseDown = true;
-        mouseStartX = e.clientX;
-        mouseStartY = e.clientY;
-        mouseStartPanX = panX;
-        mouseStartPanY = panY;
-        mouseStartTime = Date.now();
-        const wrapper = document.getElementById('spread-card-wrapper');
-        if (wrapper) wrapper.style.transition = 'none';
-    });
-
-    window.addEventListener('mousemove', (e) => {
-        if (!isMouseDown || !isReading) return;
-        const deltaX = e.clientX - mouseStartX;
-        const deltaY = e.clientY - mouseStartY;
-        panX = mouseStartPanX + deltaX;
-        panY = mouseStartPanY + deltaY;
-        updateWrapperTransform();
-    });
-
-    window.addEventListener('mouseup', (e) => {
-        if (!isReading) return;
-        if (isMouseDown) {
-            const deltaX = e.clientX - mouseStartX;
-            const deltaY = e.clientY - mouseStartY;
-            const elapsed = Date.now() - mouseStartTime;
-
-            if (zoomFactor <= 1.15 && elapsed < 300 && Math.abs(deltaX) > 60) {
-                panX = 0; panY = 0;
-                updateWrapperTransform();
-                if (deltaX < 0) nextStep();
-                else prevStep();
-            }
-        }
-        isMouseDown = false;
-    });
 }
 
 window.onload = () => {
