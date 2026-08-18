@@ -35,74 +35,74 @@ html, body {
 }
 
 /* =================================================== */
-/* TOP HEADER TRÈS GRAND & LISIBLE (HAUTEUR 76px) */
+/* 📱 HARMONIE MOBILE NATIVE (CALIBRÉE SANS DÉBORDEMENT) */
 /* =================================================== */
+
 #m-header {
-    height: 76px; width: 100%; background: #0c1220;
-    border-bottom: 2px solid rgba(255,255,255,0.18);
+    height: 56px; width: 100%; background: #0c1220;
+    border-bottom: 1px solid rgba(255,255,255,0.14);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 16px; position: fixed; top: 0; left: 0; z-index: 500;
+    padding: 0 10px; position: fixed; top: 0; left: 0; z-index: 500;
 }
-.brand-zone { display: flex; flex-direction: column; justify-content: center; gap: 3px; }
-.title-row { display: flex; align-items: center; gap: 8px; }
+.brand-zone { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.title-row { display: flex; align-items: center; gap: 6px; }
 .title-txt {
-    font-family: 'Cinzel', serif; font-size: 18px; font-weight: 900;
-    letter-spacing: 1px; color: #f7eedb;
+    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 900;
+    letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
 }
 .author-txt {
-    font-size: 12px; font-weight: 700; color: #dfb256; letter-spacing: 0.5px;
+    font-size: 10px; font-weight: 700; color: #dfb256; letter-spacing: 0.3px; margin-left: 2px;
 }
 .side-pill {
-    padding: 5px 12px; border-radius: 14px; font-size: 11px; font-weight: 900;
+    padding: 3px 8px; border-radius: 10px; font-size: 9px; font-weight: 900;
     text-transform: uppercase;
 }
-.pill-terrain { background: #c35936; color: #fff; box-shadow: 0 0 12px rgba(195,89,54,0.6); }
-.pill-sommet { background: #133968; color: #dfb256; box-shadow: 0 0 12px rgba(223,178,86,0.6); }
+.pill-terrain { background: #c35936; color: #fff; }
+.pill-sommet { background: #133968; color: #dfb256; }
 
-.header-btns { display: flex; align-items: center; gap: 10px; }
+.header-btns { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .btn-h {
-    background: #182236; border: 2px solid rgba(255,255,255,0.3);
-    color: #f7eedb; padding: 12px 18px; border-radius: 24px; font-size: 15px; font-weight: 800;
-    cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 48px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    background: #182236; border: 1.5px solid rgba(255,255,255,0.25);
+    color: #f7eedb; padding: 7px 11px; border-radius: 16px; font-size: 12px; font-weight: 800;
+    cursor: pointer; display: flex; align-items: center; gap: 4px; min-height: 36px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 .btn-h.active-bm { background: #dfb256; color: #111; font-weight: 900; border-color: #dfb256; }
 .btn-flip-act {
     background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
-    color: #111; font-weight: 900; font-size: 15px; border: none;
-    padding: 12px 20px; border-radius: 24px; cursor: pointer; min-height: 48px;
-    box-shadow: 0 4px 18px rgba(223, 178, 86, 0.6); white-space: nowrap;
+    color: #111; font-weight: 900; font-size: 12px; border: none;
+    padding: 8px 12px; border-radius: 16px; cursor: pointer; min-height: 36px;
+    box-shadow: 0 3px 12px rgba(223, 178, 86, 0.4); white-space: nowrap;
 }
 
-/* =================================================== */
-/* 3D STAGE BOX (PLEIN ÉCRAN & GARANTI VISIBLE) */
-/* =================================================== */
-#stage-3d-box {
-    width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 10;
-    touch-action: none; background: radial-gradient(circle at center, #10192e 0%, #040711 85%);
+/* ZOOM TOOLBAR PARFAITEMENT INTÉGRÉE (LARGEUR MAX 92%, SANS RETOUR À LA LIGNE) */
+#reader-zoom-bar {
+    position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
+    background: #0e1628;
+    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 25px;
+    padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 10px;
+    z-index: 120; font-size: 13px; font-weight: 800;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.85);
+    white-space: nowrap; width: auto; max-width: 94%;
+    opacity: 0.25; transition: opacity 0.4s ease;
+}
+#reader-zoom-bar:hover, #reader-zoom-bar.dock-awake { opacity: 1 !important; }
+
+.btn-zoom-step {
+    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.3);
+    color: #dfb256; width: 32px; height: 32px; border-radius: 8px; font-size: 18px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+#zoom-percentage-txt { color: #dfb256; font-size: 13px; font-weight: 900; min-width: 44px; text-align: center; }
+.btn-mode-pill {
+    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.25);
+    color: #f7eedb; font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 14px;
+    cursor: pointer; min-height: 32px; display: flex; align-items: center;
 }
 
-#home-3d-cta {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 380px; z-index: 50; text-align: center;
-    display: flex; flex-direction: column; gap: 12px;
-}
-.cta-info-bubble {
-    font-size: 13px; font-weight: 700; color: #889bb8;
-    background: rgba(12,18,32,0.92); padding: 9px 18px; border-radius: 20px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-}
-.cta-btn-main {
-    background: #dfb256; color: #111; font-size: 18px; font-weight: 900;
-    padding: 18px 36px; border-radius: 36px; border: none; cursor: pointer;
-    box-shadow: 0 10px 30px rgba(223, 178, 86, 0.6); width: 100%;
-}
-
-/* =================================================== */
-/* LISEUSE HAUTE FIDÉLITÉ (SANS FLÈCHES LATÉRALES) */
-/* =================================================== */
+/* LISEUSE ET SCROLL VIEWPORT CENTRÉ */
 #live-reader-container {
-    position: fixed; top: 76px; left: 0; width: 100vw; height: calc(100vh - 76px);
+    position: fixed; top: 56px; left: 0; width: 100vw; height: calc(100vh - 56px);
     display: none; justify-content: center; align-items: center;
     background: #040711; z-index: 90; overflow: hidden;
 }
@@ -112,70 +112,45 @@ html, body {
     overflow-y: auto; overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     display: flex; justify-content: center; align-items: center;
-    padding: 95px 12px 115px 12px;
+    padding: 60px 8px 75px 8px;
 }
 
 #spread-card-wrapper {
     background: #ffffff; border-radius: 6px;
-    box-shadow: 0 25px 70px rgba(0,0,0,0.95);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.95);
     position: relative; margin: auto;
     flex-shrink: 0;
 }
 .canvas-page-single { display: block; width: 100%; height: auto; border-radius: 6px; }
 
-
-/* ZOOM TOOLBAR GÉANTE (HAUTEUR 56px) */
-#reader-zoom-bar {
-    position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
-    background: #0e1628;
-    border: 2px solid rgba(255,255,255,0.3); border-radius: 40px;
-    padding: 8px 24px; display: flex; align-items: center; gap: 16px;
-    z-index: 120; font-size: 16px; font-weight: 800;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.9);
-    opacity: 0.20; transition: opacity 0.4s ease;
-}
-#reader-zoom-bar:hover, #reader-zoom-bar.dock-awake { opacity: 1 !important; }
-
-.btn-zoom-step {
-    background: #1b263e; border: 2px solid rgba(255,255,255,0.35);
-    color: #dfb256; width: 48px; height: 48px; border-radius: 14px; font-size: 24px; font-weight: 900;
-    display: flex; align-items: center; justify-content: center; cursor: pointer;
-}
-#zoom-percentage-txt { color: #dfb256; font-size: 17px; font-weight: 900; min-width: 58px; text-align: center; }
-.btn-mode-pill {
-    background: #1b263e; border: 2px solid rgba(255,255,255,0.3);
-    color: #f7eedb; font-size: 14px; font-weight: 800; padding: 10px 18px; border-radius: 20px;
-    cursor: pointer; min-height: 44px; display: flex; align-items: center;
-}
-
-/* BOTTOM DOCK GÉANT (HAUTEUR 72px) - AUCUN BOUTON SUR LES CÔTÉS */
+/* DOCK INFÉRIEUR HARMONIEUX (FLUIDE, 100% INTÉGRÉ DANS L'ÉCRAN SANS COUPURE) */
 #m-bottom-dock {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: 94%; max-width: 500px; height: 72px;
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 420px; height: 50px;
     background: #0c1220;
-    border: 2px solid rgba(255,255,255,0.3); border-radius: 40px;
+    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 25px;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 20px; z-index: 150;
-    box-shadow: 0 16px 45px rgba(0,0,0,0.95);
-    opacity: 0.20; transition: opacity 0.4s ease;
+    padding: 0 12px; z-index: 150;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.95);
+    opacity: 0.25; transition: opacity 0.4s ease;
 }
 #m-bottom-dock:hover, #m-bottom-dock.dock-awake { opacity: 1 !important; }
 
 .dock-nav-btn {
-    background: #1b263e; border: 2px solid rgba(255,255,255,0.35);
-    color: #f7eedb; padding: 12px 22px; border-radius: 22px; font-size: 20px; font-weight: 900;
-    cursor: pointer; min-width: 64px; min-height: 52px; display: flex; align-items: center; justify-content: center;
+    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.28);
+    color: #f7eedb; padding: 7px 13px; border-radius: 14px; font-size: 14px; font-weight: 900;
+    cursor: pointer; min-width: 40px; min-height: 34px; display: flex; align-items: center; justify-content: center;
 }
 .dock-slider-bar {
-    flex: 1; margin: 0 18px; -webkit-appearance: none; appearance: none;
-    height: 10px; border-radius: 10px; background: rgba(255,255,255,0.3); outline: none;
+    flex: 1; margin: 0 10px; -webkit-appearance: none; appearance: none;
+    height: 5px; border-radius: 5px; background: rgba(255,255,255,0.25); outline: none;
 }
 .dock-slider-bar::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 32px; height: 32px;
+    -webkit-appearance: none; appearance: none; width: 20px; height: 20px;
     border-radius: 50%; background: #dfb256; cursor: pointer;
-    box-shadow: 0 0 16px rgba(223, 178, 86, 1);
+    box-shadow: 0 0 10px rgba(223, 178, 86, 0.9);
 }
-#page-indicator-txt { font-size: 16px; font-weight: 900; color: #dfb256; min-width: 120px; text-align: center; }
+#page-indicator-txt { font-size: 12px; font-weight: 900; color: #dfb256; min-width: 85px; text-align: center; white-space: nowrap; }
 
 /* =================================================== */
 /* 📱 MODAL MARQUE-PAGES FORMAT MOBILE GÉANT (PLEINE LARGEUR) */
@@ -268,7 +243,7 @@ html, body {
     
     <!-- ZOOM TOOLBAR GÉANTE -->
     <div id="reader-zoom-bar">
-        <span>Zoom :</span>
+        <span style='white-space:nowrap;'>Zoom :</span>
         <button class="btn-zoom-step" onclick="stepZoom(-0.15)">−</button>
         <span id="zoom-percentage-txt">100%</span>
         <button class="btn-zoom-step" onclick="stepZoom(0.15)">+</button>
