@@ -439,8 +439,8 @@ function init3DStage() {
 
     const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
     const loader = new THREE.TextureLoader();
-    const tCover = loader.load('cover_terrain.jpg', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
-    const sCover = loader.load('cover_sommet.jpg', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
+    const tCover = loader.load('cover_terrain.jpg?v=20260818_final', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
+    const sCover = loader.load('cover_sommet.jpg?v=20260818_final', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
     sCover.center.set(0.5, 0.5);
     sCover.rotation = Math.PI;
 
