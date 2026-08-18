@@ -548,6 +548,20 @@ function hideCenteredLoader() {
     isInitialOpen = false;
 }
 
+function stepZoom(delta) {
+    wakeBottomDock();
+    zoomFactor = Math.max(0.70, Math.min(1.50, +(zoomFactor + delta).toFixed(2)));
+    renderUniversalReader();
+}
+
+function resetZoomDefault() {
+    wakeBottomDock();
+    zoomFactor = 1.0;
+    renderUniversalReader();
+    const vp = document.getElementById('reader-scroll-viewport');
+    if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
+}
+
 async function openReader() {
     isReading = true;
     document.getElementById('live-reader-container').style.display = 'flex';
@@ -888,7 +902,7 @@ function showToastAlert(txt) {
     setTimeout(() => { t.style.display = 'none'; }, 2200);
 }
 
-// TOUCH PAN POUR LE DÉPLACEMENT LIBRE
+// TOUCH PAN POUR LE DÉPLACEMENT LIBRE VERTICAL ET HORIZONTAL (360°)
 let isPanning = false;
 let startPanX = 0, startPanY = 0;
 let startScrollLeft = 0, startScrollTop = 0;
@@ -897,11 +911,12 @@ function initTouchPan() {
     const vp = document.getElementById('reader-scroll-viewport');
     if (!vp) return;
 
+    // Écouteur tactile mobile
     vp.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1 && zoomFactor > 1.0) {
             isPanning = true;
-            startPanX = e.touches[0].pageX;
-            startPanY = e.touches[0].pageY;
+            startPanX = e.touches[0].clientX;
+            startPanY = e.touches[0].clientY;
             startScrollLeft = vp.scrollLeft;
             startScrollTop = vp.scrollTop;
         }
@@ -909,13 +924,35 @@ function initTouchPan() {
 
     vp.addEventListener('touchmove', (e) => {
         if (!isPanning || e.touches.length !== 1) return;
-        const deltaX = e.touches[0].pageX - startPanX;
-        const deltaY = e.touches[0].pageY - startPanY;
+        const deltaX = e.touches[0].clientX - startPanX;
+        const deltaY = e.touches[0].clientY - startPanY;
         vp.scrollLeft = startScrollLeft - deltaX;
         vp.scrollTop = startScrollTop - deltaY;
     }, { passive: true });
 
     vp.addEventListener('touchend', () => { isPanning = false; });
+    vp.addEventListener('touchcancel', () => { isPanning = false; });
+
+    // Écouteur souris / pointeur
+    vp.addEventListener('mousedown', (e) => {
+        if (zoomFactor > 1.0) {
+            isPanning = true;
+            startPanX = e.clientX;
+            startPanY = e.clientY;
+            startScrollLeft = vp.scrollLeft;
+            startScrollTop = vp.scrollTop;
+        }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        const deltaX = e.clientX - startPanX;
+        const deltaY = e.clientY - startPanY;
+        vp.scrollLeft = startScrollLeft - deltaX;
+        vp.scrollTop = startScrollTop - deltaY;
+    });
+
+    window.addEventListener('mouseup', () => { isPanning = false; });
 }
 
 window.onload = () => {
