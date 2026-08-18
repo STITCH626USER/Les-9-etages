@@ -130,12 +130,12 @@ html, body {
     position: relative;
     margin: 0 auto;
     vertical-align: middle;
-    opacity: 0;
-    transition: opacity 0.25s ease;
+    opacity: 1;
+    transition: opacity 0.18s ease-in-out;
 }
 .canvas-page {
     display: inline-block; width: auto; height: auto;
-    background: transparent;
+    background: #ffffff;
 }
 #page-canvas-left { border-radius: 4px; box-shadow: 0 15px 45px rgba(0,0,0,0.9); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 15px 45px rgba(0,0,0,0.9); }
@@ -529,7 +529,11 @@ function initDockFadeListeners() {
     wakeBottomDock();
 }
 
+let isInitialOpen = true;
+
 function showCenteredLoader(msg) {
+    // Only show big loader on cold boot / first document load
+    if (!isInitialOpen) return;
     const sp = document.getElementById('reader-loading-spinner');
     const sub = document.getElementById('loading-sub-progress');
     if (sp) {
@@ -541,6 +545,7 @@ function showCenteredLoader(msg) {
 function hideCenteredLoader() {
     const sp = document.getElementById('reader-loading-spinner');
     if (sp) sp.style.display = 'none';
+    isInitialOpen = false;
 }
 
 async function openReader() {
@@ -567,7 +572,7 @@ async function renderUniversalReader() {
         return;
     }
 
-    showCenteredLoader();
+    if (isInitialOpen) showCenteredLoader();
 
     const totalPages = activeDoc.numPages;
     const scrubber = document.getElementById('page-scrubber');
@@ -596,7 +601,7 @@ async function renderUniversalReader() {
     const cLeft = document.getElementById('page-canvas-left');
     const cRight = document.getElementById('page-canvas-right');
     if (!wrapper || !cLeft || !cRight) {
-        hideCenteredLoader(); if (wrapper) wrapper.style.opacity = '1';
+        hideCenteredLoader();
         return;
     }
 
@@ -631,7 +636,7 @@ async function renderUniversalReader() {
             const renderScale = (displayW / unscaledVpL.width) * dpr;
             const vp = pageL.getViewport({ scale: renderScale });
 
-            // Create offscreen canvas to avoid white flash
+            // Render seamlessly offscreen first
             const offL = document.createElement('canvas');
             offL.width = vp.width;
             offL.height = vp.height;
@@ -641,7 +646,7 @@ async function renderUniversalReader() {
             renderTaskLeft = pageL.render({ canvasContext: ctxOffL, viewport: vp });
             await renderTaskLeft.promise;
 
-            // Copy to active canvas seamlessly
+            // Direct smooth swap without blank flash
             cLeft.width = vp.width;
             cLeft.height = vp.height;
             cLeft.style.width = `${Math.round(displayW)}px`;
@@ -683,7 +688,7 @@ async function renderUniversalReader() {
             const vpL = pageL.getViewport({ scale: scaleL });
             const vpR = pageR.getViewport({ scale: scaleR });
 
-            // Offscreen render to avoid white flash
+            // Offscreen render
             const offL = document.createElement('canvas');
             offL.width = vpL.width; offL.height = vpL.height;
             const offR = document.createElement('canvas');
@@ -718,7 +723,7 @@ async function renderUniversalReader() {
             console.error("PDF Render Error:", err);
         }
     } finally {
-        hideCenteredLoader(); if (wrapper) wrapper.style.opacity = '1';
+        hideCenteredLoader();
     }
 
     saveUserStore();
