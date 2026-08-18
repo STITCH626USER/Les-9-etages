@@ -84,6 +84,52 @@ body, html {
     background: #080b13; z-index: 90; overflow: hidden;
 }
 
+
+/* AUTO-FADE INTÉLIGENT DES COMMANDES (QUASI INVISIBLE AU REPOS, SE RALLUME À L'ACTIVITÉ) */
+.auto-fade-ui {
+    opacity: 0.15 !important;
+    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+.auto-fade-ui:hover, .auto-fade-ui.ui-active {
+    opacity: 1 !important;
+}
+
+#m-header {
+    opacity: 0.85;
+    transition: opacity 0.4s ease;
+}
+#m-header:hover, #m-header.ui-active {
+    opacity: 1;
+}
+
+#reader-zoom-bar {
+    opacity: 0.15;
+    transition: opacity 0.45s ease, transform 0.3s ease;
+}
+#reader-zoom-bar:hover, #reader-zoom-bar.ui-active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(2px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.85), 0 0 20px rgba(223, 178, 86, 0.25);
+}
+
+#m-bottom-dock {
+    opacity: 0.15;
+    transition: opacity 0.45s ease, transform 0.3s ease;
+}
+#m-bottom-dock:hover, #m-bottom-dock.ui-active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.9), 0 0 25px rgba(223, 178, 86, 0.25);
+}
+
+.nav-side-arrow {
+    opacity: 0.2;
+    transition: opacity 0.4s ease, transform 0.2s ease;
+}
+.nav-side-arrow:hover, .nav-side-arrow.ui-active {
+    opacity: 1;
+}
+
 /* SCROLLABLE VIEWPORT QUAND ZOOMÉ AVEC DÉPLACEMENT LIBRE & CURSEUR GRAB */
 #reader-scroll-viewport {
     width: 100%; height: 100%;
@@ -472,6 +518,7 @@ async function initAppCore() {
     updateSideBadge();
     setupTouchGestures();
     setupPanDrag();
+    setupAutoFadeListeners();
 }
 
 // RENDU UNIVERSEL : AUTO-DÉTECTION (1 PAGE MOBILE OU 2 PAGES DESKTOP) + ZOOM 20% CENTRÉ
@@ -566,6 +613,39 @@ let isPanning = false;
 let startPanX = 0, startPanY = 0;
 let scrollStartLeft = 0, scrollStartTop = 0;
 
+
+// GESTION DU REPOS ET DU RÉVEIL DES BOUTONS DE COMMANDE
+let idleFadeTimer = null;
+
+function wakeControls() {
+    const zoomBar = document.getElementById('reader-zoom-bar');
+    const bottomDock = document.getElementById('m-bottom-dock');
+    const sideArrows = document.querySelectorAll('.nav-side-arrow');
+    const header = document.getElementById('m-header');
+
+    if (zoomBar) zoomBar.classList.add('ui-active');
+    if (bottomDock) bottomDock.classList.add('ui-active');
+    if (header) header.classList.add('ui-active');
+    sideArrows.forEach(a => a.classList.add('ui-active'));
+
+    clearTimeout(idleFadeTimer);
+    idleFadeTimer = setTimeout(() => {
+        if (zoomBar) zoomBar.classList.remove('ui-active');
+        if (bottomDock) bottomDock.classList.remove('ui-active');
+        if (header) header.classList.remove('ui-active');
+        sideArrows.forEach(a => a.classList.remove('ui-active'));
+    }, 2800); // Se rend quasi invisible après 2.8s d'inactivité
+}
+
+function setupAutoFadeListeners() {
+    window.addEventListener('mousemove', wakeControls);
+    window.addEventListener('touchstart', wakeControls, { passive: true });
+    window.addEventListener('touchmove', wakeControls, { passive: true });
+    window.addEventListener('scroll', wakeControls, { passive: true });
+    window.addEventListener('keydown', wakeControls);
+    wakeControls();
+}
+
 function setupPanDrag() {
     const vp = document.getElementById('reader-scroll-viewport');
 
@@ -624,6 +704,7 @@ function setupPanDrag() {
 }
 
 function stepZoom(delta) {
+    wakeControls();
     zoomFactor = Math.max(0.60, Math.min(2.40, +(zoomFactor + delta).toFixed(2)));
     renderUniversalReader();
 }
@@ -646,6 +727,7 @@ function manualToggleLayout() {
 }
 
 function nextStep() {
+    wakeControls();
     const step = (isDoublePageMode() && currentPage > 1) ? 2 : 1;
     if (currentPage + step <= 168) {
         currentPage += step;
@@ -656,6 +738,7 @@ function nextStep() {
 }
 
 function prevStep() {
+    wakeControls();
     const step = (isDoublePageMode() && currentPage > 2) ? 2 : 1;
     if (currentPage - step >= 1) {
         currentPage -= step;
