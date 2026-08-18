@@ -240,18 +240,7 @@ html, body {
         <button class="btn-mode-pill" onclick="resetZoomDefault()">1:1 Centré</button>
     </div>
 
-    <!-- ARROWS SUR PC -->
-    <div class="nav-side-arrow nav-arrow-left" onclick="prevStep()" title="Page précédente">❮</div>
-    <div class="nav-side-arrow nav-arrow-right" onclick="nextStep()" title="Page suivante">❯</div>
-
-    <div id="reader-scroll-viewport">
-        <div id="spread-card-wrapper">
-            <div id="binding-shadow" class="spread-binding-shadow" style="display:none;"></div>
-            <canvas id="page-canvas-left" class="canvas-page-half" style="display:none;"></canvas>
-            <canvas id="page-canvas-right" class="canvas-page-half" style="display:none;"></canvas>
-            <canvas id="page-canvas-single" class="canvas-page-single"></canvas>
-        </div>
-    </div>
+    <!-- SIDE ARROWS REMOVED: NAVIGATION UNIQUEMENT VIA CURSEUR BAS -->
 
     <!-- FIXED BOTTOM DOCK -->
     <div id="m-bottom-dock">
@@ -429,8 +418,8 @@ function init3DStage() {
 
 function animate3DLoop(time) {
     requestAnimationFrame(animate3DLoop);
-    TWEEN.update(time);
-    if (!isFlipping3D && bookMesh && !isReading) {
+    if (typeof TWEEN !== 'undefined') TWEEN.update(time);
+    if (!isFlipping3D && bookMesh && !isReading && !isTouchDragging) {
         bookMesh.position.y = Math.sin(time * 0.0015) * 0.08;
     }
     if (renderer && scene && camera) {
@@ -458,13 +447,13 @@ function handleWindowResize() {
     }
 }
 
-async function initAppCore() {
+async async function initAppCore() {
     loadUserStore();
     updateSideBadge();
     docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     updateSideBadge();
-    setupTouchGestures();
+    initDockFadeListeners();
 }
 
 // RENDU HAUTE FIDÉLITÉ UNIVERSEL
@@ -595,7 +584,31 @@ function prevStep() {
     renderUniversalReader();
 }
 
+
+let dockFadeTimeout = null;
+function wakeBottomDock() {
+    const dock = document.getElementById('m-bottom-dock');
+    const zoom = document.getElementById('reader-zoom-bar');
+    if (dock) dock.classList.add('dock-awake');
+    if (zoom) zoom.classList.add('dock-awake');
+    
+    clearTimeout(dockFadeTimeout);
+    dockFadeTimeout = setTimeout(() => {
+        if (dock) dock.classList.remove('dock-awake');
+        if (zoom) zoom.classList.remove('dock-awake');
+    }, 2800);
+}
+
+function initDockFadeListeners() {
+    window.addEventListener('touchstart', wakeBottomDock, { passive: true });
+    window.addEventListener('touchmove', wakeBottomDock, { passive: true });
+    window.addEventListener('mousemove', wakeBottomDock);
+    window.addEventListener('scroll', wakeBottomDock, { passive: true });
+    wakeBottomDock();
+}
+
 function onScrubPage(val) {
+    wakeBottomDock();
     currentPage = parseInt(val);
     renderUniversalReader();
 }
