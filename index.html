@@ -35,83 +35,11 @@ html, body {
 }
 
 /* =================================================== */
-/* 📱 HEADER SUPÉRIEUR FLUIDE & SWIPABLE */
-/* =================================================== */
-#m-header {
-    height: 58px; width: 100%; background: #0c1220;
-    border-bottom: 1px solid rgba(255,255,255,0.14);
-    display: flex; align-items: center;
-    padding: 0 12px; position: fixed; top: 0; left: 0; z-index: 500;
-    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-}
-#m-header::-webkit-scrollbar { display: none; }
-
-.header-inner-track {
-    display: flex; align-items: center; justify-content: space-between;
-    width: 100%; min-width: max-content; gap: 12px;
-}
-
-.brand-zone { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.title-row { display: flex; align-items: center; gap: 6px; }
-.title-txt {
-    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 900;
-    letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
-}
-.author-txt {
-    font-size: 10.5px; font-weight: 700; color: #dfb256; letter-spacing: 0.3px;
-}
-.side-pill {
-    padding: 3px 8px; border-radius: 10px; font-size: 9.5px; font-weight: 900;
-    text-transform: uppercase;
-}
-.pill-terrain { background: #c35936; color: #fff; }
-.pill-sommet { background: #133968; color: #dfb256; }
-
-.header-btns { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.btn-h {
-    background: #182236; border: 1.5px solid rgba(255,255,255,0.25);
-    color: #f7eedb; padding: 7px 12px; border-radius: 16px; font-size: 12px; font-weight: 800;
-    cursor: pointer; display: flex; align-items: center; gap: 5px; min-height: 36px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4); white-space: nowrap;
-}
-.btn-h.active-bm { background: #dfb256; color: #111; font-weight: 900; border-color: #dfb256; }
-.btn-flip-act {
-    background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
-    color: #111; font-weight: 900; font-size: 12px; border: none;
-    padding: 8px 14px; border-radius: 16px; cursor: pointer; min-height: 36px;
-    box-shadow: 0 3px 12px rgba(223, 178, 86, 0.4); white-space: nowrap;
-}
-
-/* =================================================== */
-/* 🧊 ACCUEIL 3D & BOUTON OUVRIR LE LIVRE */
-/* =================================================== */
-#stage-3d-box {
-    width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 10;
-    touch-action: none; background: radial-gradient(circle at center, #10192e 0%, #040711 85%);
-}
-
-#home-3d-cta {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 360px; z-index: 60; text-align: center;
-    display: flex; flex-direction: column; gap: 10px;
-}
-.cta-info-bubble {
-    font-size: 12px; font-weight: 700; color: #889bb8;
-    background: rgba(12,18,32,0.92); padding: 8px 16px; border-radius: 20px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-}
-.cta-btn-main {
-    background: #dfb256; color: #111; font-size: 16px; font-weight: 900;
-    padding: 16px 32px; border-radius: 32px; border: none; cursor: pointer;
-    box-shadow: 0 8px 25px rgba(223, 178, 86, 0.6); width: 100%;
-}
-
-/* =================================================== */
-/* 📖 LISEUSE NUMÉRIQUE (100% CONTENUE) */
+/* 📱 LISEUSE PLEIN FORMAT & DÉPLACEMENT TACTILE FLUIDE */
 /* =================================================== */
 #live-reader-container {
-    position: fixed; top: 58px; left: 0; width: 100vw; height: calc(100vh - 58px);
-    display: none; flex-direction: column; justify-content: center; align-items: center;
+    position: fixed; top: 52px; left: 0; width: 100vw; height: calc(100vh - 52px);
+    display: none; justify-content: center; align-items: center;
     background: #040711; z-index: 90; overflow: hidden;
 }
 
@@ -119,76 +47,121 @@ html, body {
     width: 100%; height: 100%;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    display: flex; justify-content: center; align-items: center;
-    padding: 68px 10px 75px 10px;
+    padding: 60px 14px 70px 14px;
     touch-action: pan-x pan-y pinch-zoom;
-    cursor: grab;
+    box-sizing: border-box;
+    display: block;
+    text-align: center;
+    white-space: nowrap;
 }
-#reader-scroll-viewport:active { cursor: grabbing; }
 
 #spread-card-wrapper {
     background: transparent;
-    display: flex; align-items: center; justify-content: center;
-    position: relative; margin: auto;
-    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    position: relative;
+    margin: 0 auto;
+    vertical-align: middle;
 }
 .canvas-page {
-    display: block; width: auto; height: auto;
+    display: inline-block; width: auto; height: auto;
     background: #ffffff;
     box-shadow: 0 15px 45px rgba(0,0,0,0.9);
 }
 #page-canvas-left { border-radius: 4px 0 0 4px; }
 #page-canvas-right { border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); }
 
-/* ZOOM TOOLBAR */
+/* =================================================== */
+/* 📱 MENUS COMPACTS & ULTRA DISCRETS SUR MOBILE */
+/* =================================================== */
+#m-header {
+    height: 52px; width: 100%; background: #0c1220;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center;
+    padding: 0 10px; position: fixed; top: 0; left: 0; z-index: 500;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+#m-header::-webkit-scrollbar { display: none; }
+
+.header-inner-track {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; min-width: max-content; gap: 8px;
+}
+
+.brand-zone { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.title-row { display: flex; align-items: center; gap: 4px; }
+.title-txt {
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 900;
+    letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
+}
+.author-txt {
+    font-size: 9.5px; font-weight: 700; color: #dfb256; letter-spacing: 0.3px;
+}
+.side-pill {
+    padding: 2.5px 6px; border-radius: 8px; font-size: 8.5px; font-weight: 900;
+    text-transform: uppercase;
+}
+
+.btn-h {
+    background: #182236; border: 1px solid rgba(255,255,255,0.2);
+    color: #f7eedb; padding: 5px 9px; border-radius: 12px; font-size: 11px; font-weight: 800;
+    cursor: pointer; display: flex; align-items: center; gap: 4px; min-height: 32px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3); white-space: nowrap;
+}
+.btn-flip-act {
+    background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
+    color: #111; font-weight: 900; font-size: 11px; border: none;
+    padding: 6px 11px; border-radius: 12px; cursor: pointer; min-height: 32px;
+    box-shadow: 0 2px 8px rgba(223, 178, 86, 0.4); white-space: nowrap;
+}
+
+/* ZOOM TOOLBAR COMPACTE */
 #reader-zoom-bar {
-    position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
-    background: rgba(14, 22, 40, 0.82); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(255, 255, 255, 0.25); border-radius: 25px;
-    padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
-    z-index: 120; font-size: 13px; font-weight: 800;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.75);
+    position: fixed; top: 58px; left: 50%; transform: translateX(-50%);
+    background: rgba(12, 18, 32, 0.82); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px;
+    padding: 3px 10px; display: flex; align-items: center; justify-content: center; gap: 6px;
+    z-index: 120; font-size: 11.5px; font-weight: 800;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.75);
     white-space: nowrap; width: auto; max-width: 96%;
 }
-
 .btn-zoom-step {
-    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.3);
-    color: #dfb256; width: 32px; height: 32px; border-radius: 8px; font-size: 18px; font-weight: 900;
+    background: #1b263e; border: 1px solid rgba(255,255,255,0.25);
+    color: #dfb256; width: 26px; height: 26px; border-radius: 6px; font-size: 15px; font-weight: 900;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
-#zoom-percentage-txt { color: #dfb256; font-size: 13px; font-weight: 900; min-width: 44px; text-align: center; }
+#zoom-percentage-txt { color: #dfb256; font-size: 11.5px; font-weight: 900; min-width: 38px; text-align: center; }
 .btn-mode-pill {
-    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.25);
-    color: #f7eedb; font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 14px;
-    cursor: pointer; min-height: 32px; display: flex; align-items: center;
+    background: #1b263e; border: 1px solid rgba(255,255,255,0.2);
+    color: #f7eedb; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 10px;
+    cursor: pointer; min-height: 26px; display: flex; align-items: center;
 }
 
-/* DOCK INFÉRIEUR TOUJOURS VISIBLE DANS LA LISEUSE */
+/* DOCK INFÉRIEUR ULTRA-COMPACT */
 #m-bottom-dock {
-    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 440px; height: 50px;
+    position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 400px; height: 42px;
     background: rgba(12, 18, 32, 0.82); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(255, 255, 255, 0.25); border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 22px;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 12px; z-index: 150;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.75);
+    padding: 0 10px; z-index: 150;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.75);
 }
-
 .dock-nav-btn {
-    background: rgba(27, 38, 62, 0.85); border: 1.5px solid rgba(255,255,255,0.28);
-    color: #f7eedb; padding: 7px 13px; border-radius: 14px; font-size: 14px; font-weight: 900;
-    cursor: pointer; min-width: 40px; min-height: 34px; display: flex; align-items: center; justify-content: center;
+    background: rgba(27, 38, 62, 0.85); border: 1px solid rgba(255,255,255,0.25);
+    color: #f7eedb; padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 900;
+    cursor: pointer; min-width: 34px; min-height: 28px; display: flex; align-items: center; justify-content: center;
 }
 .dock-slider-bar {
-    flex: 1; margin: 0 10px; -webkit-appearance: none; appearance: none;
-    height: 5px; border-radius: 5px; background: rgba(255,255,255,0.25); outline: none;
+    flex: 1; margin: 0 8px; -webkit-appearance: none; appearance: none;
+    height: 4px; border-radius: 4px; background: rgba(255,255,255,0.25); outline: none;
 }
 .dock-slider-bar::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 20px; height: 20px;
+    -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
     border-radius: 50%; background: #dfb256; cursor: pointer;
-    box-shadow: 0 0 10px rgba(223, 178, 86, 0.9);
+    box-shadow: 0 0 8px rgba(223, 178, 86, 0.9);
 }
-#page-indicator-txt { font-size: 12px; font-weight: 900; color: #dfb256; min-width: 85px; text-align: center; white-space: nowrap; }
+#page-indicator-txt { font-size: 11px; font-weight: 900; color: #dfb256; min-width: 75px; text-align: center; white-space: nowrap; }
 
 @media (max-width: 768px) {
     #btn-page-mode { display: none !important; }
@@ -808,7 +781,41 @@ function showToastAlert(txt) {
     setTimeout(() => { t.style.display = 'none'; }, 2200);
 }
 
+
+// Tactile Touch Pan support for smooth moving in any direction when zoomed
+let isPanning = false;
+let startPanX = 0;
+let startPanY = 0;
+let startScrollLeft = 0;
+let startScrollTop = 0;
+
+function initTouchPan() {
+    const vp = document.getElementById('reader-scroll-viewport');
+    if (!vp) return;
+
+    vp.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1 && zoomFactor > 1.0) {
+            isPanning = true;
+            startPanX = e.touches[0].pageX;
+            startPanY = e.touches[0].pageY;
+            startScrollLeft = vp.scrollLeft;
+            startScrollTop = vp.scrollTop;
+        }
+    }, { passive: true });
+
+    vp.addEventListener('touchmove', (e) => {
+        if (!isPanning || e.touches.length !== 1) return;
+        const deltaX = e.touches[0].pageX - startPanX;
+        const deltaY = e.touches[0].pageY - startPanY;
+        vp.scrollLeft = startScrollLeft - deltaX;
+        vp.scrollTop = startScrollTop - deltaY;
+    }, { passive: true });
+
+    vp.addEventListener('touchend', () => { isPanning = false; });
+}
+
 window.onload = () => {
+    initTouchPan();
     init3DStage();
 };
 </script>
