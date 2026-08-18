@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>LES 9 ÉTAGES DE LA TOUR — Alexandre R.</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
 <meta name="title" content="LES 9 ÉTAGES DE LA TOUR — Alexandre R.">
 <meta name="description" content="Découvrez le livre tête-bêche « Les 9 Étages de la Tour » par Alexandre R.">
@@ -35,49 +35,105 @@ html, body {
 }
 
 /* =================================================== */
-/* 📱 HARMONIE MOBILE NATIVE (CALIBRÉE SANS DÉBORDEMENT) */
+/* 📱 HEADER SUPÉRIEUR FLUIDE & SCROLLABLE / SWIPABLE */
 /* =================================================== */
-
 #m-header {
-    height: 56px; width: 100%; background: #0c1220;
+    height: 58px; width: 100%; background: #0c1220;
     border-bottom: 1px solid rgba(255,255,255,0.14);
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex; align-items: center;
     padding: 0 10px; position: fixed; top: 0; left: 0; z-index: 500;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
-.brand-zone { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+#m-header::-webkit-scrollbar { display: none; }
+
+.header-inner-track {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; min-width: max-content; gap: 12px;
+}
+
+.brand-zone { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .title-row { display: flex; align-items: center; gap: 6px; }
 .title-txt {
     font-family: 'Cinzel', serif; font-size: 14px; font-weight: 900;
     letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
 }
 .author-txt {
-    font-size: 10px; font-weight: 700; color: #dfb256; letter-spacing: 0.3px; margin-left: 2px;
+    font-size: 10.5px; font-weight: 700; color: #dfb256; letter-spacing: 0.3px;
 }
 .side-pill {
-    padding: 3px 8px; border-radius: 10px; font-size: 9px; font-weight: 900;
+    padding: 3px 8px; border-radius: 10px; font-size: 9.5px; font-weight: 900;
     text-transform: uppercase;
 }
 .pill-terrain { background: #c35936; color: #fff; }
 .pill-sommet { background: #133968; color: #dfb256; }
 
-.header-btns { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.header-btns { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .btn-h {
     background: #182236; border: 1.5px solid rgba(255,255,255,0.25);
-    color: #f7eedb; padding: 7px 11px; border-radius: 16px; font-size: 12px; font-weight: 800;
-    cursor: pointer; display: flex; align-items: center; gap: 4px; min-height: 36px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    color: #f7eedb; padding: 7px 12px; border-radius: 16px; font-size: 12px; font-weight: 800;
+    cursor: pointer; display: flex; align-items: center; gap: 5px; min-height: 36px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4); white-space: nowrap;
 }
 .btn-h.active-bm { background: #dfb256; color: #111; font-weight: 900; border-color: #dfb256; }
 .btn-flip-act {
     background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
     color: #111; font-weight: 900; font-size: 12px; border: none;
-    padding: 8px 12px; border-radius: 16px; cursor: pointer; min-height: 36px;
+    padding: 8px 14px; border-radius: 16px; cursor: pointer; min-height: 36px;
     box-shadow: 0 3px 12px rgba(223, 178, 86, 0.4); white-space: nowrap;
 }
 
-/* ZOOM TOOLBAR PARFAITEMENT INTÉGRÉE (LARGEUR MAX 92%, SANS RETOUR À LA LIGNE) */
+/* =================================================== */
+/* 🧊 SCÈNE 3D & BOUTON OUVRIR LE LIVRE (100% FIABLE) */
+/* =================================================== */
+#stage-3d-box {
+    width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 10;
+    touch-action: none; background: radial-gradient(circle at center, #10192e 0%, #040711 85%);
+}
+
+#home-3d-cta {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 360px; z-index: 60; text-align: center;
+    display: flex; flex-direction: column; gap: 10px;
+}
+.cta-info-bubble {
+    font-size: 12px; font-weight: 700; color: #889bb8;
+    background: rgba(12,18,32,0.92); padding: 8px 16px; border-radius: 20px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+}
+.cta-btn-main {
+    background: #dfb256; color: #111; font-size: 16px; font-weight: 900;
+    padding: 16px 32px; border-radius: 32px; border: none; cursor: pointer;
+    box-shadow: 0 8px 25px rgba(223, 178, 86, 0.6); width: 100%;
+}
+
+/* =================================================== */
+/* 📖 LISEUSE NUMÉRIQUE HAUTE FIDÉLITÉ */
+/* =================================================== */
+#live-reader-container {
+    position: fixed; top: 58px; left: 0; width: 100vw; height: calc(100vh - 58px);
+    display: none; justify-content: center; align-items: center;
+    background: #040711; z-index: 90; overflow: hidden;
+}
+
+#reader-scroll-viewport {
+    width: 100%; height: 100%;
+    overflow-y: auto; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex; justify-content: center; align-items: center;
+    padding: 60px 8px 75px 8px;
+}
+
+#spread-card-wrapper {
+    background: #ffffff; border-radius: 6px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.95);
+    position: relative; margin: auto;
+    flex-shrink: 0;
+}
+.canvas-page-single { display: block; width: 100%; height: auto; border-radius: 6px; }
+
+/* ZOOM TOOLBAR (UNE SEULE LIGNE HORIZONTALE) */
 #reader-zoom-bar {
-    position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
+    position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
     background: #0e1628;
     border: 1.5px solid rgba(255,255,255,0.25); border-radius: 25px;
     padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -100,30 +156,7 @@ html, body {
     cursor: pointer; min-height: 32px; display: flex; align-items: center;
 }
 
-/* LISEUSE ET SCROLL VIEWPORT CENTRÉ */
-#live-reader-container {
-    position: fixed; top: 56px; left: 0; width: 100vw; height: calc(100vh - 56px);
-    display: none; justify-content: center; align-items: center;
-    background: #040711; z-index: 90; overflow: hidden;
-}
-
-#reader-scroll-viewport {
-    width: 100%; height: 100%;
-    overflow-y: auto; overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex; justify-content: center; align-items: center;
-    padding: 60px 8px 75px 8px;
-}
-
-#spread-card-wrapper {
-    background: #ffffff; border-radius: 6px;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.95);
-    position: relative; margin: auto;
-    flex-shrink: 0;
-}
-.canvas-page-single { display: block; width: 100%; height: auto; border-radius: 6px; }
-
-/* DOCK INFÉRIEUR HARMONIEUX (FLUIDE, 100% INTÉGRÉ DANS L'ÉCRAN SANS COUPURE) */
+/* DOCK INFÉRIEUR HARMONIEUX (FLUIDE SANS DÉBORDEMENT) */
 #m-bottom-dock {
     position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
     width: 92%; max-width: 420px; height: 50px;
@@ -152,9 +185,7 @@ html, body {
 }
 #page-indicator-txt { font-size: 12px; font-weight: 900; color: #dfb256; min-width: 85px; text-align: center; white-space: nowrap; }
 
-/* =================================================== */
-/* 📱 MODAL MARQUE-PAGES FORMAT MOBILE GÉANT (PLEINE LARGEUR) */
-/* =================================================== */
+/* MODAL MARQUE-PAGES PLEIN FORMAT */
 #bookmarks-dialog-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(4, 6, 12, 0.90); backdrop-filter: blur(25px);
@@ -162,73 +193,61 @@ html, body {
     padding: 16px;
 }
 .dialog-box {
-    background: #0f1628; border: 2.5px solid rgba(255,255,255,0.28);
-    border-radius: 28px; padding: 32px 20px; width: 95%; max-width: 440px;
-    box-shadow: 0 25px 70px rgba(0,0,0,0.98); text-align: center;
+    background: #0f1628; border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 24px; padding: 26px 18px; width: 92%; max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.98); text-align: center;
 }
-.dialog-box-icon {
-    font-size: 48px; margin-bottom: 10px; display: block;
-}
-.dialog-box-title {
-    font-size: 22px; font-weight: 900; color: #dfb256; text-transform: uppercase; letter-spacing: 1px;
-}
-.dialog-box-sub {
-    font-size: 15px; font-weight: 700; color: #9ab0d0; margin-top: 6px; margin-bottom: 20px;
-}
-.dialog-list {
-    max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
-    margin: 20px 0; text-align: left;
-}
+.dialog-box-icon { font-size: 38px; margin-bottom: 8px; display: block; }
+.dialog-box-title { font-size: 19px; font-weight: 900; color: #dfb256; text-transform: uppercase; }
+.dialog-box-sub { font-size: 13px; font-weight: 700; color: #9ab0d0; margin-top: 4px; margin-bottom: 16px; }
+.dialog-list { max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; text-align: left; }
 .dialog-item {
-    background: rgba(255,255,255,0.10); border: 2px solid rgba(255,255,255,0.22);
-    padding: 16px 18px; border-radius: 18px; display: flex; justify-content: space-between;
-    align-items: center; cursor: pointer; min-height: 60px;
+    background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+    padding: 12px 14px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; min-height: 50px;
 }
-.dialog-badge-side {
-    font-size: 13px; font-weight: 900; padding: 6px 12px; border-radius: 12px; text-transform: uppercase;
-}
-.dialog-page-label {
-    font-size: 18px; font-weight: 900; color: #f7eedb;
-}
+.dialog-badge-side { font-size: 11px; font-weight: 900; padding: 4px 8px; border-radius: 10px; text-transform: uppercase; }
+.dialog-page-label { font-size: 15px; font-weight: 800; color: #f7eedb; }
 .btn-dialog-close {
-    background: #dfb256; color: #111; font-weight: 900; font-size: 18px;
-    padding: 16px 32px; border-radius: 30px; border: none; cursor: pointer; width: 100%;
-    margin-top: 10px; box-shadow: 0 6px 20px rgba(223, 178, 86, 0.5);
-}
-#toast-box {
-    position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
     background: #dfb256; color: #111; font-weight: 900; font-size: 15px;
-    padding: 12px 28px; border-radius: 30px; display: none; z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    padding: 14px 28px; border-radius: 25px; border: none; cursor: pointer; width: 100%;
+    margin-top: 10px;
 }
 
+#toast-box {
+    position: fixed; top: 76px; left: 50%; transform: translateX(-50%);
+    background: #dfb256; color: #111; font-weight: 900; font-size: 13px;
+    padding: 9px 22px; border-radius: 25px; display: none; z-index: 1000;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+}
 </style>
 </head>
 <body>
 
 <div id="toast-box">Page mémorisée !</div>
 
-<!-- TOP HEADER -->
+<!-- TOP HEADER AVEC DÉFILEMENT / SWIPE HORIZONTAL FLUIDE -->
 <div id="m-header">
-    <div class="brand-zone">
-        <div class="title-row">
-            <span class="title-txt">9 ÉTAGES</span>
-            <span id="badge-side" class="side-pill pill-terrain">TERRAIN</span>
+    <div class="header-inner-track">
+        <div class="brand-zone">
+            <div class="title-row">
+                <span class="title-txt">9 ÉTAGES</span>
+                <span id="badge-side" class="side-pill pill-terrain">TERRAIN</span>
+            </div>
+            <span class="author-txt">Alexandre R.</span>
         </div>
-        <span class="author-txt">Alexandre R.</span>
-    </div>
 
-    <div class="header-btns">
-        <button id="btn-save-bm" class="btn-h" onclick="toggleCurrentBookmark()">🔖 <span id="txt-bm-label">Marquer</span></button>
-        <button class="btn-h" onclick="openBookmarksList()">📂 Marque-pages</button>
-        <button class="btn-flip-act" onclick="flip3DTeteBeche()">🔄 RETOURNER</button>
+        <div class="header-btns">
+            <button id="btn-save-bm" class="btn-h" onclick="toggleCurrentBookmark()">🔖 <span id="txt-bm-label">Marquer</span></button>
+            <button class="btn-h" onclick="openBookmarksList()">📂 Marque-pages</button>
+            <button class="btn-flip-act" onclick="flip3DTeteBeche()">🔄 RETOURNER</button>
+        </div>
     </div>
 </div>
 
-<!-- 3D STAGE BOX -->
+<!-- SCÈNE 3D DE L'ACCUEIL -->
 <div id="stage-3d-box"></div>
 
-<!-- 3D HOME CTA (OUVRIR LE LIVRE) -->
+<!-- BOUTON OUVRIR LE LIVRE DE L'ACCUEIL -->
 <div id="home-3d-cta">
     <div class="cta-info-bubble">
         👆 Touchez & glissez pour manipuler à 360°
@@ -238,12 +257,12 @@ html, body {
     </button>
 </div>
 
-<!-- LISEUSE PLEIN ÉCRAN -->
+<!-- LISEUSE PLEIN FORMAT -->
 <div id="live-reader-container">
     
-    <!-- ZOOM TOOLBAR GÉANTE -->
+    <!-- ZOOM TOOLBAR SUR 1 SEULE LIGNE -->
     <div id="reader-zoom-bar">
-        <span style='white-space:nowrap;'>Zoom :</span>
+        <span style="white-space:nowrap;">Zoom :</span>
         <button class="btn-zoom-step" onclick="stepZoom(-0.15)">−</button>
         <span id="zoom-percentage-txt">100%</span>
         <button class="btn-zoom-step" onclick="stepZoom(0.15)">+</button>
@@ -256,38 +275,37 @@ html, body {
         </div>
     </div>
 
-    <!-- BOTTOM DOCK GÉANT -->
+    <!-- DOCK INFÉRIEUR -->
     <div id="m-bottom-dock">
         <button class="dock-nav-btn" onclick="prevStep()">◀</button>
-        <input type="range" id="page-scrubber" class="dock-slider-bar" min="1" max="168" value="1" oninput="onScrubPage(this.value)" />
+        <input type="range" id="page-scrubber" class="dock-slider-bar" min="1" max="170" value="1" oninput="onScrubPage(this.value)" />
         <span id="page-indicator-txt">Couverture</span>
         <button class="dock-nav-btn" onclick="nextStep()">▶</button>
     </div>
 </div>
 
-<!-- BOOKMARKS MODAL -->
+<!-- MODAL MARQUE-PAGES -->
 <div id="bookmarks-dialog-overlay">
     <div class="dialog-box">
-        <div style="font-size:36px; margin-bottom:8px;">🔖</div>
-        <h3 style="font-size:19px; color:#dfb256; text-transform:uppercase;">Mes Marque-Pages</h3>
-        <p style="font-size:13px; color:#889bb8; margin-bottom:16px;">Accédez instantanément à vos pages</p>
+        <span class="dialog-box-icon">🔖</span>
+        <h3 class="dialog-box-title">Mes Marque-Pages</h3>
+        <p class="dialog-box-sub">Accédez instantanément à vos pages</p>
         <div class="dialog-list" id="dialog-bm-items"></div>
-        <button onclick="closeBookmarksList()" style="background:#dfb256; color:#111; font-weight:900; font-size:15px; padding:12px 28px; border-radius:25px; border:none; cursor:pointer; width:100%;">Fermer ✕</button>
+        <button class="btn-dialog-close" onclick="closeBookmarksList()">Fermer ✕</button>
     </div>
 </div>
 
 <script>
-const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V2";
+const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V3";
 
-let currentSide = 'terrain'; // 'terrain' or 'sommet'
-let currentPage = 1; // 1 to 168
+let currentSide = 'terrain';
+let currentPage = 1;
 let isReading = false;
 let zoomFactor = 1.0;
 
 let docTerrain = null;
 let docSommet = null;
 
-// Three.js
 let scene, camera, renderer, bookMesh;
 let isFlipping3D = false;
 let isTouchDragging = false;
@@ -341,10 +359,10 @@ function init3DStage() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 1.1));
-    const lKey = new THREE.DirectionalLight(0xffffff, 1.0);
+    scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+    const lKey = new THREE.DirectionalLight(0xffffff, 1.1);
     lKey.position.set(5, 8, 7); scene.add(lKey);
-    const lRim = new THREE.DirectionalLight(0xdfb256, 0.7);
+    const lRim = new THREE.DirectionalLight(0xdfb256, 0.8);
     lRim.position.set(-5, -4, 5); scene.add(lRim);
 
     const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
@@ -393,7 +411,6 @@ function init3DStage() {
     }
     scene.add(bookMesh);
 
-    // FREE TOUCH TRACKBALL (360° SANS BLOCAGE)
     const dom = renderer.domElement;
     dom.addEventListener('pointerdown', (e) => {
         isTouchDragging = true;
@@ -442,7 +459,6 @@ function animate3DLoop(time) {
 async function initAppCore() {
     loadUserStore();
     updateSideBadge();
-    updateBookmarkUI();
     docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     updateSideBadge();
@@ -490,7 +506,7 @@ async function renderUniversalReader() {
     const cSingle = document.getElementById('page-canvas-single');
 
     const screenW = window.innerWidth;
-    const availH = window.innerHeight - 76 - 72;
+    const availH = window.innerHeight - 58 - 50;
 
     const page = await activeDoc.getPage(currentPage);
     
@@ -519,9 +535,6 @@ async function renderUniversalReader() {
 
     saveUserStore();
 }
-
-
-
 
 function stepZoom(delta) {
     wakeBottomDock();
@@ -638,7 +651,7 @@ function openBookmarksList() {
     (userStore.sommetBookmarks || []).forEach(p => all.push({ side: 'sommet', page: p }));
 
     if (all.length === 0) {
-        c.innerHTML = '<div style="font-size:16px; font-weight:700; color:#889bb8; text-align:center; padding:25px;">Aucun marque-page enregistré.<br><span style="font-size:13px; font-weight:600; opacity:0.8;">Utilisez le bouton 🔖 Marquer en cours de lecture.</span></div>';
+        c.innerHTML = '<div style="font-size:14px; font-weight:700; color:#889bb8; text-align:center; padding:20px;">Aucun marque-page enregistré.<br><span style="font-size:12px; font-weight:600; opacity:0.8;">Utilisez le bouton 🔖 Marquer en cours de lecture.</span></div>';
     } else {
         all.forEach(item => {
             const row = document.createElement('div');
@@ -646,11 +659,11 @@ function openBookmarksList() {
             const badgeBg = (item.side === 'terrain') ? '#c35936' : '#133968';
             const pTxt = (item.page === 1) ? "Couverture" : `Page ${item.page - 1}`;
             row.innerHTML = `
-                <div onclick="jumpToBm('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:12px; flex:1;">
+                <div onclick="jumpToBm('${item.side}', ${item.page})" style="display:flex; align-items:center; gap:10px; flex:1;">
                     <span class="dialog-badge-side" style="background:${badgeBg}; color:#fff;">${item.side}</span>
                     <span class="dialog-page-label">${pTxt}</span>
                 </div>
-                <button onclick="delBmItem('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#ff5555; font-size:24px; padding:6px; cursor:pointer;" title="Supprimer">🗑️</button>
+                <button onclick="delBmItem('${item.side}', ${item.page}, event)" style="background:transparent; border:none; color:#ff5555; font-size:20px; padding:4px; cursor:pointer;" title="Supprimer">🗑️</button>
             `;
             c.appendChild(row);
         });
