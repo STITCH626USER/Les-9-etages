@@ -48,7 +48,13 @@ html, body {
     width: 100%; min-width: max-content; gap: 12px; flex-shrink: 0;
 }
 
-.brand-zone { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.brand-zone {
+    display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+    cursor: pointer; user-select: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.brand-zone:hover { opacity: 0.9; transform: scale(1.02); }
+.brand-zone:active { transform: scale(0.97); }
 .title-txt {
     font-family: 'Cinzel', serif; font-size: 15px; font-weight: 900;
     letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
@@ -291,7 +297,7 @@ html, body {
 <!-- TOP HEADER FLUIDE AVEC DÉFILEMENT TACTILE (SWIPABLE) -->
 <div id="m-header">
     <div class="header-inner-track">
-        <div class="brand-zone">
+        <div class="brand-zone" onclick="goToHome3D()" title="Accueil 3D">
             <span class="title-txt">9 ÉTAGES</span>
             <span id="badge-side" class="side-pill pill-terrain">TERRAIN</span>
             <span class="author-txt">Alexandre R.</span>
@@ -594,6 +600,30 @@ function resetZoomDefault() {
     renderUniversalReader();
     const vp = document.getElementById('reader-scroll-viewport');
     if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
+}
+
+function goToHome3D() {
+    isReading = false;
+    const reader = document.getElementById('live-reader-container');
+    const cta = document.getElementById('home-3d-cta');
+    const stage = document.getElementById('stage-3d-box');
+    
+    if (reader) reader.style.display = 'none';
+    if (stage) stage.style.display = 'block';
+    if (cta) cta.style.display = 'flex';
+    
+    saveUserStore();
+    
+    if (bookMesh) {
+        if (currentSide === 'sommet') {
+            bookMesh.rotation.set(0.15, Math.PI - 0.35, Math.PI);
+        } else {
+            bookMesh.rotation.set(0.15, -0.35, 0);
+        }
+    }
+    if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+    }
 }
 
 async function openReader() {
