@@ -562,98 +562,103 @@ function isDoublePageMode() {
 }
 
 function init3DStage() {
-    const container = document.getElementById('stage-3d-box');
-    scene = new THREE.Scene();
+    try {
+        const container = document.getElementById('stage-3d-box');
+        if (!container) return;
+        container.innerHTML = '';
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 9.2);
+        scene = new THREE.Scene();
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true;
-    container.appendChild(renderer.domElement);
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 9.2);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-    const lKey = new THREE.DirectionalLight(0xffffff, 0.95);
-    lKey.position.set(5, 8, 7); scene.add(lKey);
-    const lRim = new THREE.DirectionalLight(0xdfb256, 0.6);
-    lRim.position.set(-5, -4, 5); scene.add(lRim);
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
 
-    const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
-    const loader = new THREE.TextureLoader();
-    const tCover = loader.load(window.BOOK_DATA.terrainCover);
-    const sCover = loader.load(window.BOOK_DATA.sommetCover);
-    sCover.center.set(0.5, 0.5);
-    sCover.rotation = Math.PI;
+        scene.add(new THREE.AmbientLight(0xffffff, 0.95));
+        const lKey = new THREE.DirectionalLight(0xffffff, 0.95);
+        lKey.position.set(5, 8, 7); scene.add(lKey);
+        const lRim = new THREE.DirectionalLight(0xdfb256, 0.6);
+        lRim.position.set(-5, -4, 5); scene.add(lRim);
 
-    const canvasP = document.createElement('canvas');
-    canvasP.width = 128; canvasP.height = 512;
-    const ctxP = canvasP.getContext('2d');
-    ctxP.fillStyle = '#f6f0df'; ctxP.fillRect(0,0,128,512);
-    ctxP.fillStyle = '#d8cca8';
-    for(let i=0; i<512; i+=4) ctxP.fillRect(0, i, 128, 1.5);
-    const pTex = new THREE.CanvasTexture(canvasP);
+        const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
+        const loader = new THREE.TextureLoader();
+        const tCover = loader.load(window.BOOK_DATA.terrainCover, () => { renderer.render(scene, camera); });
+        const sCover = loader.load(window.BOOK_DATA.sommetCover, () => { renderer.render(scene, camera); });
+        sCover.center.set(0.5, 0.5);
+        sCover.rotation = Math.PI;
 
-    const canvasS = document.createElement('canvas');
-    canvasS.width = 256; canvasS.height = 1024;
-    const ctxS = canvasS.getContext('2d');
-    ctxS.fillStyle = '#111a2d'; ctxS.fillRect(0,0,256,512);
-    ctxS.fillStyle = '#c35936'; ctxS.fillRect(0,512,256,512);
-    ctxS.fillStyle = '#dfb256'; ctxS.font = 'bold 36px sans-serif'; ctxS.textAlign = 'center';
-    
-    ctxS.save(); ctxS.translate(128, 256); ctxS.rotate(Math.PI/2);
-    ctxS.fillText("▲ SOMMET · 9 ÉTAGES", 0, 12); ctxS.restore();
+        const canvasP = document.createElement('canvas');
+        canvasP.width = 128; canvasP.height = 512;
+        const ctxP = canvasP.getContext('2d');
+        ctxP.fillStyle = '#f6f0df'; ctxP.fillRect(0,0,128,512);
+        ctxP.fillStyle = '#d8cca8';
+        for(let i=0; i<512; i+=4) ctxP.fillRect(0, i, 128, 1.5);
+        const pTex = new THREE.CanvasTexture(canvasP);
 
-    ctxS.save(); ctxS.translate(128, 768); ctxS.rotate(-Math.PI/2);
-    ctxS.fillStyle = '#f7eedb'; ctxS.fillText("▲ TERRAIN · 9 ÉTAGES", 0, 12); ctxS.restore();
-    const spineTex = new THREE.CanvasTexture(canvasS);
+        const canvasS = document.createElement('canvas');
+        canvasS.width = 256; canvasS.height = 1024;
+        const ctxS = canvasS.getContext('2d');
+        ctxS.fillStyle = '#111a2d'; ctxS.fillRect(0,0,256,512);
+        ctxS.fillStyle = '#c35936'; ctxS.fillRect(0,512,256,512);
+        ctxS.fillStyle = '#dfb256'; ctxS.font = 'bold 36px sans-serif'; ctxS.textAlign = 'center';
+        
+        ctxS.save(); ctxS.translate(128, 256); ctxS.rotate(Math.PI/2);
+        ctxS.fillText("▲ SOMMET · 9 ÉTAGES", 0, 12); ctxS.restore();
 
-    const materials = [
-        new THREE.MeshStandardMaterial({ map: pTex }),
-        new THREE.MeshStandardMaterial({ map: spineTex }),
-        new THREE.MeshStandardMaterial({ map: pTex }),
-        new THREE.MeshStandardMaterial({ map: pTex }),
-        new THREE.MeshStandardMaterial({ map: tCover, roughness: 0.35 }),
-        new THREE.MeshStandardMaterial({ map: sCover, roughness: 0.35 })
-    ];
+        ctxS.save(); ctxS.translate(128, 768); ctxS.rotate(-Math.PI/2);
+        ctxS.fillStyle = '#f7eedb'; ctxS.fillText("▲ TERRAIN · 9 ÉTAGES", 0, 12); ctxS.restore();
+        const spineTex = new THREE.CanvasTexture(canvasS);
 
-    bookMesh = new THREE.Mesh(geometry, materials);
-    if (currentSide === 'sommet') {
-        bookMesh.rotation.set(0.15, Math.PI - 0.35, Math.PI);
-    } else {
+        const materials = [
+            new THREE.MeshStandardMaterial({ map: pTex }),
+            new THREE.MeshStandardMaterial({ map: spineTex }),
+            new THREE.MeshStandardMaterial({ map: pTex }),
+            new THREE.MeshStandardMaterial({ map: pTex }),
+            new THREE.MeshStandardMaterial({ map: tCover, roughness: 0.35 }),
+            new THREE.MeshStandardMaterial({ map: sCover, roughness: 0.35 })
+        ];
+
+        bookMesh = new THREE.Mesh(geometry, materials);
         bookMesh.rotation.set(0.15, -0.35, 0);
+        scene.add(bookMesh);
+
+        // TRACKBALL TOUCH ET SOURIS
+        const dom = renderer.domElement;
+        dom.addEventListener('pointerdown', (e) => {
+            isTouchDragging = true;
+            prevTouchPos = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            if (!isTouchDragging || !bookMesh) return;
+            const deltaX = e.clientX - prevTouchPos.x;
+            const deltaY = e.clientY - prevTouchPos.y;
+
+            const deltaQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+                deltaY * 0.008,
+                deltaX * 0.008,
+                0,
+                'XYZ'
+            ));
+            bookMesh.quaternion.multiplyQuaternions(deltaQuat, bookMesh.quaternion);
+            prevTouchPos = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('pointerup', () => { isTouchDragging = false; });
+
+        window.addEventListener('resize', handleWindowResize);
+
+        animate3DLoop();
+        initAppCore();
+    } catch(err) {
+        console.error("3D Init Error:", err);
     }
-    scene.add(bookMesh);
-
-    // FREE TOUCH TRACKBALL (360° SANS BLOCAGE)
-    const dom = renderer.domElement;
-    dom.addEventListener('pointerdown', (e) => {
-        isTouchDragging = true;
-        prevTouchPos = { x: e.clientX, y: e.clientY };
-    });
-
-    window.addEventListener('pointermove', (e) => {
-        if (!isTouchDragging) return;
-        const deltaX = e.clientX - prevTouchPos.x;
-        const deltaY = e.clientY - prevTouchPos.y;
-
-        const deltaQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(
-            deltaY * 0.008,
-            deltaX * 0.008,
-            0,
-            'XYZ'
-        ));
-        bookMesh.quaternion.multiplyQuaternions(deltaQuat, bookMesh.quaternion);
-        prevTouchPos = { x: e.clientX, y: e.clientY };
-    });
-
-    window.addEventListener('pointerup', () => { isTouchDragging = false; });
-
-    window.addEventListener('resize', handleWindowResize);
-
-    animate3DLoop();
-    initAppCore();
+} catch(err) {
+        console.error("3D Init Error:", err);
+    }
 }
 
 function animate3DLoop(time) {
@@ -1060,7 +1065,7 @@ function setupTouchGestures() {
     }, { passive: true });
 }
 
-window.onload = init3DStage;
+window.onload = () => { init3DStage(); }; };
 </script>
 </body>
 </html>
