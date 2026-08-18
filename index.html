@@ -314,6 +314,7 @@ function loadUserStore() {
         currentSide = 'terrain';
         currentPage = 1;
     }
+    updateBookmarkUI();
 }
 
 function saveUserStore() {
@@ -440,9 +441,11 @@ function animate3DLoop(time) {
 async function initAppCore() {
     loadUserStore();
     updateSideBadge();
+    updateBookmarkUI();
     docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     updateSideBadge();
+    updateBookmarkUI();
     initDockFadeListeners();
 }
 
