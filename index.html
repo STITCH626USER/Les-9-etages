@@ -35,13 +35,13 @@ html, body {
 }
 
 /* =================================================== */
-/* 📱 HEADER SUPÉRIEUR FLUIDE & SCROLLABLE / SWIPABLE */
+/* 📱 HEADER SUPÉRIEUR FLUIDE & SWIPABLE */
 /* =================================================== */
 #m-header {
     height: 58px; width: 100%; background: #0c1220;
     border-bottom: 1px solid rgba(255,255,255,0.14);
     display: flex; align-items: center;
-    padding: 0 10px; position: fixed; top: 0; left: 0; z-index: 500;
+    padding: 0 12px; position: fixed; top: 0; left: 0; z-index: 500;
     overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
 #m-header::-webkit-scrollbar { display: none; }
@@ -83,7 +83,7 @@ html, body {
 }
 
 /* =================================================== */
-/* 🧊 SCÈNE 3D & BOUTON OUVRIR LE LIVRE (100% FIABLE) */
+/* 🧊 ACCUEIL 3D & BOUTON OUVRIR LE LIVRE */
 /* =================================================== */
 #stage-3d-box {
     width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 10;
@@ -107,42 +107,49 @@ html, body {
 }
 
 /* =================================================== */
-/* 📖 LISEUSE NUMÉRIQUE HAUTE FIDÉLITÉ */
+/* 📖 LISEUSE NUMÉRIQUE (100% CONTENUE) */
 /* =================================================== */
 #live-reader-container {
     position: fixed; top: 58px; left: 0; width: 100vw; height: calc(100vh - 58px);
-    display: none; justify-content: center; align-items: center;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
     background: #040711; z-index: 90; overflow: hidden;
 }
 
 #reader-scroll-viewport {
     width: 100%; height: 100%;
-    overflow-y: auto; overflow-x: auto;
+    overflow: auto;
     -webkit-overflow-scrolling: touch;
     display: flex; justify-content: center; align-items: center;
-    padding: 60px 8px 75px 8px;
+    padding: 68px 10px 75px 10px;
+    touch-action: pan-x pan-y pinch-zoom;
+    cursor: grab;
 }
+#reader-scroll-viewport:active { cursor: grabbing; }
 
 #spread-card-wrapper {
-    background: #ffffff; border-radius: 6px;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.95);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
     position: relative; margin: auto;
     flex-shrink: 0;
 }
-.canvas-page-single { display: block; width: 100%; height: auto; border-radius: 6px; }
-
-/* ZOOM TOOLBAR (UNE SEULE LIGNE HORIZONTALE) */
-#reader-zoom-bar {
-    display: none; position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
-    background: #0e1628;
-    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 25px;
-    padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 10px;
-    z-index: 120; font-size: 13px; font-weight: 800;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.85);
-    white-space: nowrap; width: auto; max-width: 94%;
-    opacity: 0.25; transition: opacity 0.4s ease;
+.canvas-page {
+    display: block; width: auto; height: auto;
+    background: #ffffff;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.9);
 }
-#reader-zoom-bar:hover, #reader-zoom-bar.dock-awake { opacity: 1 !important; }
+#page-canvas-left { border-radius: 4px 0 0 4px; }
+#page-canvas-right { border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); }
+
+/* ZOOM TOOLBAR */
+#reader-zoom-bar {
+    position: fixed; top: 66px; left: 50%; transform: translateX(-50%);
+    background: rgba(14, 22, 40, 0.82); backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 0.25); border-radius: 25px;
+    padding: 5px 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    z-index: 120; font-size: 13px; font-weight: 800;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.75);
+    white-space: nowrap; width: auto; max-width: 96%;
+}
 
 .btn-zoom-step {
     background: #1b263e; border: 1.5px solid rgba(255,255,255,0.3);
@@ -156,21 +163,19 @@ html, body {
     cursor: pointer; min-height: 32px; display: flex; align-items: center;
 }
 
-/* DOCK INFÉRIEUR HARMONIEUX (FLUIDE SANS DÉBORDEMENT) */
+/* DOCK INFÉRIEUR TOUJOURS VISIBLE DANS LA LISEUSE */
 #m-bottom-dock {
-    display: none; position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 420px; height: 50px;
-    background: #0c1220;
-    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 25px;
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 440px; height: 50px;
+    background: rgba(12, 18, 32, 0.82); backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 0.25); border-radius: 25px;
     display: flex; justify-content: space-between; align-items: center;
     padding: 0 12px; z-index: 150;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.95);
-    opacity: 0.25; transition: opacity 0.4s ease;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.75);
 }
-#m-bottom-dock:hover, #m-bottom-dock.dock-awake { opacity: 1 !important; }
 
 .dock-nav-btn {
-    background: #1b263e; border: 1.5px solid rgba(255,255,255,0.28);
+    background: rgba(27, 38, 62, 0.85); border: 1.5px solid rgba(255,255,255,0.28);
     color: #f7eedb; padding: 7px 13px; border-radius: 14px; font-size: 14px; font-weight: 900;
     cursor: pointer; min-width: 40px; min-height: 34px; display: flex; align-items: center; justify-content: center;
 }
@@ -185,7 +190,11 @@ html, body {
 }
 #page-indicator-txt { font-size: 12px; font-weight: 900; color: #dfb256; min-width: 85px; text-align: center; white-space: nowrap; }
 
-/* MODAL MARQUE-PAGES PLEIN FORMAT */
+@media (max-width: 768px) {
+    #btn-page-mode { display: none !important; }
+}
+
+/* MODAL MARQUE-PAGES */
 #bookmarks-dialog-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(4, 6, 12, 0.90); backdrop-filter: blur(25px);
@@ -225,7 +234,7 @@ html, body {
 
 <div id="toast-box">Page mémorisée !</div>
 
-<!-- TOP HEADER AVEC DÉFILEMENT / SWIPE HORIZONTAL FLUIDE -->
+<!-- TOP HEADER FLUIDE -->
 <div id="m-header">
     <div class="header-inner-track">
         <div class="brand-zone">
@@ -257,10 +266,10 @@ html, body {
     </button>
 </div>
 
-<!-- LISEUSE PLEIN FORMAT -->
+<!-- LISEUSE NUMÉRIQUE -->
 <div id="live-reader-container">
     
-    <!-- ZOOM TOOLBAR AVEC CHOIX 1 PAGE / 2 PAGES SUR GRAND ÉCRAN & ZOOM MAX 150% -->
+    <!-- ZOOM TOOLBAR (SEULEMENT DANS LA LISEUSE) -->
     <div id="reader-zoom-bar">
         <button id="btn-page-mode" class="btn-mode-pill" onclick="toggleDisplayMode()">📖 2 Pages</button>
         <span style="white-space:nowrap; margin-left:4px;">Zoom :</span>
@@ -269,14 +278,16 @@ html, body {
         <button class="btn-zoom-step" onclick="stepZoom(0.15)">+</button>
         <button class="btn-mode-pill" onclick="resetZoomDefault()">1:1 Centré</button>
     </div>
+
+    <!-- VIEWPORT DE LECTURE -->
     <div id="reader-scroll-viewport">
         <div id="spread-card-wrapper">
             <canvas id="page-canvas-left" class="canvas-page"></canvas>
             <canvas id="page-canvas-right" class="canvas-page"></canvas>
         </div>
     </div>
-    </div>
-    <!-- DOCK INFÉRIEUR -->
+
+    <!-- DOCK INFÉRIEUR (SEULEMENT DANS LA LISEUSE) -->
     <div id="m-bottom-dock">
         <button class="dock-nav-btn" onclick="prevStep()">◀</button>
         <input type="range" id="page-scrubber" class="dock-slider-bar" min="1" max="170" value="1" oninput="onScrubPage(this.value)" />
@@ -297,12 +308,13 @@ html, body {
 </div>
 
 <script>
-const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V3";
+const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V4";
 
 let currentSide = 'terrain';
 let currentPage = 1;
 let isReading = false;
 let zoomFactor = 1.0;
+let displayMode = (window.innerWidth > 900) ? 'spread' : 'single';
 
 let docTerrain = null;
 let docSommet = null;
@@ -311,8 +323,8 @@ let scene, camera, renderer, bookMesh;
 let isFlipping3D = false;
 let isTouchDragging = false;
 let prevTouchPos = { x: 0, y: 0 };
-let renderTaskSingle = null;
-let dockFadeTimeout = null;
+let renderTaskLeft = null;
+let renderTaskRight = null;
 
 let userStore = {
     terrainLastPage: 1,
@@ -464,33 +476,20 @@ async function initAppCore() {
     docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     updateSideBadge();
     updateBookmarkUI();
-    initDockFadeListeners();
 }
 
-function wakeBottomDock() {
-    const dock = document.getElementById('m-bottom-dock');
-    const zoom = document.getElementById('reader-zoom-bar');
-    if (dock) dock.classList.add('dock-awake');
-    if (zoom) zoom.classList.add('dock-awake');
+async function openReader() {
+    isReading = true;
+    document.getElementById('live-reader-container').style.display = 'flex';
+    document.getElementById('home-3d-cta').style.display = 'none';
     
-    clearTimeout(dockFadeTimeout);
-    dockFadeTimeout = setTimeout(() => {
-        if (dock) dock.classList.remove('dock-awake');
-        if (zoom) zoom.classList.remove('dock-awake');
-    }, 2800);
+    if (!docTerrain || !docSommet) {
+        document.getElementById('page-indicator-txt').innerText = "Chargement...";
+        if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
+        if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
+    }
+    renderUniversalReader();
 }
-
-function initDockFadeListeners() {
-    window.addEventListener('touchstart', wakeBottomDock, { passive: true });
-    window.addEventListener('touchmove', wakeBottomDock, { passive: true });
-    window.addEventListener('mousemove', wakeBottomDock);
-    window.addEventListener('scroll', wakeBottomDock, { passive: true });
-    wakeBottomDock();
-}
-
-let displayMode = (window.innerWidth > 900) ? 'spread' : 'single';
-let renderTaskLeft = null;
-let renderTaskRight = null;
 
 function toggleDisplayMode() {
     displayMode = (displayMode === 'single') ? 'spread' : 'single';
@@ -511,21 +510,6 @@ function resetZoomDefault() {
     if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
 }
 
-async function openReader() {
-    isReading = true;
-    document.getElementById('live-reader-container').style.display = 'flex';
-    document.getElementById('home-3d-cta').style.display = 'none';
-    document.getElementById('reader-zoom-bar').style.display = 'flex';
-    document.getElementById('m-bottom-dock').style.display = 'flex';
-    
-    if (!docTerrain || !docSommet) {
-        document.getElementById('page-indicator-txt').innerText = "Chargement...";
-        if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
-        if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
-    }
-    renderUniversalReader();
-}
-
 async function renderUniversalReader() {
     if (renderTaskLeft) { try { renderTaskLeft.cancel(); } catch(e){} renderTaskLeft = null; }
     if (renderTaskRight) { try { renderTaskRight.cancel(); } catch(e){} renderTaskRight = null; }
@@ -540,7 +524,6 @@ async function renderUniversalReader() {
     const isMobile = window.innerWidth <= 768;
     const effectiveMode = isMobile ? 'single' : displayMode;
 
-    // Dual page spread applies when: not on mobile, spread mode selected, and not on cover (page 1)
     const isTwoPage = (effectiveMode === 'spread' && currentPage > 1 && currentPage < totalPages);
     
     let pLabel = "";
@@ -574,6 +557,7 @@ async function renderUniversalReader() {
             // MODE 1 PAGE
             cRight.style.display = 'none';
             cLeft.style.display = 'block';
+            cLeft.style.borderRadius = '4px';
 
             const maxFitW = screenW * 0.92;
             const maxFitH = availH * 0.90;
@@ -610,6 +594,8 @@ async function renderUniversalReader() {
             // MODE 2 PAGES (DIPTYQUE PARFAIT)
             cRight.style.display = 'block';
             cLeft.style.display = 'block';
+            cLeft.style.borderRadius = '4px 0 0 4px';
+            cRight.style.borderRadius = '0 4px 4px 0';
 
             const rightPageNum = Math.min(currentPage + 1, totalPages);
             const pageR = await activeDoc.getPage(rightPageNum);
@@ -699,7 +685,6 @@ function prevStep() {
 function onScrubPage(val) {
     currentPage = parseInt(val);
     renderUniversalReader();
-    wakeBottomDock();
 }
 
 function flip3DTeteBeche() {
@@ -731,19 +716,6 @@ function updateSideBadge() {
         b.className = "side-pill pill-sommet";
         b.innerText = "SOMMET";
     }
-}
-
-async function openReader() {
-    isReading = true;
-    document.getElementById('live-reader-container').style.display = 'flex';
-    document.getElementById('home-3d-cta').style.display = 'none';
-    
-    if (!docTerrain || !docSommet) {
-        document.getElementById('page-indicator-txt').innerText = "Chargement...";
-        if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
-        if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
-    }
-    renderUniversalReader();
 }
 
 function toggleCurrentBookmark() {
