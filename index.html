@@ -231,6 +231,25 @@ html, body {
     padding: 9px 22px; border-radius: 25px; display: none; z-index: 1000;
     box-shadow: 0 8px 25px rgba(0,0,0,0.7);
 }
+/* =================================================== */
+/* ⏳ SPINNER & CHARGEMENT NOBLE CENTRÉ AU MILIEU */
+/* =================================================== */
+#reader-loading-spinner {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(12, 18, 32, 0.94); backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(223, 178, 86, 0.4); border-radius: 20px;
+    padding: 22px 32px; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    z-index: 200; box-shadow: 0 15px 50px rgba(0,0,0,0.95);
+    text-align: center; pointer-events: none;
+}
+.spinner-ring {
+    width: 42px; height: 42px; border: 3.5px solid rgba(223, 178, 86, 0.2);
+    border-top: 3.5px solid #dfb256; border-radius: 50%;
+    animation: spinRing 0.85s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+}
+@keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.loading-txt-main { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 900; color: #dfb256; letter-spacing: 1px; }
+.loading-txt-sub { font-size: 11px; font-weight: 700; color: #9ab0d0; }
 </style>
 </head>
 <body>
@@ -269,6 +288,12 @@ html, body {
 
 <!-- LISEUSE NUMÉRIQUE -->
 <div id="live-reader-container">
+<!-- SPINNER DE CHARGEMENT CENTRÉ AU MILIEU DE L'ÉCRAN -->
+    <div id="reader-loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="loading-txt-main">CHARGEMENT DU MANUSCRIT</div>
+        <div class="loading-txt-sub" id="loading-sub-progress">Préparation des pages haute définition...</div>
+    </div>
     
     <!-- ZOOM TOOLBAR -->
     <div id="reader-zoom-bar">
@@ -503,6 +528,20 @@ function initDockFadeListeners() {
     wakeBottomDock();
 }
 
+function showCenteredLoader(msg) {
+    const sp = document.getElementById('reader-loading-spinner');
+    const sub = document.getElementById('loading-sub-progress');
+    if (sp) {
+        if (msg && sub) sub.innerText = msg;
+        sp.style.display = 'flex';
+    }
+}
+
+function hideCenteredLoader() {
+    const sp = document.getElementById('reader-loading-spinner');
+    if (sp) sp.style.display = 'none';
+}
+
 async function openReader() {
     isReading = true;
     document.getElementById('live-reader-container').style.display = 'flex';
@@ -510,33 +549,11 @@ async function openReader() {
     wakeBottomDock();
     
     if (!docTerrain || !docSommet) {
-        document.getElementById('page-indicator-txt').innerText = "Chargement...";
+        showCenteredLoader("Ouverture du manuscrit...");
         if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
         if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
     }
     renderUniversalReader();
-}
-
-function toggleDisplayMode() {
-    displayMode = (displayMode === 'single') ? 'spread' : 'single';
-    const btn = document.getElementById('btn-page-mode');
-    if (btn) btn.innerText = (displayMode === 'spread') ? '📄 1 Page' : '📖 2 Pages';
-    renderUniversalReader();
-    wakeBottomDock();
-}
-
-function stepZoom(delta) {
-    zoomFactor = Math.max(0.70, Math.min(1.50, +(zoomFactor + delta).toFixed(2)));
-    renderUniversalReader();
-    wakeBottomDock();
-}
-
-function resetZoomDefault() {
-    zoomFactor = 1.0;
-    renderUniversalReader();
-    wakeBottomDock();
-    const vp = document.getElementById('reader-scroll-viewport');
-    if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
 }
 
 async function renderUniversalReader() {
@@ -544,7 +561,12 @@ async function renderUniversalReader() {
     if (renderTaskRight) { try { renderTaskRight.cancel(); } catch(e){} renderTaskRight = null; }
     
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
-    if (!activeDoc) return;
+    if (!activeDoc) {
+        showCenteredLoader("Chargement du document...");
+        return;
+    }
+
+    showCenteredLoader();
 
     const totalPages = activeDoc.numPages;
     const scrubber = document.getElementById('page-scrubber');
@@ -572,7 +594,10 @@ async function renderUniversalReader() {
     const wrapper = document.getElementById('spread-card-wrapper');
     const cLeft = document.getElementById('page-canvas-left');
     const cRight = document.getElementById('page-canvas-right');
-    if (!wrapper || !cLeft || !cRight) return;
+    if (!wrapper || !cLeft || !cRight) {
+        hideCenteredLoader();
+        return;
+    }
 
     try {
         const screenW = window.innerWidth;
@@ -605,22 +630,29 @@ async function renderUniversalReader() {
             const renderScale = (displayW / unscaledVpL.width) * dpr;
             const vp = pageL.getViewport({ scale: renderScale });
 
+            // Create offscreen canvas to avoid white flash
+            const offL = document.createElement('canvas');
+            offL.width = vp.width;
+            offL.height = vp.height;
+            const ctxOffL = offL.getContext('2d');
+            ctxOffL.imageSmoothingEnabled = true; ctxOffL.imageSmoothingQuality = 'high';
+
+            renderTaskLeft = pageL.render({ canvasContext: ctxOffL, viewport: vp });
+            await renderTaskLeft.promise;
+
+            // Copy to active canvas seamlessly
             cLeft.width = vp.width;
             cLeft.height = vp.height;
             cLeft.style.width = `${Math.round(displayW)}px`;
             cLeft.style.height = `${Math.round(displayH)}px`;
+            const ctxL = cLeft.getContext('2d');
+            ctxL.drawImage(offL, 0, 0);
 
             wrapper.style.width = `${Math.round(displayW)}px`;
             wrapper.style.height = `${Math.round(displayH)}px`;
 
-            const ctxL = cLeft.getContext('2d');
-            ctxL.imageSmoothingEnabled = true;
-            ctxL.imageSmoothingQuality = 'high';
-            renderTaskLeft = pageL.render({ canvasContext: ctxL, viewport: vp });
-            await renderTaskLeft.promise;
-
         } else {
-            // MODE 2 PAGES (DIPTYQUE PARFAIT)
+            // MODE 2 PAGES
             cRight.style.display = 'block';
             cLeft.style.display = 'block';
             cLeft.style.borderRadius = '4px 0 0 4px';
@@ -650,32 +682,42 @@ async function renderUniversalReader() {
             const vpL = pageL.getViewport({ scale: scaleL });
             const vpR = pageR.getViewport({ scale: scaleR });
 
+            // Offscreen render to avoid white flash
+            const offL = document.createElement('canvas');
+            offL.width = vpL.width; offL.height = vpL.height;
+            const offR = document.createElement('canvas');
+            offR.width = vpR.width; offR.height = vpR.height;
+
+            const ctxOffL = offL.getContext('2d');
+            const ctxOffR = offR.getContext('2d');
+            ctxOffL.imageSmoothingEnabled = true; ctxOffL.imageSmoothingQuality = 'high';
+            ctxOffR.imageSmoothingEnabled = true; ctxOffR.imageSmoothingQuality = 'high';
+
+            renderTaskLeft = pageL.render({ canvasContext: ctxOffL, viewport: vpL });
+            renderTaskRight = pageR.render({ canvasContext: ctxOffR, viewport: vpR });
+            await Promise.all([renderTaskLeft.promise, renderTaskRight.promise]);
+
             cLeft.width = vpL.width;
             cLeft.height = vpL.height;
             cLeft.style.width = `${Math.round(displaySingleW)}px`;
             cLeft.style.height = `${Math.round(displayH)}px`;
+            cLeft.getContext('2d').drawImage(offL, 0, 0);
 
             cRight.width = vpR.width;
             cRight.height = vpR.height;
             cRight.style.width = `${Math.round(displaySingleW)}px`;
             cRight.style.height = `${Math.round(displayH)}px`;
+            cRight.getContext('2d').drawImage(offR, 0, 0);
 
             wrapper.style.width = `${Math.round(displaySingleW * 2)}px`;
             wrapper.style.height = `${Math.round(displayH)}px`;
-
-            const ctxL = cLeft.getContext('2d');
-            const ctxR = cRight.getContext('2d');
-            ctxL.imageSmoothingEnabled = true; ctxL.imageSmoothingQuality = 'high';
-            ctxR.imageSmoothingEnabled = true; ctxR.imageSmoothingQuality = 'high';
-
-            renderTaskLeft = pageL.render({ canvasContext: ctxL, viewport: vpL });
-            renderTaskRight = pageR.render({ canvasContext: ctxR, viewport: vpR });
-            await Promise.all([renderTaskLeft.promise, renderTaskRight.promise]);
         }
     } catch(err) {
         if (err.name !== 'RenderingCancelledException') {
             console.error("PDF Render Error:", err);
         }
+    } finally {
+        hideCenteredLoader();
     }
 
     saveUserStore();
