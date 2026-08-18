@@ -260,21 +260,22 @@ html, body {
 <!-- LISEUSE PLEIN FORMAT -->
 <div id="live-reader-container">
     
-    <!-- ZOOM TOOLBAR SUR 1 SEULE LIGNE -->
+    <!-- ZOOM TOOLBAR AVEC CHOIX 1 PAGE / 2 PAGES SUR GRAND ÉCRAN & ZOOM MAX 150% -->
     <div id="reader-zoom-bar">
-        <span style="white-space:nowrap;">Zoom :</span>
+        <button id="btn-page-mode" class="btn-mode-pill" onclick="toggleDisplayMode()">📖 2 Pages</button>
+        <span style="white-space:nowrap; margin-left:4px;">Zoom :</span>
         <button class="btn-zoom-step" onclick="stepZoom(-0.15)">−</button>
         <span id="zoom-percentage-txt">100%</span>
         <button class="btn-zoom-step" onclick="stepZoom(0.15)">+</button>
         <button class="btn-mode-pill" onclick="resetZoomDefault()">1:1 Centré</button>
     </div>
-
     <div id="reader-scroll-viewport">
         <div id="spread-card-wrapper">
-            <canvas id="page-canvas-single" class="canvas-page-single"></canvas>
+            <canvas id="page-canvas-left" class="canvas-page"></canvas>
+            <canvas id="page-canvas-right" class="canvas-page"></canvas>
         </div>
     </div>
-
+    </div>
     <!-- DOCK INFÉRIEUR -->
     <div id="m-bottom-dock">
         <button class="dock-nav-btn" onclick="prevStep()">◀</button>
@@ -487,11 +488,33 @@ function initDockFadeListeners() {
     wakeBottomDock();
 }
 
+let displayMode = (window.innerWidth > 900) ? 'spread' : 'single'; // 'single' ou 'spread' (2 pages)
+let renderTaskLeft = null;
+let renderTaskRight = null;
+
+function toggleDisplayMode() {
+    displayMode = (displayMode === 'single') ? 'spread' : 'single';
+    const btn = document.getElementById('btn-page-mode');
+    if (btn) btn.innerText = (displayMode === 'spread') ? '📄 1 Page' : '📖 2 Pages';
+    renderUniversalReader();
+}
+
+function stepZoom(delta) {
+    zoomFactor = Math.max(0.70, Math.min(1.50, +(zoomFactor + delta).toFixed(2)));
+    renderUniversalReader();
+}
+
+function resetZoomDefault() {
+    zoomFactor = 1.0;
+    renderUniversalReader();
+    const vp = document.getElementById('reader-scroll-viewport');
+    if (vp) { vp.scrollTop = 0; vp.scrollLeft = 0; }
+}
+
 async function renderUniversalReader() {
-    if (renderTaskSingle) { 
-        try { renderTaskSingle.cancel(); } catch(e){} 
-        renderTaskSingle = null; 
-    }
+    if (renderTaskLeft) { try { renderTaskLeft.cancel(); } catch(e){} renderTaskLeft = null; }
+    if (renderTaskRight) { try { renderTaskRight.cancel(); } catch(e){} renderTaskRight = null; }
+    
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     if (!activeDoc) return;
 
@@ -499,55 +522,117 @@ async function renderUniversalReader() {
     const scrubber = document.getElementById('page-scrubber');
     if (scrubber) scrubber.max = totalPages;
 
-    const pLabel = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / ${totalPages - 1}`;
+    const isMobile = window.innerWidth <= 768;
+    const effectiveMode = isMobile ? 'single' : displayMode;
+
+    const isTwoPage = (effectiveMode === 'spread' && currentPage > 1 && currentPage < totalPages);
     
+    let pLabel = "";
+    if (currentPage === 1) pLabel = "Couverture";
+    else if (isTwoPage) pLabel = `p. ${currentPage - 1}-${currentPage} / ${totalPages - 1}`;
+    else pLabel = `p. ${currentPage - 1} / ${totalPages - 1}`;
+
     if (document.getElementById('page-scrubber')) document.getElementById('page-scrubber').value = currentPage;
     if (document.getElementById('page-indicator-txt')) document.getElementById('page-indicator-txt').innerText = pLabel;
     if (document.getElementById('zoom-percentage-txt')) document.getElementById('zoom-percentage-txt').innerText = `${Math.round(zoomFactor * 100)}%`;
 
     const wrapper = document.getElementById('spread-card-wrapper');
-    const cSingle = document.getElementById('page-canvas-single');
-    if (!wrapper || !cSingle) return;
+    const cLeft = document.getElementById('page-canvas-left');
+    const cRight = document.getElementById('page-canvas-right');
+    if (!wrapper || !cLeft || !cRight) return;
 
     try {
-        const page = await activeDoc.getPage(currentPage);
-        const unscaledVp = page.getViewport({ scale: 1.0 });
-
         const screenW = window.innerWidth;
-        const availH = window.innerHeight - 58 - 50;
+        const availH = window.innerHeight - 58 - 50; // header - dock
 
-        const maxFitW = screenW * 0.94;
-        const maxFitH = availH * 0.92;
-
-        let displayW = maxFitW;
-        let displayH = displayW * (unscaledVp.height / unscaledVp.width);
-
-        if (displayH > maxFitH) {
-            displayH = maxFitH;
-            displayW = displayH * (unscaledVp.width / unscaledVp.height);
-        }
-
-        displayW = displayW * zoomFactor;
-        displayH = displayH * zoomFactor;
+        const pageL = await activeDoc.getPage(currentPage);
+        const unscaledVp = pageL.getViewport({ scale: 1.0 });
 
         const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-        const renderScale = (displayW / unscaledVp.width) * dpr;
-        const vp = page.getViewport({ scale: renderScale });
 
-        cSingle.width = vp.width;
-        cSingle.height = vp.height;
+        if (!isTwoPage) {
+            // MODE 1 SEULE PAGE
+            cRight.style.display = 'none';
+            cLeft.style.display = 'block';
 
-        cSingle.style.width = `${Math.round(displayW)}px`;
-        cSingle.style.height = `${Math.round(displayH)}px`;
-        wrapper.style.width = `${Math.round(displayW)}px`;
-        wrapper.style.height = `${Math.round(displayH)}px`;
+            const maxFitW = screenW * 0.94;
+            const maxFitH = availH * 0.92;
 
-        const ctx = cSingle.getContext('2d');
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+            let displayW = maxFitW;
+            let displayH = displayW * (unscaledVp.height / unscaledVp.width);
 
-        renderTaskSingle = page.render({ canvasContext: ctx, viewport: vp });
-        await renderTaskSingle.promise;
+            if (displayH > maxFitH) {
+                displayH = maxFitH;
+                displayW = displayH * (unscaledVp.width / unscaledVp.height);
+            }
+
+            displayW = displayW * zoomFactor;
+            displayH = displayH * zoomFactor;
+
+            const renderScale = (displayW / unscaledVp.width) * dpr;
+            const vp = pageL.getViewport({ scale: renderScale });
+
+            cLeft.width = vp.width;
+            cLeft.height = vp.height;
+            cLeft.style.width = `${Math.round(displayW)}px`;
+            cLeft.style.height = `${Math.round(displayH)}px`;
+
+            wrapper.style.width = `${Math.round(displayW)}px`;
+            wrapper.style.height = `${Math.round(displayH)}px`;
+
+            const ctxL = cLeft.getContext('2d');
+            ctxL.imageSmoothingEnabled = true;
+            ctxL.imageSmoothingQuality = 'high';
+            renderTaskLeft = pageL.render({ canvasContext: ctxL, viewport: vp });
+            await renderTaskLeft.promise;
+
+        } else {
+            // MODE 2 PAGES (DIPTYQUE WEB / DESKTOP)
+            cRight.style.display = 'block';
+            cLeft.style.display = 'block';
+
+            const pageR = await activeDoc.getPage(currentPage + 1);
+
+            const maxFitW = screenW * 0.92;
+            const maxFitH = availH * 0.90;
+
+            let displayH = maxFitH;
+            let displaySingleW = displayH * (unscaledVp.width / unscaledVp.height);
+
+            if (displaySingleW * 2 > maxFitW) {
+                displaySingleW = maxFitW / 2;
+                displayH = displaySingleW * (unscaledVp.height / unscaledVp.width);
+            }
+
+            displaySingleW = displaySingleW * zoomFactor;
+            displayH = displayH * zoomFactor;
+
+            const renderScale = (displaySingleW / unscaledVp.width) * dpr;
+            const vpL = pageL.getViewport({ scale: renderScale });
+            const vpR = pageR.getViewport({ scale: renderScale });
+
+            cLeft.width = vpL.width;
+            cLeft.height = vpL.height;
+            cLeft.style.width = `${Math.round(displaySingleW)}px`;
+            cLeft.style.height = `${Math.round(displayH)}px`;
+
+            cRight.width = vpR.width;
+            cRight.height = vpR.height;
+            cRight.style.width = `${Math.round(displaySingleW)}px`;
+            cRight.style.height = `${Math.round(displayH)}px`;
+
+            wrapper.style.width = `${Math.round(displaySingleW * 2 + 4)}px`;
+            wrapper.style.height = `${Math.round(displayH)}px`;
+
+            const ctxL = cLeft.getContext('2d');
+            const ctxR = cRight.getContext('2d');
+            ctxL.imageSmoothingEnabled = true; ctxL.imageSmoothingQuality = 'high';
+            ctxR.imageSmoothingEnabled = true; ctxR.imageSmoothingQuality = 'high';
+
+            renderTaskLeft = pageL.render({ canvasContext: ctxL, viewport: vpL });
+            renderTaskRight = pageR.render({ canvasContext: ctxR, viewport: vpR });
+            await Promise.all([renderTaskLeft.promise, renderTaskRight.promise]);
+        }
     } catch(err) {
         if (err.name !== 'RenderingCancelledException') {
             console.error("PDF Render Error:", err);
@@ -557,34 +642,32 @@ async function renderUniversalReader() {
     saveUserStore();
 }
 
-function stepZoom(delta) {
-    wakeBottomDock();
-    zoomFactor = Math.max(0.70, Math.min(1.30, +(zoomFactor + delta).toFixed(2)));
-    renderUniversalReader();
-}
-
-function resetZoomDefault() {
-    wakeBottomDock();
-    zoomFactor = 1.0;
-    renderUniversalReader();
-    document.getElementById('reader-scroll-viewport').scrollTop = 0;
-    document.getElementById('reader-scroll-viewport').scrollLeft = 0;
-}
-
 function nextStep() {
-    wakeBottomDock();
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     const maxP = activeDoc ? activeDoc.numPages : 170;
-    if (currentPage < maxP) {
-        currentPage += 1;
+    const isMobile = window.innerWidth <= 768;
+    const effectiveMode = isMobile ? 'single' : displayMode;
+    const step = (effectiveMode === 'spread' && currentPage > 1 && currentPage < maxP - 1) ? 2 : 1;
+    
+    if (currentPage + step <= maxP) {
+        currentPage += step;
+        renderUniversalReader();
+    } else if (currentPage < maxP) {
+        currentPage = maxP;
         renderUniversalReader();
     }
 }
 
 function prevStep() {
-    wakeBottomDock();
-    if (currentPage > 1) {
-        currentPage -= 1;
+    const isMobile = window.innerWidth <= 768;
+    const effectiveMode = isMobile ? 'single' : displayMode;
+    const step = (effectiveMode === 'spread' && currentPage > 2) ? 2 : 1;
+    
+    if (currentPage - step >= 1) {
+        currentPage -= step;
+        renderUniversalReader();
+    } else if (currentPage > 1) {
+        currentPage = 1;
         renderUniversalReader();
     }
 }
