@@ -488,7 +488,10 @@ function initDockFadeListeners() {
 }
 
 async function renderUniversalReader() {
-    if (renderTaskSingle) { try { renderTaskSingle.cancel(); } catch(e){} renderTaskSingle = null; }
+    if (renderTaskSingle) { 
+        try { renderTaskSingle.cancel(); } catch(e){} 
+        renderTaskSingle = null; 
+    }
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     if (!activeDoc) return;
 
@@ -498,40 +501,58 @@ async function renderUniversalReader() {
 
     const pLabel = (currentPage === 1) ? "Couverture" : `p. ${currentPage - 1} / ${totalPages - 1}`;
     
-    document.getElementById('page-scrubber').value = currentPage;
-    document.getElementById('page-indicator-txt').innerText = pLabel;
-    document.getElementById('zoom-percentage-txt').innerText = `${Math.round(zoomFactor * 100)}%`;
+    if (document.getElementById('page-scrubber')) document.getElementById('page-scrubber').value = currentPage;
+    if (document.getElementById('page-indicator-txt')) document.getElementById('page-indicator-txt').innerText = pLabel;
+    if (document.getElementById('zoom-percentage-txt')) document.getElementById('zoom-percentage-txt').innerText = `${Math.round(zoomFactor * 100)}%`;
 
     const wrapper = document.getElementById('spread-card-wrapper');
     const cSingle = document.getElementById('page-canvas-single');
+    if (!wrapper || !cSingle) return;
 
-    const screenW = window.innerWidth;
-    const availH = window.innerHeight - 58 - 50;
+    try {
+        const page = await activeDoc.getPage(currentPage);
+        const unscaledVp = page.getViewport({ scale: 1.0 });
 
-    const page = await activeDoc.getPage(currentPage);
-    
-    const maxH = (availH * 0.94) * zoomFactor;
-    const maxW = (screenW * 0.92) * zoomFactor;
+        const screenW = window.innerWidth;
+        const availH = window.innerHeight - 58 - 50;
 
-    let targetSingleW = maxW;
-    let targetSingleH = targetSingleW * (210 / 148);
+        const maxFitW = screenW * 0.94;
+        const maxFitH = availH * 0.92;
 
-    if (targetSingleH > maxH && zoomFactor <= 1.0) {
-        targetSingleH = maxH;
-        targetSingleW = targetSingleH * (148 / 210);
+        let displayW = maxFitW;
+        let displayH = displayW * (unscaledVp.height / unscaledVp.width);
+
+        if (displayH > maxFitH) {
+            displayH = maxFitH;
+            displayW = displayH * (unscaledVp.width / unscaledVp.height);
+        }
+
+        displayW = displayW * zoomFactor;
+        displayH = displayH * zoomFactor;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        const renderScale = (displayW / unscaledVp.width) * dpr;
+        const vp = page.getViewport({ scale: renderScale });
+
+        cSingle.width = vp.width;
+        cSingle.height = vp.height;
+
+        cSingle.style.width = `${Math.round(displayW)}px`;
+        cSingle.style.height = `${Math.round(displayH)}px`;
+        wrapper.style.width = `${Math.round(displayW)}px`;
+        wrapper.style.height = `${Math.round(displayH)}px`;
+
+        const ctx = cSingle.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        renderTaskSingle = page.render({ canvasContext: ctx, viewport: vp });
+        await renderTaskSingle.promise;
+    } catch(err) {
+        if (err.name !== 'RenderingCancelledException') {
+            console.error("PDF Render Error:", err);
+        }
     }
-
-    const scale = (targetSingleW / (page.view[2] - page.view[0])) * 2.2;
-    const vp = page.getViewport({ scale: scale });
-
-    cSingle.width = vp.width; cSingle.height = vp.height;
-    renderTaskSingle = page.render({ canvasContext: cSingle.getContext('2d'), viewport: vp });
-    try { await renderTaskSingle.promise; } catch(e){}
-
-    wrapper.style.width = targetSingleW + 'px';
-    wrapper.style.height = targetSingleH + 'px';
-    cSingle.style.width = targetSingleW + 'px';
-    cSingle.style.height = targetSingleH + 'px';
 
     saveUserStore();
 }
@@ -605,10 +626,16 @@ function updateSideBadge() {
     }
 }
 
-function openReader() {
+async function openReader() {
     isReading = true;
     document.getElementById('live-reader-container').style.display = 'flex';
     document.getElementById('home-3d-cta').style.display = 'none';
+    
+    if (!docTerrain || !docSommet) {
+        document.getElementById('page-indicator-txt').innerText = "Chargement...";
+        if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
+        if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
+    }
     renderUniversalReader();
 }
 
