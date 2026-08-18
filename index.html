@@ -35,8 +35,17 @@ html, body {
 #m-header {
     height: 56px; width: 100%; background: #0c1220;
     border-bottom: 1px solid rgba(255,255,255,0.14);
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 0 12px; position: fixed; top: 0; left: 0; z-index: 500;
+    overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    touch-action: pan-x;
+}
+#m-header::-webkit-scrollbar { display: none; }
+
+.header-inner-track {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 14px; position: fixed; top: 0; left: 0; z-index: 500;
+    width: 100%; min-width: max-content; gap: 12px; flex-shrink: 0;
 }
 
 .brand-zone { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
@@ -45,11 +54,11 @@ html, body {
     letter-spacing: 0.5px; color: #f7eedb; white-space: nowrap;
 }
 .author-txt {
-    font-size: 11px; font-weight: 700; color: #dfb256; letter-spacing: 0.3px;
+    font-size: 11px; font-weight: 700; color: #dfb256; letter-spacing: 0.3px; white-space: nowrap;
 }
 .side-pill {
     padding: 3px 8px; border-radius: 8px; font-size: 9px; font-weight: 900;
-    text-transform: uppercase;
+    text-transform: uppercase; white-space: nowrap;
 }
 .pill-terrain { background: #c35936; color: #fff; }
 .pill-sommet { background: #133968; color: #dfb256; }
@@ -59,14 +68,14 @@ html, body {
     background: #182236; border: 1.5px solid rgba(255,255,255,0.22);
     color: #f7eedb; padding: 7px 12px; border-radius: 14px; font-size: 12px; font-weight: 800;
     cursor: pointer; display: flex; align-items: center; gap: 5px; min-height: 36px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4); white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4); white-space: nowrap; flex-shrink: 0;
 }
 .btn-h.active-bm { background: #dfb256; color: #111; font-weight: 900; border-color: #dfb256; }
 .btn-flip-act {
     background: linear-gradient(135deg, #c35936 0%, #dfb256 100%);
     color: #111; font-weight: 900; font-size: 12px; border: none;
     padding: 8px 14px; border-radius: 14px; cursor: pointer; min-height: 36px;
-    box-shadow: 0 3px 12px rgba(223, 178, 86, 0.4); white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(223, 178, 86, 0.4); white-space: nowrap; flex-shrink: 0;
 }
 
 /* =================================================== */
@@ -228,18 +237,20 @@ html, body {
 
 <div id="toast-box">Page mémorisée !</div>
 
-<!-- TOP HEADER FLUIDE -->
+<!-- TOP HEADER FLUIDE AVEC DÉFILEMENT TACTILE (SWIPABLE) -->
 <div id="m-header">
-    <div class="brand-zone">
-        <span class="title-txt">9 ÉTAGES</span>
-        <span id="badge-side" class="side-pill pill-terrain">TERRAIN</span>
-        <span class="author-txt">Alexandre R.</span>
-    </div>
+    <div class="header-inner-track">
+        <div class="brand-zone">
+            <span class="title-txt">9 ÉTAGES</span>
+            <span id="badge-side" class="side-pill pill-terrain">TERRAIN</span>
+            <span class="author-txt">Alexandre R.</span>
+        </div>
 
-    <div class="header-btns">
-        <button class="btn-flip-act" onclick="flip3DTeteBeche()">🔄 RETOURNER</button>
-        <button id="btn-save-bm" class="btn-h" onclick="toggleCurrentBookmark()">🔖 <span id="txt-bm-label">Marquer</span></button>
-        <button class="btn-h" onclick="openBookmarksList()">📂 Marque-pages</button>
+        <div class="header-btns">
+            <button class="btn-flip-act" onclick="flip3DTeteBeche()">🔄 RETOURNER</button>
+            <button id="btn-save-bm" class="btn-h" onclick="toggleCurrentBookmark()">🔖 <span id="txt-bm-label">Marquer</span></button>
+            <button class="btn-h" onclick="openBookmarksList()">📂 Marque-pages</button>
+        </div>
     </div>
 </div>
 
