@@ -4,7 +4,7 @@ window.BOOK_DATA = {
   "pageCount": 159,
   "pages": [
     "COMMENT LIRE CE LIVRE\nCe livre est un tête-bêche — il se lit dans deux sens.\nCÔTÉ TERRAIN\nVous tenez le livre\nnormalement. Lisez depuis\ncette page jusqu'au Hall\nCentral.\nCÔTÉ SOMMET\nRetournez le livre à 180°. Lisez\ndepuis l'autre couverture\njusqu'au Hall Central.\nLes deux lectures convergent au Hall Central — le centre du livre, accessible par les\ndeux côtés.\nLES 9 ÉTAGES DE LA TOUR\n© Alexandre ROUX, 2026\nTous droits réservés.\nToute reproduction, même partielle, de cet ouvrage est interdite sans autorisation écrite de\nl'auteur. Une copie ou reproduction par quelque procédé que ce soit constitue une contrefaçon\npassible des peines prévues par la loi du 11 mars 1957 sur la protection des droits d'auteur.\nImprimé en France · Dépôt légal : 2026\n1",
-    "LES 9 ÉTAGES DE LA TOUR — CÔTÉ\nTERRAIN\nVoyage au cœur du travail réel\nAuteur : Alexandre R. Édition originale — Ouvrage de circulation libre et d'utilité\ncollective\nAvertissement : Les scènes, récits et témoignages rassemblés dans cet\nouvrage constituent une synthèse sociologique d'observations menées en\nimmersion au sein d'organisations réelles. Les données statistiques citées\nreposent sur des enquêtes institutionnelles de référence. Afin de garantir\nune totale neutralité et de dépassionner le débat, tous les noms\nd'entreprises, de personnes et de marques ont été rigoureusement\nanonymisés. Ce livre n'est pas un réquisitoire, mais une invitation à\nobserver lucidement nos fonctionnements collectifs.\nCet ouvrage ne prétend pas être une étude scientifique. Il ne repose ni sur\nun protocole académique, ni sur un échantillon représentatif. C'est un\ntravail d'observation et de synthèse, nourri de centaines de conversations\ninformelles, de lectures et d'une conviction simple : on ne comprend pas\nune tour en restant à un seul étage.\nNote de lecture : Selon la taille de votre organisation, certains étages de\ncette tour n'existent pas. Dans une PME de 30 personnes, les étages 5, 6 et 7\nsont vides. Dans une coopérative autogérée, les étages 3 à 8 n'ont pas de\nréalité. Ce qui compte, ce ne sont pas les chiffres — c'est la logique. Pour\nvous aider à vous situer, les 9 étages se lisent en 3 grandes zones :\nÉTAGES 0 – 1  – 2\nLE TERRAIN\nCeux qui font\nÉTAGES 3 – 4 – 5\nL'INTERFACE\nCeux qui traduisent\nÉTAGES 6 – 7 – 8\nLE SOMMET\nCeux qui décident de loin\n1",
+    "LES 9 ÉTAGES DE LA TOUR — CÔTÉ TERRAIN\nVoyage au cœur du travail réel\nAuteur : Alexandre R. Édition originale — Ouvrage de circulation libre et d'utilité collective\nAvertissement : Les scènes, récits et témoignages rassemblés dans cet ouvrage\nconstituent une synthèse sociologique d'observations menées en immersion au sein\nd'organisations réelles. Les données statistiques citées reposent sur des enquêtes\ninstitutionnelles de référence. Afin de garantir une totale neutralité et de dépassionner le\ndébat, tous les noms d'entreprises, de personnes et de marques ont été rigoureusement\nanonymisés. Ce livre n'est pas un réquisitoire, mais une invitation à observer lucidement\nnos fonctionnements collectifs.\nCet ouvrage ne prétend pas être une étude scientifique. Il ne repose ni sur un protocole\nacadémique, ni sur un échantillon représentatif. C'est un travail d'observation et de\nsynthèse, nourri de centaines de conversations informelles, de lectures et d'une\nconviction simple : on ne comprend pas une tour en restant à un seul étage.\nNote de lecture : Selon la taille de votre organisation, certains étages de cette tour\nn'existent pas. Dans une PME de 30 personnes, les étages 5, 6 et 7 sont vides. Dans une\ncoopérative autogérée, les étages 3 à 8 n'ont pas de réalité. Ce qui compte, ce ne sont pas\nles chiffres — c'est la logique. Pour vous aider à vous situer, les 9 étages se lisent en 3\ngrandes zones :\nÉTAGES 0 – 1  – 2\nLE TERRAIN\nCeux qui font\nÉTAGES 3 – 4 – 5\nL'INTERFACE\nCeux qui traduisent\nÉTAGES 6 – 7 – 8\nLE SOMMET\nCeux qui décident de loin\n1",
     "CÔTÉ TERRAIN\nTABLE DES MATIÈRES\nPARTIE I — LA TOUR\nPrologue\n0 Le Terrain\n1 Le Manager de proximité\n2 Le Responsable de service\n3 Le Directeur\n4 Le Vice-Président\n5 Le Président de division\n6 Le Président international\n7 Le Chairman\n8 Le CEO\nPARTIE II — LES LEVIERS\n• La vue d'ensemble\n• Le grand départ\n• Et si ? Le monde d'après\n• Ceux qui ont déjà commencé\n• Fiches pratiques\n• La transition\n• Le plan de transformation\n• Le Hall Central\n1",
     "ÉTAGE 0 — CHI FFRE CL É\n7 %\ndes salariés français se disent activement\nengagés dans leur travail. La France est\ndernière d’Europe — 38e sur 38 pays.\nGALLUP — STATE OF THE GLOBAL WORKPLACE, 2024",
     "ÉTAGE 0 SUR 9\nÉTAGE 0 — LE TERRAIN\nLe flux opérationnel\nQuatre lieux. Quatre métiers. Le même lundi matin.\nLIEU 1 — Un théâtre, quelque part. 7h45. Le parking est encore clairsemé,\nmais l'effervescence monte. Dans deux heures, trois cents personnes\nviendront s'asseoir dans cette salle, espérant s'évader. Beaucoup ont\néconomisé pour s'offrir ce moment. En coulisses, une dizaine de personnes\ns'activent avec une précision chorégraphiée. Vérification des lumières.\nTests sonores. Calage des machines. Un projecteur montre des signes de\nfaiblesse : un technicien le remplace discrètement, sans alerter personne,\ncar c'est son cœur de métier et il maîtrise la solution. Le téléphone sonne.\nLe responsable de salle prévient qu'il sera retenu au siège pour une réunion\nintitulée « Réalignement stratégique des opérations ». Le régisseur\nraccroche, informe l'équipe, et la préparation suit son cours. À 10h30, le\nspectacle commence. Il est techniquement irréprochable.\nLIEU 2 — Un service hospitalier, ailleurs. 6h50. Les transmissions\ns'enchaînent. L'infirmière de garde prend note des constantes, des\ntraitements en cours et des alertes. Chambre 12 : surveillance renforcée.\nChambre 7 : perfusion à changer à 9h. La cadre de santé est absente cette\nsemaine, mobilisée par une formation sur le « pilotage de la performance\nsoignante ». L'infirmière ne s'en formalise pas. Elle connaît son métier,\nl'exerçant avec constance depuis huit ans. La journée suivra son cours : les\npatients recevront leurs soins, les familles seront accompagnées, et les\nimprévus seront gérés par la résilience de l'équipe.\n1",
@@ -165,7 +165,7 @@ window.BOOK_DATA = {
   ],
   "toc": [
     {
-      "title": "LES 9 ÉTAGES DE LA TOUR — CÔTÉ",
+      "title": "LES 9 ÉTAGES DE LA TOUR — CÔTÉ TERRAIN",
       "page": 2
     },
     {
@@ -255,15 +255,13 @@ window.BOOK_DATA = {
   ]
 },
     sommet: {
-  "pageCount": 140,
+  "pageCount": 138,
   "pages": [
     "COMMENT LIRE CE LIVRE\nCe livre est un tête-bêche — il se lit dans deux sens.\nCÔTÉ SOMMET\nVous tenez le livre\nnormalement. Lisez depuis\ncette page jusqu'au Hall\nCentral.\nCÔTÉ TERRAIN\nRetournez le livre à 180°. Lisez\ndepuis l'autre couverture\njusqu'au Hall Central.\nLes deux lectures convergent au Hall Central — le centre du livre, accessible par les\ndeux côtés.\nLES 9 ÉTAGES DE LA TOUR\n© Alexandre ROUX, 2026\nTous droits réservés.\nToute reproduction, même partielle, de cet ouvrage est interdite sans autorisation écrite de\nl'auteur. Une copie ou reproduction par quelque procédé que ce soit constitue une contrefaçon\npassible des peines prévues par la loi du 11 mars 1957 sur la protection des droits d'auteur.\nImprimé en France · Dépôt légal : 2026\n1",
-    "LES 9 ÉTAGES DE LA TOUR — CÔTÉ\nSOMMET\nLe regard d'en haut\nAuteur : Alexandre R. Édition originale — Ouvrage de circulation libre et d'utilité\ncollective\nAvertissement : Les scènes, récits et témoignages rassemblés dans cet\nouvrage constituent une synthèse sociologique d'observations menées au\nsein d'organisations réelles. Les données statistiques citées reposent sur\ndes enquêtes institutionnelles de référence. Afin de garantir une totale\nneutralité et de dépassionner le débat, tous les noms d'entreprises, de\npersonnes et de marques ont été rigoureusement anonymisés. Ce livre n'est\npas un réquisitoire, mais une invitation à observer lucidement nos\nfonctionnements collectifs.\nCet ouvrage ne prétend pas être une étude scientifique. Il ne repose ni sur\nun protocole académique, ni sur un échantillon représentatif. C'est un\ntravail d'observation et de synthèse, nourri de centaines de conversations\ninformelles, de lectures et d'une conviction simple : on ne comprend pas\nune tour en restant à un seul étage.\nNote de lecture : Ce livre descend de l'Étage 8 vers l'Étage 0 — du sommet\nvers le terrain. Selon la taille de votre organisation, certains étages\nn'existent pas. Ce qui compte, ce ne sont pas les numéros — c'est la logique.\nLes 9 étages se lisent en 3 grandes zones :\nÉTAGES 6 – 7 – 8\nLE SOMMET\nÉTAGES 3 – 4 – 5\nL'INTERFACE\nÉTAGES 0 – 1  – 2\nLE TERRAIN\n1",
-    "Ceux qui orientent Ceux qui arbitrent Ceux qui font tourner\n2",
+    "LES 9 ÉTAGES DE LA TOUR — CÔTÉ SOMMET\nLe regard d'en haut\nAuteur : Alexandre R. Édition originale — Ouvrage de circulation libre et d'utilité collective\nAvertissement : Les scènes, récits et témoignages rassemblés dans cet ouvrage\nconstituent une synthèse sociologique d'observations menées au sein d'organisations\nréelles. Les données statistiques citées reposent sur des enquêtes institutionnelles de\nréférence. Afin de garantir une totale neutralité et de dépassionner le débat, tous les\nnoms d'entreprises, de personnes et de marques ont été rigoureusement anonymisés. Ce\nlivre n'est pas un réquisitoire, mais une invitation à observer lucidement nos\nfonctionnements collectifs.\nCet ouvrage ne prétend pas être une étude scientifique. Il ne repose ni sur un protocole\nacadémique, ni sur un échantillon représentatif. C'est un travail d'observation et de\nsynthèse, nourri de centaines de conversations informelles, de lectures et d'une\nconviction simple : on ne comprend pas une tour en restant à un seul étage.\nNote de lecture : Ce livre descend de l'Étage 8 vers l'Étage 0 — du sommet vers le terrain.\nSelon la taille de votre organisation, certains étages n'existent pas. Ce qui compte, ce ne\nsont pas les numéros — c'est la logique. Les 9 étages se lisent en 3 grandes zones :\nÉTAGES 6 – 7 – 8\nLE SOMMET\nCeux qui orientent\nÉTAGES 3 – 4 – 5\nL'INTERFACE\nCeux qui arbitrent\nÉTAGES 0 – 1  – 2\nLE TERRAIN\nCeux qui font tourner\n1",
     "PROLOGUE SOMMET : DEMAIN, VOTRE\nTERRAIN NE VIENT PAS\nQuatre lieux. Quatre métiers. Le même lundi matin. Mais cette fois,\npersonne ne monte de l'étage 0.\nLIEU 1 — Un théâtre, quelque part. 8h15. Le directeur de salle arrive. Café\nen main. Badge au cou. Il ouvre son ordinateur, consulte ses mails, prépare\nla réunion de 10h avec le programmateur. À 9h00, il descend vers le plateau.\nLes portes sont ouvertes. Les lumières sont éteintes. La console est froide.\nLes perches n'ont pas bougé. Le sol n'a pas été balayé. Personne. Il appelle.\nPas de réponse. Le régisseur ne viendra pas. Les techniciens ne viendront\npas. L'habilleuse ne viendra pas. Il est 9h30. Dans une heure, trois cents\npersonnes vont s'asseoir dans cette salle. Le directeur regarde le plateau\nvide. Il sait allumer son ordinateur, écrire un budget et négocier avec une\nmairie, mais il ne sait pas allumer un projecteur. Le spectacle n'aura pas\nlieu.\nLIEU 2 — Un service hospitalier, ailleurs. 7h00. La cadre de santé arrive.\nElle est revenue de sa formation sur « le pilotage de la performance\nsoignante ». Elle a un nouveau PowerPoint. Des indicateurs. Un plan\nd'action. Elle pousse la porte du service. Les couloirs sont vides. Pas\nd'infirmières. Pas d'aides-soignantes. Pas de brancardiers. Chambre 12 —\nsurveillance renforcée. Personne ne surveille. Chambre 7 — perfusion à\nchanger à 9h. Personne ne la changera. La cadre de santé a un master. Elle\nsait piloter un budget. Elle sait remplir un reporting, mais elle ne sait plus\nposer une perfusion. Les alarmes commencent à sonner. L'hôpital ne\nfonctionne pas.\nLIEU 3 — Un restaurant, en centre-ville. 9h30. Le directeur régional fait\nson audit terrain. Il arrive avec sa grille d'évaluation, son stylo quatre\ncouleurs et son œil pour les détails. La porte est fermée. Pas de chef en\ncuisine. Pas de commis. Pas de plongeur. Pas de serveur. Le directeur\nrégional sait analyser un ticket moyen et calculer un ratio matière, mais il\nne sait pas faire une omelette. Le restaurant n'ouvrira pas aujourd'hui.\n1",
     "LIEU 4 — Un chantier, en banlieue. 7h30. Le conducteur de travaux revient\nde sa réunion avec le maître d'ouvrage. Tableaux Excel, pourcentages\nd'avancement, marges prévisionnelles — tout est prêt. Le chantier est\nsilencieux. Pas de chef d'équipe. Pas de ferrailleur. Pas de grutier. Le\nconducteur de travaux sait lire un plan et planifier, mais il ne sait pas couler\nune dalle. Le chantier n'avancera pas d'un centimètre.\nQuatre endroits. Quatre métiers. Quatre équipes terrain absentes. Arrêt\ntotal. Posez-vous la question. Pas pour ces gens-là. Pour vous. Si demain,\nles gens « d'en bas » ne viennent pas — est-ce que ça continue ? Ou est-ce\nque tout s'arrête ? Et si tout s'arrête... Alors qui fait vraiment tourner le\nmonde ?\nCe n'est pas une attaque. C'est un miroir.\nDe l'autre côté de ce livre — si vous le retournez — il y a le même lundi\nmatin. Les mêmes quatre lieux. Mais là-bas, c'est le manager qui ne vient\npas. Et le spectacle a lieu. L'hôpital soigne. Le restaurant sert. Le chantier\navance. Sans un accroc.\nLa question n'est pas de savoir si le management est utile. Bien sûr qu'il l'est\n— ou qu'il peut l'être. La question est plus simple, et plus vertigineuse : Si le\nterrain peut tourner sans vous, mais que vous ne pouvez rien faire tourner\nsans le terrain — qui tient vraiment le pouvoir ?\nEt si la réponse vous met mal à l'aise — alors peut-être que ce livre est pour\nvous.\nDescendons.\n2",
     "CÔTÉ SOMMET\nTABLE DES MATIÈRES\nPARTIE I — LA TOUR\nPrologue\n8 Le CEO\n7 Le Chairman\n6 Le Président international\n5 Le Président de division\n4 Le Vice-Président\n3 Le Directeur de site\n2 Le Manager de managers\n1 Le Manager de proximité\n0 Le retour au réel\nPARTIE II — LES LEVIERS\n• Ces managers qui ont changé\n• Ce que le Sommet ne voit pas\n• Pourquoi le changement n'a pas lieu\n• Le premier pas\n• Guide pour le manager qui veut changer\n• Le Hall Central\n1",
-    "",
     "ÉTAGE 8 — CHIFFRE CLÉ\n38 %\nseulement des PDG se déclarent préoccupés\npar la montée du mécontentement dans leurs\néquipes — alors que cela précède\nstatistiquement leur propre remplacement.\nBCG — CEO INSOMNIA INDEX, 2024",
     "ÉTAGE 8 SUR 9\nÉTAGE 8 — LE CEO\nCelui qui signe — et qui ne sait plus quoi.\nCe chapitre est court. Comme les journées du CEO sont longues, mais vides\nde ce qui compte.\nLe bureau est immense. Baie vitrée. Skyline. Un horizon qui n'en finit pas.\nDes centaines de milliers de personnes travaillent sous cette signature. Des\ncentaines de milliers de vies. Des centaines de milliers de réveils à 5h du\nmatin, de trajets dans le froid, de paires de mains qui font le travail que le\nmonde consomme. Il ne les verra jamais.\nCe matin, le CEO a un rapport trimestriel sur son bureau. 247 pages. Des\ngraphiques. Des tendances. Des projections. Tout est codé en couleurs —\nvert, orange, rouge — comme si la réalité pouvait tenir dans un feu\ntricolore. Il tourne les pages. Revenus en hausse de 3,2 %. EBITDA stable.\nCoûts de personnel « maîtrisés » — un euphémisme pour dire qu'on a gelé\nles embauches et laissé partir les CDD.\nUne phrase l'arrête, au milieu d'un graphique : « Taux de turnover étage 0 :\n+17 % sur l'exercice. » Il souligne le chiffre. Note dans la marge : « Voir avec\nRH. » Puis il tourne la page.\nIl y a dix-huit mois, il a visité un site de production. C'était organisé. Le\ndirecteur l'avait prévenu trois semaines à l'avance. Les allées étaient\npropres. Les gens souriaient. On lui a fait visiter l'atelier le plus récent, celui\navec les machines neuves. On a soigneusement évité le bâtiment B, celui où\nle chauffage ne fonctionne plus depuis deux hivers. Il est reparti en disant :\n1",
     "« Impressionnant. Les équipes sont formidables. » Il le pensait\nsincèrement. Il ne savait pas qu'on lui avait montré un décor.\nCe soir, dans la voiture qui le ramène chez lui — une berline noire, vitres\nteintées, un silence parfait —, une pensée lui traverse l'esprit. Elle est brève.\nPresque rien. Mais elle est là : « Est-ce que je sais vraiment ce qu'on fait ? »\nPas ce que l'entreprise produit. Il connaît le discours. La mission. La vision.\nLes valeurs — il les a lui-même approuvées, encadrées, accrochées dans le\nhall d'entrée. Mais ce qu'on fait. Concrètement. Avec les mains. Le geste\ntechnique. Le savoir-faire. Le produit tel qu'il naît, avant qu'il ne devienne\nun chiffre dans un rapport trimestriel. La pensée dure trois secondes.\n2",
@@ -400,112 +398,112 @@ window.BOOK_DATA = {
   ],
   "toc": [
     {
-      "title": "LES 9 ÉTAGES DE LA TOUR — CÔTÉ",
+      "title": "LES 9 ÉTAGES DE LA TOUR — CÔTÉ SOMMET",
       "page": 2
     },
     {
       "title": "PROLOGUE SOMMET : DEMAIN, VOTRE",
-      "page": 4
+      "page": 3
     },
     {
       "title": "ÉTAGE 8 — CHIFFRE CLÉ",
-      "page": 8
+      "page": 6
     },
     {
       "title": "ÉTAGE 8 SUR 9",
-      "page": 9
+      "page": 7
     },
     {
       "title": "▌  DONNÉES D'ÉTAGE — VU D'EN HAUT",
-      "page": 15
+      "page": 13
     },
     {
       "title": "ÉTAGE 7  — CHI FFRE CL É",
-      "page": 18
+      "page": 16
     },
     {
       "title": "ÉTAGE 7 SUR 9",
+      "page": 17
+    },
+    {
+      "title": "▌  DONNÉES D'ÉTAGE — VU D'EN HAUT",
       "page": 19
     },
     {
-      "title": "▌  DONNÉES D'ÉTAGE — VU D'EN HAUT",
-      "page": 21
-    },
-    {
       "title": "ÉTAGE 6 — À SAVOIR",
-      "page": 22
+      "page": 20
     },
     {
       "title": "ÉTAGE 6 SUR 9",
-      "page": 23
+      "page": 21
     },
     {
       "title": "ÉTAGE 5  — CHI FFRE CL É",
-      "page": 28
+      "page": 26
     },
     {
       "title": "ÉTAGE 5 SUR 9",
-      "page": 29
+      "page": 27
     },
     {
       "title": "▌  DONNÉES D'ÉTAGE — VU D'EN HAUT",
-      "page": 32
+      "page": 30
     },
     {
       "title": "ÉTAGE 4 — POUR RÉFLÉCHIR",
-      "page": 34
+      "page": 32
     },
     {
       "title": "ÉTAGE 4 SUR 9",
-      "page": 35
+      "page": 33
     },
     {
       "title": "▌  DONNÉES D'ÉTAGE — VU D'EN HAUT",
-      "page": 36
+      "page": 34
     },
     {
       "title": "ÉTAGE 3 — CHIFFRE CLÉ",
-      "page": 42
+      "page": 40
     },
     {
       "title": "ÉTAGE 3 SUR 9",
-      "page": 43
+      "page": 41
     },
     {
       "title": "▌  DONNÉES D'ÉTAGE — VU D'EN HAUT",
-      "page": 44
+      "page": 42
     },
     {
       "title": "ÉTAGE 2  — À SAVOI R",
-      "page": 50
+      "page": 48
     },
     {
       "title": "ÉTAGE 2 SUR 9",
-      "page": 51
+      "page": 49
     },
     {
       "title": "▌  DONNÉES D'ÉTAGE — VU D'EN HAUT",
-      "page": 52
+      "page": 50
     },
     {
       "title": "ÉTAGE 1 — CHIFFRE CLÉ",
-      "page": 60
+      "page": 58
     },
     {
       "title": "ÉTAGE 1 SUR 9",
-      "page": 61
+      "page": 59
     },
     {
       "title": "ÉTAGE 0 — POUR RÉFLÉCHIR",
-      "page": 68
+      "page": 66
     },
     {
       "title": "ÉTAGE 0 SUR 9",
-      "page": 69
+      "page": 67
     },
     {
       "title": "LE HALL CENTRAL",
-      "page": 135
+      "page": 133
     }
   ]
 }
