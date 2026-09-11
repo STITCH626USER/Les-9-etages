@@ -155,41 +155,108 @@ html, body {
 #page-canvas-left { border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 
-/* BARRE DE CONTRÔLE FLOTTANTE CENTRÉE */
+/* BARRE DE CONTRÔLE FLOTTANTE CENTRÉE AVEC DÉFILEMENT (SCRUBBER) */
 #m-bottom-dock {
-    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
-    background: rgba(12, 18, 32, 0.94); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(255, 255, 255, 0.22); border-radius: 24px;
-    display: inline-flex; justify-content: center; align-items: center; gap: 8px;
-    padding: 6px 14px; z-index: 150;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.85);
-    opacity: 0.94;
-    pointer-events: auto;
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(10, 16, 28, 0.93); backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(223, 178, 86, 0.30); border-radius: 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 10px 16px 8px 16px; z-index: 150;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.88);
+    width: 92%; max-width: 480px; box-sizing: border-box;
+    opacity: 0.96; pointer-events: auto;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 #m-bottom-dock:hover { opacity: 1 !important; }
 
+/* Ligne 1 : Barre de défilement / Scrubber */
+.dock-scrubber-row {
+    width: 100%; display: flex; align-items: center; gap: 10px; position: relative;
+}
+.scrubber-edge-label {
+    font-size: 11px; font-weight: 800; color: #8fa0ba; min-width: 22px; text-align: center;
+}
+.scrubber-track-container {
+    flex: 1; position: relative; display: flex; align-items: center; height: 22px; cursor: pointer;
+}
+#reader-page-slider {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px; outline: none; margin: 0; cursor: pointer; position: relative; z-index: 2;
+}
+#reader-page-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #dfb256; border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 10px rgba(223, 178, 86, 0.7);
+    cursor: grab; transition: transform 0.12s ease, background 0.12s ease;
+}
+#reader-page-slider::-webkit-slider-thumb:hover, #reader-page-slider::-webkit-slider-thumb:active {
+    transform: scale(1.25); background: #fce18b; cursor: grabbing;
+}
+#reader-page-slider::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #dfb256; border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 10px rgba(223, 178, 86, 0.7);
+    cursor: grab;
+}
+.scrubber-track-fill {
+    position: absolute; left: 0; top: 8px; height: 6px;
+    background: linear-gradient(90deg, #c35936, #dfb256);
+    border-radius: 6px; pointer-events: none; z-index: 1;
+    width: 0%;
+}
+.scrubber-bubble {
+    position: absolute; bottom: 28px; left: 0; transform: translateX(-50%);
+    background: #dfb256; color: #0a0f1d; font-size: 11.5px; font-weight: 900;
+    padding: 4px 10px; border-radius: 12px; pointer-events: none; white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.8);
+    opacity: 0; transition: opacity 0.15s ease;
+    z-index: 10;
+}
+.scrubber-bubble::after {
+    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: #dfb256;
+}
+.scrubber-bubble.bubble-visible {
+    opacity: 1;
+}
+
+/* Ligne 2 : Commandes */
+.dock-controls-row {
+    width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 6px;
+}
 .dock-nav-btn {
     background: #182236; border: 1px solid rgba(255,255,255,0.25);
-    color: #dfb256; padding: 6px 16px; border-radius: 14px; font-size: 15px; font-weight: 900;
-    cursor: pointer; min-width: 44px; min-height: 34px; display: flex; align-items: center; justify-content: center;
+    color: #dfb256; padding: 5px 14px; border-radius: 14px; font-size: 14px; font-weight: 900;
+    cursor: pointer; min-width: 38px; min-height: 32px; display: flex; align-items: center; justify-content: center;
     transition: background 0.15s ease, transform 0.1s ease;
 }
 .dock-nav-btn:active { background: #dfb256; color: #111; transform: scale(0.96); }
+
+.dock-page-jump {
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+    padding: 4px 10px; border-radius: 10px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14); transition: background 0.15s ease, border-color 0.15s ease;
+}
+.dock-page-jump:hover {
+    background: rgba(223,178,86,0.18); border-color: rgba(223,178,86,0.45);
+}
 #page-indicator-txt { font-size: 12.5px; font-weight: 900; color: #f7eedb; min-width: 75px; text-align: center; white-space: nowrap; }
+.jump-hint-icon { font-size: 11px; color: #dfb256; opacity: 0.8; }
 
 .dock-divider {
-    width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 2px;
+    width: 1px; height: 18px; background: rgba(255,255,255,0.2); margin: 0 1px;
 }
 .dock-zoom-btn {
-    font-size: 18px !important; font-weight: 900 !important;
-    padding: 4px 10px !important; min-width: 34px !important; min-height: 32px !important;
+    font-size: 17px !important; font-weight: 900 !important;
+    padding: 4px 9px !important; min-width: 32px !important; min-height: 30px !important;
 }
 .dock-zoom-indicator {
     background: rgba(255,255,255,0.08); border: 1px solid rgba(223,178,86,0.35);
-    color: #dfb256; font-size: 11.5px; font-weight: 900; border-radius: 12px;
-    padding: 5px 9px; cursor: pointer; transition: all 0.2s ease;
-    white-space: nowrap; min-width: 46px; text-align: center;
+    color: #dfb256; font-size: 11px; font-weight: 900; border-radius: 12px;
+    padding: 4px 8px; cursor: pointer; transition: all 0.2s ease;
+    white-space: nowrap; min-width: 44px; text-align: center;
 }
 .dock-zoom-indicator:hover, .dock-zoom-indicator:active {
     background: #dfb256; color: #111;
@@ -305,15 +372,35 @@ html, body {
         </div>
     </div>
 
-    <!-- COMMANDES FLOTTANTES DE NAVIGATION & ZOOM FLUIDE -->
+    <!-- COMMANDES FLOTTANTES DE NAVIGATION, BARRE DE DÉFILEMENT & ZOOM -->
     <div id="m-bottom-dock">
-        <button class="dock-nav-btn" onclick="prevStep()" title="Page précédente (Flèche Gauche)">◀</button>
-        <span id="page-indicator-txt">Couverture</span>
-        <button class="dock-nav-btn" onclick="nextStep()" title="Page suivante (Flèche Droite)">▶</button>
-        <div class="dock-divider"></div>
-        <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(-0.25)" title="Dézoomer (−)">−</button>
-        <button class="dock-zoom-indicator" id="zoom-indicator-btn" onclick="resetZoom(true)" title="Réinitialiser à 100% (Touche 0)">100%</button>
-        <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(0.25)" title="Zoomer (+)">+</button>
+        <!-- LIGNE 1 : BARRE DE DÉFILEMENT DIRECTE (SCRUBBER) -->
+        <div class="dock-scrubber-row">
+            <span class="scrubber-edge-label" id="scrubber-start-label">1</span>
+            <div class="scrubber-track-container">
+                <input type="range" id="reader-page-slider" min="1" max="139" value="1" step="1"
+                       oninput="onSliderInput(this.value)" onchange="onSliderChange(this.value)">
+                <div class="scrubber-track-fill" id="scrubber-track-fill"></div>
+                <div class="scrubber-bubble" id="scrubber-bubble">Page 1</div>
+            </div>
+            <span class="scrubber-edge-label" id="scrubber-end-label">139</span>
+        </div>
+
+        <!-- LIGNE 2 : COMMANDES ET ZOOM -->
+        <div class="dock-controls-row">
+            <button class="dock-nav-btn" onclick="prevStep()" title="Page précédente (Flèche Gauche)">◀</button>
+            <div class="dock-page-jump" onclick="promptDirectPageJump()" title="Cliquer pour entrer directement un numéro de page">
+                <span id="page-indicator-txt">Couverture</span>
+                <span class="jump-hint-icon">✎</span>
+            </div>
+            <button class="dock-nav-btn" onclick="nextStep()" title="Page suivante (Flèche Droite)">▶</button>
+            
+            <div class="dock-divider"></div>
+            
+            <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(-0.25)" title="Dézoomer (−)">−</button>
+            <button class="dock-zoom-indicator" id="zoom-indicator-btn" onclick="resetZoom(true)" title="Réinitialiser à 100% (Touche 0)">100%</button>
+            <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(0.25)" title="Zoomer (+)">+</button>
+        </div>
     </div>
 </div>
 
@@ -721,6 +808,7 @@ async function renderUniversalReader() {
         }
 
         applyReaderTransform(false);
+        updateSliderUI(currentPage, totalPages);
     } catch(err) {
         if (err.name !== 'RenderingCancelledException') {
             console.error("PDF Render Error:", err);
@@ -889,6 +977,90 @@ function showToastAlert(txt) {
     const t = document.getElementById('toast-box');
     t.innerText = txt; t.style.display = 'block';
     setTimeout(() => { t.style.display = 'none'; }, 2200);
+}
+
+// ===================================================
+// BARRE DE DÉFILEMENT (SCRUBBER) & NAVIGATION DIRECTE
+// ===================================================
+
+function updateSliderUI(pageNum, totalPages) {
+    const slider = document.getElementById('reader-page-slider');
+    const fill = document.getElementById('scrubber-track-fill');
+    const endLbl = document.getElementById('scrubber-end-label');
+    if (!slider) return;
+
+    slider.max = totalPages;
+    slider.value = pageNum;
+    if (endLbl) endLbl.innerText = totalPages;
+
+    const pct = ((pageNum - 1) / Math.max(1, totalPages - 1)) * 100;
+    if (fill) fill.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+}
+
+function onSliderInput(val) {
+    wakeBottomDock();
+    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
+    const totalPages = activeDoc ? activeDoc.numPages : 139;
+    const p = parseInt(val, 10);
+
+    const fill = document.getElementById('scrubber-track-fill');
+    const bubble = document.getElementById('scrubber-bubble');
+    const slider = document.getElementById('reader-page-slider');
+
+    const pct = ((p - 1) / Math.max(1, totalPages - 1)) * 100;
+    if (fill) fill.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+
+    if (bubble && slider) {
+        bubble.classList.add('bubble-visible');
+        let label = (p === 1) ? "Couverture" : `Page ${p - 1} / ${totalPages - 1}`;
+        bubble.innerText = label;
+        const sliderWidth = slider.offsetWidth || 300;
+        const thumbPos = (pct / 100) * sliderWidth;
+        bubble.style.left = `${thumbPos}px`;
+    }
+}
+
+function onSliderChange(val) {
+    wakeBottomDock();
+    const bubble = document.getElementById('scrubber-bubble');
+    if (bubble) bubble.classList.remove('bubble-visible');
+
+    let p = parseInt(val, 10);
+    const isMobile = window.innerWidth <= 768;
+    const effectiveMode = isMobile ? 'single' : displayMode;
+    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
+    const totalPages = activeDoc ? activeDoc.numPages : 139;
+
+    if (effectiveMode === 'spread' && p > 1 && p % 2 === 1 && p < totalPages) {
+        p = p - 1;
+    }
+
+    currentPage = p;
+    resetZoom(false);
+    renderUniversalReader();
+}
+
+function promptDirectPageJump() {
+    wakeBottomDock();
+    const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
+    const totalPages = activeDoc ? activeDoc.numPages : 139;
+    const currentReadable = (currentPage === 1) ? 1 : (currentPage - 1);
+
+    const ans = prompt(`Aller directement à la page (1 à ${totalPages - 1}) :`, currentReadable);
+    if (!ans) return;
+    const num = parseInt(ans.trim(), 10);
+    if (isNaN(num)) return;
+
+    let targetPage = (num <= 1) ? 1 : Math.min(num + 1, totalPages);
+    const isMobile = window.innerWidth <= 768;
+    const effectiveMode = isMobile ? 'single' : displayMode;
+    if (effectiveMode === 'spread' && targetPage > 1 && targetPage % 2 === 1 && targetPage < totalPages) {
+        targetPage = targetPage - 1;
+    }
+
+    currentPage = targetPage;
+    resetZoom(false);
+    renderUniversalReader();
 }
 
 // ===================================================
