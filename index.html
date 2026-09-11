@@ -575,8 +575,8 @@ function animate3DLoop(time) {
 async function initAppCore() {
     loadUserStore();
     updateSideBadge();
-    docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
-    docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
+    docTerrain = await pdfjsLib.getDocument('terrain.pdf?v=20260911_v4').promise;
+    docSommet = await pdfjsLib.getDocument('sommet.pdf?v=20260911_v4').promise;
     updateSideBadge();
     updateBookmarkUI();
     initDockFadeListeners();
@@ -653,8 +653,8 @@ async function openReader() {
     
     if (!docTerrain || !docSommet) {
         showCenteredLoader("Ouverture du manuscrit...");
-        if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
-        if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
+        if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf?v=20260911_v4').promise;
+        if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf?v=20260911_v4').promise;
     }
     renderUniversalReader();
 }
