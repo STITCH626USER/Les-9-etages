@@ -119,14 +119,19 @@ html, body {
 
 #reader-scroll-viewport {
     width: 100%; height: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 20px 20px 80px 20px;
-    touch-action: pan-x pan-y pinch-zoom;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
     box-sizing: border-box;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
+    position: relative;
+    cursor: grab;
+}
+#reader-scroll-viewport.is-dragging {
+    cursor: grabbing !important;
 }
 
 #spread-card-wrapper {
@@ -134,10 +139,9 @@ html, body {
     display: inline-flex;
     align-items: center; justify-content: center;
     position: relative;
-    margin: 0 auto;
+    margin: auto;
     vertical-align: middle;
     opacity: 1;
-    transition: opacity 0.18s ease-in-out;
     transform-origin: center center;
     will-change: transform;
     flex-shrink: 0;
@@ -146,30 +150,53 @@ html, body {
 .canvas-page {
     display: inline-block; width: auto; height: auto;
     background: #ffffff;
+    pointer-events: none;
 }
 #page-canvas-left { border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 
-/* BARRE DE CONTRÔLE FLOTTANTE CENTRÉE (FADE 1S) */
+/* BARRE DE CONTRÔLE FLOTTANTE CENTRÉE */
 #m-bottom-dock {
     position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
     background: rgba(12, 18, 32, 0.94); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(255, 255, 255, 0.22); border-radius: 24px;
-    display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+    display: inline-flex; justify-content: center; align-items: center; gap: 8px;
     padding: 6px 14px; z-index: 150;
     box-shadow: 0 8px 30px rgba(0,0,0,0.85);
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
+    opacity: 0.94;
+    pointer-events: auto;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
-#m-bottom-dock.dock-awake { opacity: 1 !important; pointer-events: auto !important; }
+#m-bottom-dock:hover { opacity: 1 !important; }
 
 .dock-nav-btn {
     background: #182236; border: 1px solid rgba(255,255,255,0.25);
     color: #dfb256; padding: 6px 16px; border-radius: 14px; font-size: 15px; font-weight: 900;
     cursor: pointer; min-width: 44px; min-height: 34px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s ease, transform 0.1s ease;
 }
-.dock-nav-btn:active { background: #dfb256; color: #111; }
+.dock-nav-btn:active { background: #dfb256; color: #111; transform: scale(0.96); }
 #page-indicator-txt { font-size: 12.5px; font-weight: 900; color: #f7eedb; min-width: 75px; text-align: center; white-space: nowrap; }
+
+.dock-divider {
+    width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 2px;
+}
+.dock-zoom-btn {
+    font-size: 18px !important; font-weight: 900 !important;
+    padding: 4px 10px !important; min-width: 34px !important; min-height: 32px !important;
+}
+.dock-zoom-indicator {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(223,178,86,0.35);
+    color: #dfb256; font-size: 11.5px; font-weight: 900; border-radius: 12px;
+    padding: 5px 9px; cursor: pointer; transition: all 0.2s ease;
+    white-space: nowrap; min-width: 46px; text-align: center;
+}
+.dock-zoom-indicator:hover, .dock-zoom-indicator:active {
+    background: #dfb256; color: #111;
+}
+.dock-zoom-indicator.zoom-active {
+    border-color: #dfb256; background: rgba(223,178,86,0.25); color: #ffd700;
+}
 
 /* CACHER LA BARRE DE ZOOM SUR TOUT MOBILE/TABLETTE */
 #reader-zoom-bar { display: none !important; }
@@ -278,11 +305,15 @@ html, body {
         </div>
     </div>
 
-    <!-- COMMANDES FLOTTANTES DE NAVIGATION -->
+    <!-- COMMANDES FLOTTANTES DE NAVIGATION & ZOOM FLUIDE -->
     <div id="m-bottom-dock">
-        <button class="dock-nav-btn" onclick="prevStep()">◀</button>
+        <button class="dock-nav-btn" onclick="prevStep()" title="Page précédente (Flèche Gauche)">◀</button>
         <span id="page-indicator-txt">Couverture</span>
-        <button class="dock-nav-btn" onclick="nextStep()">▶</button>
+        <button class="dock-nav-btn" onclick="nextStep()" title="Page suivante (Flèche Droite)">▶</button>
+        <div class="dock-divider"></div>
+        <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(-0.25)" title="Dézoomer (−)">−</button>
+        <button class="dock-zoom-indicator" id="zoom-indicator-btn" onclick="resetZoom(true)" title="Réinitialiser à 100% (Touche 0)">100%</button>
+        <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(0.25)" title="Zoomer (+)">+</button>
     </div>
 </div>
 
@@ -303,7 +334,11 @@ const STORAGE_KEY = "LES_9_ETAGES_APP_STORAGE_MASTER_V5";
 let currentSide = 'terrain';
 let currentPage = 1;
 let isReading = false;
-let zoomFactor = 1.0;
+let currentZoom = 1.0;
+let panX = 0;
+let panY = 0;
+let baseContentW = 0;
+let baseContentH = 0;
 let displayMode = (window.innerWidth > 900) ? 'spread' : 'single';
 
 let docTerrain = null;
@@ -468,7 +503,7 @@ function wakeBottomDock() {
     clearTimeout(dockFadeTimeout);
     dockFadeTimeout = setTimeout(() => {
         if (dock) dock.classList.remove('dock-awake');
-    }, 1000);
+    }, 2800);
 }
 
 function initDockFadeListeners() {
@@ -499,6 +534,7 @@ function hideCenteredLoader() {
 
 function goToHome3D() {
     isReading = false;
+    resetZoom(false);
     const reader = document.getElementById('live-reader-container');
     const cta = document.getElementById('home-3d-cta');
     const stage = document.getElementById('stage-3d-box');
@@ -523,6 +559,7 @@ function goToHome3D() {
 
 async function openReader() {
     isReading = true;
+    resetZoom(false);
     document.getElementById('live-reader-container').style.display = 'flex';
     document.getElementById('home-3d-cta').style.display = 'none';
     wakeBottomDock();
@@ -575,11 +612,12 @@ async function renderUniversalReader() {
 
     try {
         const screenW = window.innerWidth;
-        const availH = window.innerHeight - 56 - 20;
+        const availH = window.innerHeight - 56 - 36;
 
         const pageL = await activeDoc.getPage(currentPage);
         const unscaledVpL = pageL.getViewport({ scale: 1.0 });
-        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        // Rendu supersample haute définition : netteté absolue même à fort grossissement
+        const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2.0) * 1.35, 3.2);
 
         if (!isTwoPage) {
             // MODE 1 PAGE
@@ -587,8 +625,8 @@ async function renderUniversalReader() {
             cLeft.style.display = 'block';
             cLeft.style.borderRadius = '4px';
 
-            const maxFitW = isMobile ? (screenW - 16) : (screenW * 0.90);
-            const maxFitH = availH * 0.96;
+            const maxFitW = isMobile ? (screenW - 20) : (screenW * 0.90);
+            const maxFitH = availH * 0.94;
 
             let displayW = maxFitW;
             let displayH = displayW * (unscaledVpL.height / unscaledVpL.width);
@@ -597,9 +635,6 @@ async function renderUniversalReader() {
                 displayH = maxFitH;
                 displayW = displayH * (unscaledVpL.width / unscaledVpL.height);
             }
-
-            displayW = displayW * zoomFactor;
-            displayH = displayH * zoomFactor;
 
             const renderScale = (displayW / unscaledVpL.width) * dpr;
             const vp = pageL.getViewport({ scale: renderScale });
@@ -620,8 +655,10 @@ async function renderUniversalReader() {
             const ctxL = cLeft.getContext('2d');
             ctxL.drawImage(offL, 0, 0);
 
-            wrapper.style.width = `${Math.round(displayW)}px`;
-            wrapper.style.height = `${Math.round(displayH)}px`;
+            baseContentW = Math.round(displayW);
+            baseContentH = Math.round(displayH);
+            wrapper.style.width = `${baseContentW}px`;
+            wrapper.style.height = `${baseContentH}px`;
 
         } else {
             // MODE 2 PAGES
@@ -644,9 +681,6 @@ async function renderUniversalReader() {
                 displaySingleW = maxFitW / 2;
                 displayH = displaySingleW * (unscaledVpL.height / unscaledVpL.width);
             }
-
-            displaySingleW = displaySingleW * zoomFactor;
-            displayH = displayH * zoomFactor;
 
             const scaleL = (displaySingleW / unscaledVpL.width) * dpr;
             const scaleR = (displaySingleW / unscaledVpR.width) * dpr;
@@ -680,9 +714,13 @@ async function renderUniversalReader() {
             cRight.style.height = `${Math.round(displayH)}px`;
             cRight.getContext('2d').drawImage(offR, 0, 0);
 
-            wrapper.style.width = `${Math.round(displaySingleW * 2)}px`;
-            wrapper.style.height = `${Math.round(displayH)}px`;
+            baseContentW = Math.round(displaySingleW * 2);
+            baseContentH = Math.round(displayH);
+            wrapper.style.width = `${baseContentW}px`;
+            wrapper.style.height = `${baseContentH}px`;
         }
+
+        applyReaderTransform(false);
     } catch(err) {
         if (err.name !== 'RenderingCancelledException') {
             console.error("PDF Render Error:", err);
@@ -696,6 +734,7 @@ async function renderUniversalReader() {
 
 function nextStep() {
     wakeBottomDock();
+    resetZoom(false);
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     const maxP = activeDoc ? activeDoc.numPages : 170;
     const isMobile = window.innerWidth <= 768;
@@ -714,6 +753,7 @@ function nextStep() {
 
 function prevStep() {
     wakeBottomDock();
+    resetZoom(false);
     const isMobile = window.innerWidth <= 768;
     const effectiveMode = isMobile ? 'single' : displayMode;
     const step = (effectiveMode === 'spread' && currentPage > 2) ? 2 : 1;
@@ -729,6 +769,7 @@ function prevStep() {
 function flip3DTeteBeche() {
     if (isFlipping3D) return;
     isFlipping3D = true;
+    resetZoom(false);
 
     currentSide = (currentSide === 'terrain') ? 'sommet' : 'terrain';
     currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
@@ -825,6 +866,7 @@ function closeBookmarksList() {
 
 function jumpToBm(side, pageNum) {
     closeBookmarksList();
+    resetZoom(false);
     currentSide = side;
     currentPage = pageNum;
     updateSideBadge();
@@ -849,13 +891,103 @@ function showToastAlert(txt) {
     setTimeout(() => { t.style.display = 'none'; }, 2200);
 }
 
-// GESTES FLUIDES : SWIPE & PINCH SANS BUTÉE
-let isPinching = false;
-let initialPinchDist = 0;
-let initialPinchZoom = 1.0;
+// ===================================================
+// GESTION DU ZOOM FLUIDE & DU PANNING (DÉPLACEMENT)
+// ===================================================
 
-let touchStartX = 0, touchStartY = 0;
-let touchStartTime = 0;
+function clampPan() {
+    const vp = document.getElementById('reader-scroll-viewport');
+    if (!vp || !baseContentW || !baseContentH) return;
+
+    const vpW = vp.clientWidth;
+    const vpH = vp.clientHeight;
+    const scaledW = baseContentW * currentZoom;
+    const scaledH = baseContentH * currentZoom;
+
+    let maxPanX = (scaledW > vpW) ? ((scaledW - vpW) / 2 + 50) : 30;
+    let maxPanY = (scaledH > vpH) ? ((scaledH - vpH) / 2 + 50) : 30;
+
+    if (currentZoom <= 1.02) {
+        panX = 0;
+        panY = 0;
+    } else {
+        panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+        panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+    }
+}
+
+function applyReaderTransform(withTransition = false) {
+    const wrapper = document.getElementById('spread-card-wrapper');
+    if (!wrapper) return;
+
+    clampPan();
+
+    if (withTransition) {
+        wrapper.style.transition = 'transform 0.26s cubic-bezier(0.2, 0.9, 0.3, 1)';
+    } else {
+        wrapper.style.transition = 'none';
+    }
+
+    wrapper.style.transform = `translate3d(${Math.round(panX)}px, ${Math.round(panY)}px, 0) scale(${currentZoom})`;
+
+    const zoomBtn = document.getElementById('zoom-indicator-btn');
+    if (zoomBtn) {
+        const pct = Math.round(currentZoom * 100);
+        zoomBtn.innerText = `${pct}%`;
+        if (currentZoom > 1.05 || currentZoom < 0.95) {
+            zoomBtn.classList.add('zoom-active');
+        } else {
+            zoomBtn.classList.remove('zoom-active');
+        }
+    }
+}
+
+function zoomAtPoint(newZoom, cursorX, cursorY, withTransition = false) {
+    newZoom = Math.max(1.0, Math.min(3.5, +newZoom.toFixed(2)));
+    if (Math.abs(newZoom - currentZoom) < 0.005) return;
+
+    const ratio = newZoom / currentZoom;
+    panX = cursorX - (cursorX - panX) * ratio;
+    panY = cursorY - (cursorY - panY) * ratio;
+    currentZoom = newZoom;
+
+    if (currentZoom <= 1.02) {
+        currentZoom = 1.0;
+        panX = 0;
+        panY = 0;
+    }
+
+    applyReaderTransform(withTransition);
+}
+
+function zoomStep(delta, withTransition = true) {
+    wakeBottomDock();
+    const target = Math.max(1.0, Math.min(3.5, +(currentZoom + delta).toFixed(2)));
+    zoomAtPoint(target, 0, 0, withTransition);
+}
+
+function resetZoom(withTransition = true) {
+    wakeBottomDock();
+    currentZoom = 1.0;
+    panX = 0;
+    panY = 0;
+    applyReaderTransform(withTransition);
+}
+
+function handleDoubleAction(clientX, clientY) {
+    const vp = document.getElementById('reader-scroll-viewport');
+    if (!vp) return;
+    wakeBottomDock();
+    const vpRect = vp.getBoundingClientRect();
+    const cursorX = clientX - (vpRect.left + vpRect.width / 2);
+    const cursorY = clientY - (vpRect.top + vpRect.height / 2);
+
+    if (currentZoom > 1.15) {
+        resetZoom(true);
+    } else {
+        zoomAtPoint(2.0, cursorX, cursorY, true);
+    }
+}
 
 function getDistanceBetweenTouches(t1, t2) {
     const dx = t1.clientX - t2.clientX;
@@ -863,78 +995,262 @@ function getDistanceBetweenTouches(t1, t2) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
+function getTouchesMidpoint(t1, t2, vpEl) {
+    const vpRect = vpEl.getBoundingClientRect();
+    const mx = (t1.clientX + t2.clientX) / 2;
+    const my = (t1.clientY + t2.clientY) / 2;
+    return {
+        x: mx - (vpRect.left + vpRect.width / 2),
+        y: my - (vpRect.top + vpRect.height / 2)
+    };
+}
+
 function initTouchPan() {
     const vp = document.getElementById('reader-scroll-viewport');
     if (!vp) return;
 
-    // 1. ÉCOUTEURS TACTILES
+    let isMouseDown = false;
+    let mouseStartX = 0, mouseStartY = 0;
+    let startPanX = 0, startPanY = 0;
+    let hasMovedMouse = false;
+    let lastClickTime = 0;
+
+    // 1. GESTION SOURIS (BUREAU / DRAG FLUIDE)
+    vp.addEventListener('mousedown', (e) => {
+        if (!isReading) return;
+        if (e.button !== 0) return;
+        wakeBottomDock();
+
+        const now = Date.now();
+        if (now - lastClickTime < 320) {
+            lastClickTime = 0;
+            handleDoubleAction(e.clientX, e.clientY);
+            return;
+        }
+        lastClickTime = now;
+
+        isMouseDown = true;
+        hasMovedMouse = false;
+        mouseStartX = e.clientX;
+        mouseStartY = e.clientY;
+        startPanX = panX;
+        startPanY = panY;
+        vp.classList.add('is-dragging');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isReading || !isMouseDown) return;
+
+        const dx = e.clientX - mouseStartX;
+        const dy = e.clientY - mouseStartY;
+
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+            hasMovedMouse = true;
+        }
+
+        if (currentZoom > 1.05) {
+            panX = startPanX + dx;
+            panY = startPanY + dy;
+            applyReaderTransform(false);
+        } else {
+            panX = dx * 0.35;
+            applyReaderTransform(false);
+        }
+    });
+
+    window.addEventListener('mouseup', (e) => {
+        if (!isReading || !isMouseDown) return;
+        isMouseDown = false;
+        vp.classList.remove('is-dragging');
+
+        if (currentZoom <= 1.05) {
+            const dx = e.clientX - mouseStartX;
+            const dy = e.clientY - mouseStartY;
+            if (hasMovedMouse && Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+                if (dx < 0) nextStep();
+                else prevStep();
+            }
+            panX = 0;
+            panY = 0;
+            applyReaderTransform(true);
+        } else {
+            clampPan();
+            applyReaderTransform(true);
+        }
+    });
+
+    // 2. ZOOM MOLETTE SOURIS & TRACKPAD
+    vp.addEventListener('wheel', (e) => {
+        if (!isReading) return;
+        wakeBottomDock();
+        e.preventDefault();
+
+        const vpRect = vp.getBoundingClientRect();
+        const cursorX = e.clientX - (vpRect.left + vpRect.width / 2);
+        const cursorY = e.clientY - (vpRect.top + vpRect.height / 2);
+
+        if (e.ctrlKey || e.metaKey) {
+            // Pincement trackpad ou Ctrl+Molette -> Zoom fluide continu
+            const zoomDelta = -e.deltaY * 0.006;
+            const targetZoom = Math.max(1.0, Math.min(3.5, currentZoom + zoomDelta));
+            zoomAtPoint(targetZoom, cursorX, cursorY, false);
+        } else {
+            // Défilement 2 doigts / molette -> Panoramique fluide
+            if (currentZoom > 1.02) {
+                panX -= e.deltaX;
+                panY -= e.deltaY;
+                applyReaderTransform(false);
+            } else {
+                if (Math.abs(e.deltaX) > 40) {
+                    if (e.deltaX > 40) nextStep();
+                    else prevStep();
+                }
+            }
+        }
+    }, { passive: false });
+
+    // 3. GESTES TACTILES (MOBILE / TABLETTE)
+    let isTouchDragging = false;
+    let isTouchPinching = false;
+    let touchStartX = 0, touchStartY = 0;
+    let touchLastX = 0, touchLastY = 0;
+    let touchStartTime = 0;
+    let initialPinchDist = 0;
+    let initialPinchZoom = 1.0;
+    let pinchMidX = 0, pinchMidY = 0;
+    let lastTapTime = 0;
+
     vp.addEventListener('touchstart', (e) => {
         if (!isReading) return;
         wakeBottomDock();
 
         if (e.touches.length === 2) {
-            isPinching = true;
+            isTouchPinching = true;
+            isTouchDragging = false;
             initialPinchDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
-            initialPinchZoom = zoomFactor;
+            initialPinchZoom = currentZoom;
+            const mid = getTouchesMidpoint(e.touches[0], e.touches[1], vp);
+            pinchMidX = mid.x;
+            pinchMidY = mid.y;
         } else if (e.touches.length === 1) {
-            isPinching = false;
+            const now = Date.now();
+            if (now - lastTapTime < 320) {
+                lastTapTime = 0;
+                handleDoubleAction(e.touches[0].clientX, e.touches[0].clientY);
+                return;
+            }
+            lastTapTime = now;
+
+            isTouchPinching = false;
+            isTouchDragging = true;
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
-            touchStartTime = Date.now();
+            touchLastX = touchStartX;
+            touchLastY = touchStartY;
+            touchStartTime = now;
+            startPanX = panX;
+            startPanY = panY;
         }
-    }, { passive: true });
+    }, { passive: false });
 
     vp.addEventListener('touchmove', (e) => {
         if (!isReading) return;
 
-        if (isPinching && e.touches.length === 2) {
-            const currentDist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
+        if (isTouchPinching && e.touches.length === 2) {
+            e.preventDefault();
+            const dist = getDistanceBetweenTouches(e.touches[0], e.touches[1]);
             if (initialPinchDist > 0) {
-                const scaleDelta = currentDist / initialPinchDist;
-                const newZ = Math.max(0.80, Math.min(2.50, +(initialPinchZoom * scaleDelta).toFixed(2)));
-                if (Math.abs(newZ - zoomFactor) > 0.05) {
-                    zoomFactor = newZ;
-                    renderUniversalReader();
-                }
+                const factor = dist / initialPinchDist;
+                const targetZoom = initialPinchZoom * factor;
+                zoomAtPoint(targetZoom, pinchMidX, pinchMidY, false);
+            }
+        } else if (isTouchDragging && e.touches.length === 1 && !isTouchPinching) {
+            const cx = e.touches[0].clientX;
+            const cy = e.touches[0].clientY;
+            const dx = cx - touchLastX;
+            const dy = cy - touchLastY;
+            touchLastX = cx;
+            touchLastY = cy;
+
+            if (currentZoom > 1.05) {
+                e.preventDefault();
+                panX += dx;
+                panY += dy;
+                applyReaderTransform(false);
+            } else {
+                const totalDx = cx - touchStartX;
+                panX = totalDx * 0.35;
+                applyReaderTransform(false);
             }
         }
-    }, { passive: true });
+    }, { passive: false });
 
     vp.addEventListener('touchend', (e) => {
         if (!isReading) return;
 
-        if (isPinching && e.touches.length < 2) {
-            isPinching = false;
+        if (isTouchPinching) {
+            if (e.touches.length < 2) {
+                isTouchPinching = false;
+                if (currentZoom < 1.0) {
+                    resetZoom(true);
+                } else {
+                    clampPan();
+                    applyReaderTransform(true);
+                }
+            }
             return;
         }
 
-        if (!isPinching && e.changedTouches.length === 1 && zoomFactor <= 1.15) {
-            const deltaX = e.changedTouches[0].clientX - touchStartX;
-            const deltaY = e.changedTouches[0].clientY - touchStartY;
-            const elapsed = Date.now() - touchStartTime;
+        if (isTouchDragging) {
+            isTouchDragging = false;
+            if (currentZoom <= 1.05) {
+                const totalDx = (e.changedTouches[0] ? e.changedTouches[0].clientX : touchLastX) - touchStartX;
+                const totalDy = (e.changedTouches[0] ? e.changedTouches[0].clientY : touchLastY) - touchStartY;
+                const elapsed = Date.now() - touchStartTime;
 
-            if (elapsed < 450 && Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
-                if (deltaX < 0) nextStep();
-                else prevStep();
+                if (elapsed < 450 && Math.abs(totalDx) > 45 && Math.abs(totalDx) > Math.abs(totalDy) * 1.3) {
+                    if (totalDx < 0) nextStep();
+                    else prevStep();
+                }
+                panX = 0;
+                panY = 0;
+                applyReaderTransform(true);
+            } else {
+                clampPan();
+                applyReaderTransform(true);
             }
         }
     });
 
     vp.addEventListener('touchcancel', () => {
-        isPinching = false;
+        isTouchPinching = false;
+        isTouchDragging = false;
+        clampPan();
+        applyReaderTransform(true);
     });
 
-    // 2. ZOOM MOLETTE SOURIS
-    vp.addEventListener('wheel', (e) => {
+    // 4. RACCOURCIS CLAVIER
+    window.addEventListener('keydown', (e) => {
         if (!isReading) return;
-        if (e.ctrlKey || e.metaKey || e.altKey) {
+        wakeBottomDock();
+
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') {
             e.preventDefault();
-            wakeBottomDock();
-            const delta = e.deltaY < 0 ? 0.10 : -0.10;
-            zoomFactor = Math.max(0.80, Math.min(2.50, +(zoomFactor + delta).toFixed(2)));
-            renderUniversalReader();
+            nextStep();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            prevStep();
+        } else if (e.key === '+' || e.key === '=') {
+            e.preventDefault();
+            zoomStep(0.25);
+        } else if (e.key === '-' || e.key === '_') {
+            e.preventDefault();
+            zoomStep(-0.25);
+        } else if (e.key === '0' || e.key === 'Escape') {
+            e.preventDefault();
+            resetZoom(true);
         }
-    }, { passive: false });
+    });
 }
 
 window.onload = () => {
