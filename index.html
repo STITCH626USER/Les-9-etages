@@ -373,36 +373,24 @@ function init3DStage() {
 
     const geometry = new THREE.BoxGeometry(3.2, 4.5, 0.52);
     const loader = new THREE.TextureLoader();
-    const tCover = loader.load('cover_terrain.jpg?v=20260818_final', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
-    const sCover = loader.load('cover_sommet.jpg?v=20260818_final', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
+    const tCover = loader.load('cover_terrain.jpg?v=20260911_v2', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
+    const sCover = loader.load('cover_sommet.jpg?v=20260911_v2', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
     sCover.center.set(0.5, 0.5);
     sCover.rotation = Math.PI;
 
     const canvasP = document.createElement('canvas');
     canvasP.width = 128; canvasP.height = 512;
     const ctxP = canvasP.getContext('2d');
-    ctxP.fillStyle = '#f6f0df'; ctxP.fillRect(0,0,128,512);
-    ctxP.fillStyle = '#d8cca8';
+    ctxP.fillStyle = '#f7f5ee'; ctxP.fillRect(0,0,128,512);
+    ctxP.fillStyle = '#ded9c8';
     for(let i=0; i<512; i+=4) ctxP.fillRect(0, i, 128, 1.5);
     const pTex = new THREE.CanvasTexture(canvasP);
 
-    const canvasS = document.createElement('canvas');
-    canvasS.width = 256; canvasS.height = 1024;
-    const ctxS = canvasS.getContext('2d');
-    ctxS.fillStyle = '#111a2d'; ctxS.fillRect(0,0,256,512);
-    ctxS.fillStyle = '#c35936'; ctxS.fillRect(0,512,256,512);
-    ctxS.fillStyle = '#dfb256'; ctxS.font = 'bold 36px sans-serif'; ctxS.textAlign = 'center';
-    
-    ctxS.save(); ctxS.translate(128, 256); ctxS.rotate(Math.PI/2);
-    ctxS.fillText("▲ SOMMET · 9 ÉTAGES", 0, 12); ctxS.restore();
-
-    ctxS.save(); ctxS.translate(128, 768); ctxS.rotate(-Math.PI/2);
-    ctxS.fillStyle = '#f7eedb'; ctxS.fillText("▲ TERRAIN · 9 ÉTAGES", 0, 12); ctxS.restore();
-    const spineTex = new THREE.CanvasTexture(canvasS);
+    const spineTex = loader.load('cover_spine.jpg?v=20260911_v2', () => { if (renderer && scene && camera) renderer.render(scene, camera); });
 
     const materials = [
         new THREE.MeshStandardMaterial({ map: pTex }),
-        new THREE.MeshStandardMaterial({ map: spineTex }),
+        new THREE.MeshStandardMaterial({ map: spineTex, roughness: 0.55, metalness: 0.05 }),
         new THREE.MeshStandardMaterial({ map: pTex }),
         new THREE.MeshStandardMaterial({ map: pTex }),
         new THREE.MeshStandardMaterial({ map: tCover, roughness: 0.55, metalness: 0.05 }),
