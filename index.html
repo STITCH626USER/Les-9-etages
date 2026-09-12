@@ -125,10 +125,11 @@ html, body {
     -webkit-user-select: none;
     box-sizing: border-box;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     position: relative;
     cursor: grab;
+    padding-top: 10px;
 }
 #reader-scroll-viewport.is-dragging {
     cursor: grabbing !important;
@@ -139,10 +140,10 @@ html, body {
     display: inline-flex;
     align-items: center; justify-content: center;
     position: relative;
-    margin: auto;
-    vertical-align: middle;
+    margin: 0 auto;
+    vertical-align: top;
     opacity: 1;
-    transform-origin: center center;
+    transform-origin: center top;
     will-change: transform;
     flex-shrink: 0;
 }
@@ -157,17 +158,22 @@ html, body {
 
 /* BARRE DE CONTRÔLE FLOTTANTE CENTRÉE AVEC DÉFILEMENT (SCRUBBER) */
 #m-bottom-dock {
-    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-    background: rgba(10, 16, 28, 0.93); backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(223, 178, 86, 0.30); border-radius: 20px;
+    position: fixed; bottom: 16px; left: 50%;
+    transform: translate(-50%, 20px);
+    background: rgba(10, 16, 28, 0.95); backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(223, 178, 86, 0.35); border-radius: 20px;
     display: flex; flex-direction: column; align-items: center; gap: 8px;
     padding: 10px 16px 8px 16px; z-index: 150;
     box-shadow: 0 12px 40px rgba(0,0,0,0.88);
     width: 92%; max-width: 480px; box-sizing: border-box;
-    opacity: 0.96; pointer-events: auto;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-#m-bottom-dock:hover { opacity: 1 !important; }
+#m-bottom-dock.dock-awake, #m-bottom-dock:hover, #m-bottom-dock:focus-within {
+    opacity: 0.98 !important;
+    pointer-events: auto !important;
+    transform: translate(-50%, 0) !important;
+}
 
 /* Ligne 1 : Barre de défilement / Scrubber */
 .dock-scrubber-row {
@@ -438,6 +444,7 @@ let prevTouchPos = { x: 0, y: 0 };
 let renderTaskLeft = null;
 let renderTaskRight = null;
 let dockFadeTimeout = null;
+let isDockScrubbing = false;
 
 let userStore = {
     terrainLastPage: 1,
@@ -583,22 +590,62 @@ async function initAppCore() {
     initTouchPan();
 }
 
-function wakeBottomDock() {
+function wakeBottomDock(customDuration = 1500) {
     const dock = document.getElementById('m-bottom-dock');
-    if (dock) dock.classList.add('dock-awake');
+    if (!dock) return;
+    dock.classList.add('dock-awake');
     
     clearTimeout(dockFadeTimeout);
-    dockFadeTimeout = setTimeout(() => {
-        if (dock) dock.classList.remove('dock-awake');
-    }, 2800);
+    if (!isDockScrubbing) {
+        dockFadeTimeout = setTimeout(() => {
+            if (dock && !isDockScrubbing) dock.classList.remove('dock-awake');
+        }, customDuration);
+    }
+}
+
+function hideBottomDock() {
+    const dock = document.getElementById('m-bottom-dock');
+    if (dock) {
+        dock.classList.remove('dock-awake');
+        clearTimeout(dockFadeTimeout);
+    }
+}
+
+function toggleBottomDock() {
+    const dock = document.getElementById('m-bottom-dock');
+    if (!dock) return;
+    if (dock.classList.contains('dock-awake')) {
+        hideBottomDock();
+    } else {
+        wakeBottomDock(2500);
+    }
 }
 
 function initDockFadeListeners() {
-    window.addEventListener('touchstart', wakeBottomDock, { passive: true });
-    window.addEventListener('touchmove', wakeBottomDock, { passive: true });
-    window.addEventListener('mousemove', wakeBottomDock);
-    window.addEventListener('scroll', wakeBottomDock, { passive: true });
-    wakeBottomDock();
+    const dock = document.getElementById('m-bottom-dock');
+    if (dock) {
+        dock.addEventListener('mouseenter', () => {
+            isDockScrubbing = true;
+            wakeBottomDock(3000);
+        });
+        dock.addEventListener('mouseleave', () => {
+            isDockScrubbing = false;
+            wakeBottomDock(1200);
+        });
+        dock.addEventListener('touchstart', (e) => {
+            wakeBottomDock(3000);
+        }, { passive: true });
+    }
+
+    const slider = document.getElementById('reader-page-slider');
+    if (slider) {
+        slider.addEventListener('mousedown', () => { isDockScrubbing = true; wakeBottomDock(3500); });
+        slider.addEventListener('touchstart', () => { isDockScrubbing = true; wakeBottomDock(3500); }, { passive: true });
+        slider.addEventListener('mouseup', () => { isDockScrubbing = false; wakeBottomDock(1500); });
+        slider.addEventListener('touchend', () => { isDockScrubbing = false; wakeBottomDock(1500); });
+    }
+
+    window.addEventListener('keydown', () => wakeBottomDock(1800));
 }
 
 let isInitialOpen = true;
@@ -649,7 +696,7 @@ async function openReader() {
     resetZoom(false);
     document.getElementById('live-reader-container').style.display = 'flex';
     document.getElementById('home-3d-cta').style.display = 'none';
-    wakeBottomDock();
+    wakeBottomDock(2500);
     
     if (!docTerrain || !docSommet) {
         showCenteredLoader("Ouverture du manuscrit...");
@@ -699,7 +746,9 @@ async function renderUniversalReader() {
 
     try {
         const screenW = window.innerWidth;
-        const availH = window.innerHeight - 56 - 36;
+        // Hauteur réservée : Header (56px) + padding-top (10px) + dock de navigation en bas (92px mobile, 80px bureau)
+        const dockReservedH = isMobile ? 92 : 80;
+        const availH = window.innerHeight - 56 - 10 - dockReservedH;
 
         const pageL = await activeDoc.getPage(currentPage);
         const unscaledVpL = pageL.getViewport({ scale: 1.0 });
@@ -713,7 +762,7 @@ async function renderUniversalReader() {
             cLeft.style.borderRadius = '4px';
 
             const maxFitW = isMobile ? (screenW - 20) : (screenW * 0.90);
-            const maxFitH = availH * 0.94;
+            const maxFitH = availH * 0.98;
 
             let displayW = maxFitW;
             let displayH = displayW * (unscaledVpL.height / unscaledVpL.width);
@@ -998,7 +1047,8 @@ function updateSliderUI(pageNum, totalPages) {
 }
 
 function onSliderInput(val) {
-    wakeBottomDock();
+    isDockScrubbing = true;
+    wakeBottomDock(3500);
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     const totalPages = activeDoc ? activeDoc.numPages : 139;
     const p = parseInt(val, 10);
@@ -1021,7 +1071,8 @@ function onSliderInput(val) {
 }
 
 function onSliderChange(val) {
-    wakeBottomDock();
+    isDockScrubbing = false;
+    wakeBottomDock(1500);
     const bubble = document.getElementById('scrubber-bubble');
     if (bubble) bubble.classList.remove('bubble-visible');
 
@@ -1241,6 +1292,8 @@ function initTouchPan() {
             if (hasMovedMouse && Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.3) {
                 if (dx < 0) nextStep();
                 else prevStep();
+            } else if (!hasMovedMouse) {
+                toggleBottomDock();
             }
             panX = 0;
             panY = 0;
@@ -1376,13 +1429,17 @@ function initTouchPan() {
         if (isTouchDragging) {
             isTouchDragging = false;
             if (currentZoom <= 1.05) {
-                const totalDx = (e.changedTouches[0] ? e.changedTouches[0].clientX : touchLastX) - touchStartX;
-                const totalDy = (e.changedTouches[0] ? e.changedTouches[0].clientY : touchLastY) - touchStartY;
+                const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : touchLastX;
+                const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : touchLastY;
+                const totalDx = endX - touchStartX;
+                const totalDy = endY - touchStartY;
                 const elapsed = Date.now() - touchStartTime;
 
                 if (elapsed < 450 && Math.abs(totalDx) > 45 && Math.abs(totalDx) > Math.abs(totalDy) * 1.3) {
                     if (totalDx < 0) nextStep();
                     else prevStep();
+                } else if (elapsed < 320 && Math.abs(totalDx) < 15 && Math.abs(totalDy) < 15) {
+                    toggleBottomDock();
                 }
                 panX = 0;
                 panY = 0;
