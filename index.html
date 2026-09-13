@@ -451,7 +451,8 @@ let userStore = {
     sommetLastPage: 1,
     terrainBookmarks: [],
     sommetBookmarks: [],
-    lastSide: 'terrain'
+    lastSide: 'terrain',
+    preferredZoom: 1.0
 };
 
 function loadUserStore() {
@@ -461,10 +462,14 @@ function loadUserStore() {
             userStore = JSON.parse(saved);
             currentSide = userStore.lastSide || 'terrain';
             currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
+            if (userStore.preferredZoom && typeof userStore.preferredZoom === 'number') {
+                currentZoom = Math.max(1.0, Math.min(3.5, userStore.preferredZoom));
+            }
         } catch(e) {}
     } else {
         currentSide = 'terrain';
         currentPage = 1;
+        currentZoom = 1.0;
     }
     updateBookmarkUI();
 }
@@ -473,7 +478,10 @@ function saveUserStore() {
     if (currentSide === 'terrain') userStore.terrainLastPage = currentPage;
     else userStore.sommetLastPage = currentPage;
     userStore.lastSide = currentSide;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(userStore));
+    userStore.preferredZoom = currentZoom;
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(userStore));
+    } catch(e) {}
     updateBookmarkUI();
 }
 
@@ -668,7 +676,8 @@ function hideCenteredLoader() {
 
 function goToHome3D() {
     isReading = false;
-    resetZoom(false);
+    panX = 0;
+    panY = 0;
     const reader = document.getElementById('live-reader-container');
     const cta = document.getElementById('home-3d-cta');
     const stage = document.getElementById('stage-3d-box');
@@ -693,7 +702,11 @@ function goToHome3D() {
 
 async function openReader() {
     isReading = true;
-    resetZoom(false);
+    if (userStore.preferredZoom && typeof userStore.preferredZoom === 'number') {
+        currentZoom = Math.max(1.0, Math.min(3.5, userStore.preferredZoom));
+    }
+    panX = 0;
+    panY = 0;
     document.getElementById('live-reader-container').style.display = 'flex';
     document.getElementById('home-3d-cta').style.display = 'none';
     wakeBottomDock(2500);
@@ -871,7 +884,9 @@ async function renderUniversalReader() {
 
 function nextStep() {
     wakeBottomDock();
-    resetZoom(false);
+    // Conserver le zoom choisi, replacer la vue en haut de la nouvelle page
+    panX = 0;
+    panY = 0;
     const activeDoc = (currentSide === 'terrain') ? docTerrain : docSommet;
     const maxP = activeDoc ? activeDoc.numPages : 170;
     const isMobile = window.innerWidth <= 768;
@@ -890,7 +905,9 @@ function nextStep() {
 
 function prevStep() {
     wakeBottomDock();
-    resetZoom(false);
+    // Conserver le zoom choisi, replacer la vue en haut de la page précédente
+    panX = 0;
+    panY = 0;
     const isMobile = window.innerWidth <= 768;
     const effectiveMode = isMobile ? 'single' : displayMode;
     const step = (effectiveMode === 'spread' && currentPage > 2) ? 2 : 1;
@@ -906,7 +923,8 @@ function prevStep() {
 function flip3DTeteBeche() {
     if (isFlipping3D) return;
     isFlipping3D = true;
-    resetZoom(false);
+    panX = 0;
+    panY = 0;
 
     currentSide = (currentSide === 'terrain') ? 'sommet' : 'terrain';
     currentPage = (currentSide === 'terrain') ? (userStore.terrainLastPage || 1) : (userStore.sommetLastPage || 1);
@@ -1003,7 +1021,8 @@ function closeBookmarksList() {
 
 function jumpToBm(side, pageNum) {
     closeBookmarksList();
-    resetZoom(false);
+    panX = 0;
+    panY = 0;
     currentSide = side;
     currentPage = pageNum;
     updateSideBadge();
@@ -1087,7 +1106,8 @@ function onSliderChange(val) {
     }
 
     currentPage = p;
-    resetZoom(false);
+    panX = 0;
+    panY = 0;
     renderUniversalReader();
 }
 
@@ -1110,7 +1130,8 @@ function promptDirectPageJump() {
     }
 
     currentPage = targetPage;
-    resetZoom(false);
+    panX = 0;
+    panY = 0;
     renderUniversalReader();
 }
 
@@ -1127,15 +1148,21 @@ function clampPan() {
     const scaledW = baseContentW * currentZoom;
     const scaledH = baseContentH * currentZoom;
 
-    let maxPanX = (scaledW > vpW) ? ((scaledW - vpW) / 2 + 50) : 30;
-    let maxPanY = (scaledH > vpH) ? ((scaledH - vpH) / 2 + 50) : 30;
-
     if (currentZoom <= 1.02) {
         panX = 0;
         panY = 0;
+        return;
+    }
+
+    let maxPanX = (scaledW > vpW) ? ((scaledW - vpW) / 2 + 50) : 30;
+    panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+
+    if (scaledH > vpH) {
+        let minPanY = -(scaledH - vpH + 50);
+        let maxPanY = 30;
+        panY = Math.max(minPanY, Math.min(maxPanY, panY));
     } else {
-        panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
-        panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+        panY = Math.max(-30, Math.min(30, panY));
     }
 }
 
@@ -1181,6 +1208,8 @@ function zoomAtPoint(newZoom, cursorX, cursorY, withTransition = false) {
     }
 
     applyReaderTransform(withTransition);
+    userStore.preferredZoom = currentZoom;
+    saveUserStore();
 }
 
 function zoomStep(delta, withTransition = true) {
@@ -1195,6 +1224,8 @@ function resetZoom(withTransition = true) {
     panX = 0;
     panY = 0;
     applyReaderTransform(withTransition);
+    userStore.preferredZoom = 1.0;
+    saveUserStore();
 }
 
 function handleDoubleAction(clientX, clientY) {
@@ -1208,7 +1239,7 @@ function handleDoubleAction(clientX, clientY) {
     if (currentZoom > 1.15) {
         resetZoom(true);
     } else {
-        zoomAtPoint(2.0, cursorX, cursorY, true);
+        zoomAtPoint(1.6, cursorX, cursorY, true);
     }
 }
 
@@ -1299,6 +1330,9 @@ function initTouchPan() {
             panY = 0;
             applyReaderTransform(true);
         } else {
+            if (!hasMovedMouse) {
+                toggleBottomDock();
+            }
             clampPan();
             applyReaderTransform(true);
         }
@@ -1416,11 +1450,13 @@ function initTouchPan() {
         if (isTouchPinching) {
             if (e.touches.length < 2) {
                 isTouchPinching = false;
-                if (currentZoom < 1.0) {
+                if (currentZoom <= 1.02) {
                     resetZoom(true);
                 } else {
                     clampPan();
                     applyReaderTransform(true);
+                    userStore.preferredZoom = currentZoom;
+                    saveUserStore();
                 }
             }
             return;
@@ -1428,13 +1464,13 @@ function initTouchPan() {
 
         if (isTouchDragging) {
             isTouchDragging = false;
-            if (currentZoom <= 1.05) {
-                const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : touchLastX;
-                const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : touchLastY;
-                const totalDx = endX - touchStartX;
-                const totalDy = endY - touchStartY;
-                const elapsed = Date.now() - touchStartTime;
+            const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : touchLastX;
+            const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : touchLastY;
+            const totalDx = endX - touchStartX;
+            const totalDy = endY - touchStartY;
+            const elapsed = Date.now() - touchStartTime;
 
+            if (currentZoom <= 1.05) {
                 if (elapsed < 450 && Math.abs(totalDx) > 45 && Math.abs(totalDx) > Math.abs(totalDy) * 1.3) {
                     if (totalDx < 0) nextStep();
                     else prevStep();
@@ -1445,6 +1481,9 @@ function initTouchPan() {
                 panY = 0;
                 applyReaderTransform(true);
             } else {
+                if (elapsed < 320 && Math.abs(totalDx) < 15 && Math.abs(totalDy) < 15) {
+                    toggleBottomDock();
+                }
                 clampPan();
                 applyReaderTransform(true);
             }
