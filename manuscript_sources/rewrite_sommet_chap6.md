@@ -72,7 +72,7 @@ Le siège international déploie en direct de Munich un logiciel unique de factu
 
 ### ▌ LE SAVIEZ-VOUS ?
 
-> Selon les recherches de l'INSEAD sur le management interculturel, **plus de 65 % des grands projets de standardisation internationale des processus échouent** à délivrer les gains de productivité escomptés, en raison du développement systématique d'outils informatiques parallèles par les équipes locales.
+> Selon McKinsey & Company (*Delivering through diversity*, 2023), **70 % des grandes transformations organisationnelles n'atteignent pas leurs objectifs initiaux**, en raison notamment du développement systématique d'outils et pratiques parallèles par les équipes locales pour compenser l'inadaptation des standards imposés.
 
 </div>
 

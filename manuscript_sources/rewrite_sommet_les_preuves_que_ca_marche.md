@@ -17,14 +17,15 @@ turnover, de l'absentéisme, des coûts de recrutement.
 Buurtzorg — 15 000 infirmiers, zéro manager intermédiaire — a
 obtenu ces résultats :
 Votre indicateur Système classique Buurtzorg
-Coûts par patient Base -40 %
+Coûts par patient (système) Base -40 %¹
 Absentéisme 7-10 % < 3 %
 Turnover 15-25 % < 5 %
 Satisfaction employés Moyenne N°1 du pays
 Coût de management Significatif Quasi-nul
 Lisez la colonne de droite avec vos lunettes de VP. Ce n'est pas un
-projet social. C'est un avantage compétitif massif. -40 % de coûts.
+projet social. C'est un avantage compétitif massif.
 Turnover divisé par cinq. Satisfaction maximale.
+¹ *Note méthodologique : les économies de -40 % sont une projection macro Ernst & Young (2012) estimant le gain potentiel pour l’ensemble du système de soins néerlandais si le modèle était généralisé. Sur le plan opérationnel, Buurtzorg utilise environ 35 % moins d’heures de soin par client que le secteur traditionnel (Swiss Re).*
 Quel cabinet de conseil vous promettrait ces résultats ? Aucun. Parce
 qu'ils viennent d'un modèle qui supprime le besoin de cabinets de
 conseil.
@@ -76,8 +77,7 @@ Et Mondragon est là depuis 1956. Presque 70 ans. Combien
 d'entreprises du CAC 40 peuvent dire la même chose dans leur
 forme actuelle ?
 L'open source — Plus innovant, pas moins
-Linux fait tourner 90 % des serveurs mondiaux. Android — basé sur
-Linux — équipe la majorité des smartphones de la planète.
+Linux fait tourner la quasi-totalité de l’infrastructure cloud mondiale (AWS, Google, Azure) et 100 % des 500 supercalculateurs les plus puissants de la planète. Android — basé sur Linux — équipe environ 72 % des smartphones mondiaux.
 Wikipedia est la plus grande encyclopédie de l'histoire. Firefox, VLC,
 WordPress — des logiciels utilisés par des milliards de personnes.
 Tous produits sans hiérarchie. Sans VP. Sans Town Hall. Sans plan

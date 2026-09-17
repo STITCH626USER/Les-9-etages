@@ -74,7 +74,7 @@ Lors de la convention annuelle retransmise en direct à 8 000 salariés, le Pré
 
 ### ▌ LE SAVIEZ-VOUS ?
 
-> D'après le Baromètre de la Confiance Managériale (Edelman Trust Barometer, 2024), **seuls 24 % des salariés accordent leur confiance aux discours officiels de leur direction générale**, alors que plus de 78 % font confiance aux constats partagés par leurs collègues directs et leur chef d'équipe immédiat.
+> D'après le Baromètre de la Confiance Managériale (Edelman Trust Barometer, 2024), **seuls 19 % des salariés de terrain déclarent avoir confiance dans la parole de leur PDG sur les affaires de l'entreprise**, alors que plus de 78 % font confiance aux constats partagés par leurs collègues directs et leur chef d'équipe immédiat.
 
 </div>
 

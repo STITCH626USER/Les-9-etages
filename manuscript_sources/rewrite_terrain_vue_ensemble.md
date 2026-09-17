@@ -6,7 +6,7 @@ Avant de quitter la tour, regardons-la une dernière fois. En entier.
 
 | Niveau | Population | Rémunération | Focus Principal |
 | :--- | :--- | :--- | :--- |
-| **Étage 8** — CEO | 1 personne | x200 à x500 | 3 décisions / an |
+| **Étage 8** — CEO | 1 personne | ×95 en moyenne CAC 40¹ | 3 décisions / an |
 | **Étage 7** — Chairman | ~10 pers. | x30 à x100 | Rendement actionnarial |
 | **Étage 6** — Prés. International | ~10 pers. | x15 à x30 | Marchés globaux |
 | **Étage 5** — Prés. Division | ~10 pers. | x10 à x20 | Communication & *Town Halls* |
