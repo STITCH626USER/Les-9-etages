@@ -1,0 +1,30 @@
+{
+  "name": "les-9-etages",
+  "version": "1.0.0",
+  "description": "> **Expérience de lecture interactive 3D & Liseuse Tête-Bêche pour Smartphone et Tablette.**",
+  "main": "book_data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/STITCH626USER/Les-9-etages.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/STITCH626USER/Les-9-etages/issues"
+  },
+  "homepage": "https://github.com/STITCH626USER/Les-9-etages#readme",
+  "dependencies": {
+    "marked": "^18.0.13",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^25.11.0",
+    "qrcode": "^1.5.4"
+  },
+  "allowScripts": {
+    "puppeteer@25.11.0": true
+  }
+}
