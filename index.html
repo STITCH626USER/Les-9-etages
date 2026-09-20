@@ -156,121 +156,309 @@ html, body {
 #page-canvas-left { border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 #page-canvas-right { display: none; border-radius: 0 4px 4px 0; border-left: 1px solid rgba(0,0,0,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.85); }
 
-/* BARRE DE CONTRÔLE FLOTTANTE CENTRÉE AVEC DÉFILEMENT (SCRUBBER) */
-#m-bottom-dock {
-    position: fixed; bottom: 16px; left: 50%;
-    transform: translate(-50%, 20px);
-    background: rgba(10, 16, 28, 0.95); backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(223, 178, 86, 0.35); border-radius: 20px;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    padding: 10px 16px 8px 16px; z-index: 150;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.88);
-    width: 92%; max-width: 480px; box-sizing: border-box;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+/* BOUTON FLOTTANT COMPACT & PANNEAU DE CONTRÔLE DÉPLOYABLE */
+#dock-launcher-btn {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 16, 28, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(223, 178, 86, 0.45);
+    color: #f7eedb;
+    border-radius: 30px;
+    padding: 7px 18px 7px 14px;
+    display: none;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+    z-index: 140;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), 0 0 15px rgba(223, 178, 86, 0.2);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.2s ease, border-color 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
 }
-#m-bottom-dock.dock-awake, #m-bottom-dock:hover, #m-bottom-dock:focus-within {
-    opacity: 0.98 !important;
+#dock-launcher-btn:hover {
+    transform: translateX(-50%) translateY(-2px);
+    background: rgba(16, 25, 44, 0.98);
+    border-color: #dfb256;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85), 0 0 20px rgba(223, 178, 86, 0.4);
+}
+#dock-launcher-btn:active {
+    transform: translateX(-50%) translateY(1px);
+}
+.launcher-icon {
+    font-size: 14px;
+    line-height: 1;
+    color: #dfb256;
+}
+.launcher-badge {
+    color: #f7eedb;
+    letter-spacing: 0.3px;
+}
+.launcher-chevron {
+    font-size: 11px;
+    color: #dfb256;
+    opacity: 0.85;
+    transition: transform 0.2s ease;
+}
+
+#m-bottom-dock {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translate(-50%, 25px);
+    background: rgba(10, 16, 28, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(223, 178, 86, 0.45);
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px 10px 16px;
+    z-index: 150;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(223, 178, 86, 0.15);
+    width: 94%;
+    max-width: 500px;
+    box-sizing: border-box;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+#m-bottom-dock.dock-awake {
+    opacity: 1 !important;
     pointer-events: auto !important;
     transform: translate(-50%, 0) !important;
 }
 
 /* Ligne 1 : Barre de défilement / Scrubber */
 .dock-scrubber-row {
-    width: 100%; display: flex; align-items: center; gap: 10px; position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
 }
 .scrubber-edge-label {
-    font-size: 11px; font-weight: 800; color: #8fa0ba; min-width: 22px; text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #8fa0ba;
+    min-width: 22px;
+    text-align: center;
 }
 .scrubber-track-container {
-    flex: 1; position: relative; display: flex; align-items: center; height: 22px; cursor: pointer;
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 22px;
+    cursor: pointer;
 }
 #reader-page-slider {
-    -webkit-appearance: none; appearance: none;
-    width: 100%; height: 6px; background: rgba(255, 255, 255, 0.15);
-    border-radius: 6px; outline: none; margin: 0; cursor: pointer; position: relative; z-index: 2;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    outline: none;
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
 }
 #reader-page-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: #dfb256; border: 2px solid #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 10px rgba(223, 178, 86, 0.7);
-    cursor: grab; transition: transform 0.12s ease, background 0.12s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #dfb256;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 0 10px rgba(223, 178, 86, 0.7);
+    cursor: grab;
+    transition: transform 0.12s ease, background 0.12s ease;
 }
-#reader-page-slider::-webkit-slider-thumb:hover, #reader-page-slider::-webkit-slider-thumb:active {
-    transform: scale(1.25); background: #fce18b; cursor: grabbing;
+#reader-page-slider::-webkit-slider-thumb:hover,
+#reader-page-slider::-webkit-slider-thumb:active {
+    transform: scale(1.25);
+    background: #fce18b;
+    cursor: grabbing;
 }
 #reader-page-slider::-moz-range-thumb {
-    width: 18px; height: 18px; border-radius: 50%;
-    background: #dfb256; border: 2px solid #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 10px rgba(223, 178, 86, 0.7);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #dfb256;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 0 10px rgba(223, 178, 86, 0.7);
     cursor: grab;
 }
 .scrubber-track-fill {
-    position: absolute; left: 0; top: 8px; height: 6px;
+    position: absolute;
+    left: 0;
+    top: 8px;
+    height: 6px;
     background: linear-gradient(90deg, #c35936, #dfb256);
-    border-radius: 6px; pointer-events: none; z-index: 1;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 1;
     width: 0%;
 }
 .scrubber-bubble {
-    position: absolute; bottom: 28px; left: 0; transform: translateX(-50%);
-    background: #dfb256; color: #0a0f1d; font-size: 11.5px; font-weight: 900;
-    padding: 4px 10px; border-radius: 12px; pointer-events: none; white-space: nowrap;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.8);
-    opacity: 0; transition: opacity 0.15s ease;
+    position: absolute;
+    bottom: 28px;
+    left: 0;
+    transform: translateX(-50%);
+    background: #dfb256;
+    color: #0a0f1d;
+    font-size: 11.5px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 12px;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.15s ease;
     z-index: 10;
 }
 .scrubber-bubble::after {
-    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-    border: 5px solid transparent; border-top-color: #dfb256;
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #dfb256;
 }
 .scrubber-bubble.bubble-visible {
     opacity: 1;
 }
 
-/* Ligne 2 : Commandes */
+/* Ligne 2 : Commandes et Zoom */
 .dock-controls-row {
-    width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 6px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
 }
 .dock-nav-btn {
-    background: #182236; border: 1px solid rgba(255,255,255,0.25);
-    color: #dfb256; padding: 5px 14px; border-radius: 14px; font-size: 14px; font-weight: 900;
-    cursor: pointer; min-width: 38px; min-height: 32px; display: flex; align-items: center; justify-content: center;
+    background: #182236;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #dfb256;
+    padding: 5px 13px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    min-width: 36px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: background 0.15s ease, transform 0.1s ease;
 }
-.dock-nav-btn:active { background: #dfb256; color: #111; transform: scale(0.96); }
+.dock-nav-btn:active {
+    background: #dfb256;
+    color: #111;
+    transform: scale(0.96);
+}
 
 .dock-page-jump {
-    display: flex; align-items: center; gap: 6px; cursor: pointer;
-    padding: 4px 10px; border-radius: 10px; background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.14); transition: background 0.15s ease, border-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    transition: background 0.15s ease, border-color 0.15s ease;
 }
 .dock-page-jump:hover {
-    background: rgba(223,178,86,0.18); border-color: rgba(223,178,86,0.45);
+    background: rgba(223, 178, 86, 0.18);
+    border-color: rgba(223, 178, 86, 0.45);
 }
-#page-indicator-txt { font-size: 12.5px; font-weight: 900; color: #f7eedb; min-width: 75px; text-align: center; white-space: nowrap; }
-.jump-hint-icon { font-size: 11px; color: #dfb256; opacity: 0.8; }
+#page-indicator-txt {
+    font-size: 12.5px;
+    font-weight: 900;
+    color: #f7eedb;
+    min-width: 75px;
+    text-align: center;
+    white-space: nowrap;
+}
+.jump-hint-icon {
+    font-size: 11px;
+    color: #dfb256;
+    opacity: 0.8;
+}
 
 .dock-divider {
-    width: 1px; height: 18px; background: rgba(255,255,255,0.2); margin: 0 1px;
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 1px;
 }
 .dock-zoom-btn {
-    font-size: 17px !important; font-weight: 900 !important;
-    padding: 4px 9px !important; min-width: 32px !important; min-height: 30px !important;
+    font-size: 17px !important;
+    font-weight: 900 !important;
+    padding: 4px 9px !important;
+    min-width: 32px !important;
+    min-height: 30px !important;
 }
 .dock-zoom-indicator {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(223,178,86,0.35);
-    color: #dfb256; font-size: 11px; font-weight: 900; border-radius: 12px;
-    padding: 4px 8px; cursor: pointer; transition: all 0.2s ease;
-    white-space: nowrap; min-width: 44px; text-align: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(223, 178, 86, 0.35);
+    color: #dfb256;
+    font-size: 11px;
+    font-weight: 900;
+    border-radius: 12px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: 44px;
+    text-align: center;
 }
-.dock-zoom-indicator:hover, .dock-zoom-indicator:active {
-    background: #dfb256; color: #111;
+.dock-zoom-indicator:hover,
+.dock-zoom-indicator:active {
+    background: #dfb256;
+    color: #111;
 }
 .dock-zoom-indicator.zoom-active {
-    border-color: #dfb256; background: rgba(223,178,86,0.25); color: #ffd700;
+    border-color: #dfb256;
+    background: rgba(223, 178, 86, 0.25);
+    color: #ffd700;
 }
-
+.dock-close-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #8fa0ba;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    min-width: 28px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.dock-close-btn:hover {
+    background: rgba(223, 178, 86, 0.2);
+    color: #dfb256;
+    border-color: rgba(223, 178, 86, 0.5);
+}
 /* CACHER LA BARRE DE ZOOM SUR TOUT MOBILE/TABLETTE */
 #reader-zoom-bar { display: none !important; }
 
@@ -378,7 +566,13 @@ html, body {
         </div>
     </div>
 
-    <!-- COMMANDES FLOTTANTES DE NAVIGATION, BARRE DE DÉFILEMENT & ZOOM -->
+    <!-- BOUTON FLOTTANT COMPACT & PANNEAU DE CONTRÔLE DÉPLOYABLE -->
+    <button id="dock-launcher-btn" onclick="openBottomDock(true)" title="Ouvrir le panneau de navigation & zoom">
+        <span class="launcher-icon">📖</span>
+        <span class="launcher-badge" id="dock-launcher-txt">Couverture</span>
+        <span class="launcher-chevron">▲</span>
+    </button>
+
     <div id="m-bottom-dock">
         <!-- LIGNE 1 : BARRE DE DÉFILEMENT DIRECTE (SCRUBBER) -->
         <div class="dock-scrubber-row">
@@ -406,6 +600,10 @@ html, body {
             <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(-0.25)" title="Dézoomer (−)">−</button>
             <button class="dock-zoom-indicator" id="zoom-indicator-btn" onclick="resetZoom(true)" title="Réinitialiser à 100% (Touche 0)">100%</button>
             <button class="dock-nav-btn dock-zoom-btn" onclick="zoomStep(0.25)" title="Zoomer (+)">+</button>
+
+            <div class="dock-divider"></div>
+
+            <button class="dock-close-btn" onclick="closeBottomDock(true)" title="Replier le panneau">✕</button>
         </div>
     </div>
 </div>
@@ -445,6 +643,7 @@ let renderTaskLeft = null;
 let renderTaskRight = null;
 let dockFadeTimeout = null;
 let isDockScrubbing = false;
+let isDockOpen = false;
 
 let userStore = {
     terrainLastPage: 1,
@@ -598,83 +797,129 @@ async function initAppCore() {
     initTouchPan();
 }
 
-function wakeBottomDock(customDuration = 2200) {
-    const dock = document.getElementById('m-bottom-dock');
-    if (!dock) return;
-    dock.classList.add('dock-awake');
-    
-    clearTimeout(dockFadeTimeout);
-    if (!isDockScrubbing) {
-        dockFadeTimeout = setTimeout(() => {
-            if (dock && !isDockScrubbing) {
-                dock.classList.remove('dock-awake');
-            }
-        }, customDuration);
+function updateDockLauncherBadge() {
+    const launcherTxt = document.getElementById('dock-launcher-txt');
+    const pageTxt = document.getElementById('page-indicator-txt');
+    if (launcherTxt && pageTxt) {
+        launcherTxt.innerText = pageTxt.innerText || 'Couverture';
     }
 }
 
-function hideBottomDock() {
+function openBottomDock(preventFade = false) {
+    if (!isReading) return;
     const dock = document.getElementById('m-bottom-dock');
-    if (dock) {
-        dock.classList.remove('dock-awake');
-        clearTimeout(dockFadeTimeout);
+    const launcher = document.getElementById('dock-launcher-btn');
+    if (!dock) return;
+
+    isDockOpen = true;
+    dock.classList.add('dock-awake');
+    if (launcher) launcher.style.display = 'none';
+
+    clearTimeout(dockFadeTimeout);
+    if (!preventFade && !isDockScrubbing) {
+        dockFadeTimeout = setTimeout(() => {
+            if (isDockOpen && !isDockScrubbing) {
+                closeBottomDock(false);
+            }
+        }, 4500);
+    }
+}
+
+function closeBottomDock(immediate = false) {
+    const dock = document.getElementById('m-bottom-dock');
+    const launcher = document.getElementById('dock-launcher-btn');
+    if (!dock) return;
+
+    isDockOpen = false;
+    dock.classList.remove('dock-awake');
+    clearTimeout(dockFadeTimeout);
+
+    if (launcher && isReading) {
+        updateDockLauncherBadge();
+        launcher.style.display = 'flex';
     }
 }
 
 function toggleBottomDock() {
-    const dock = document.getElementById('m-bottom-dock');
-    if (!dock) return;
-    if (dock.classList.contains('dock-awake')) {
-        hideBottomDock();
+    if (isDockOpen) {
+        closeBottomDock(true);
     } else {
-        wakeBottomDock(2500);
+        openBottomDock(true);
     }
 }
 
-let lastMouseMoveTime = 0;
+// Alias de compatibilité pour toutes les actions de navigation existantes
+function wakeBottomDock(customDuration = 4000) {
+    if (!isReading) return;
+    if (isDockOpen) {
+        clearTimeout(dockFadeTimeout);
+        if (!isDockScrubbing) {
+            dockFadeTimeout = setTimeout(() => {
+                if (isDockOpen && !isDockScrubbing) closeBottomDock(false);
+            }, customDuration);
+        }
+    }
+}
 
 function initDockFadeListeners() {
     const dock = document.getElementById('m-bottom-dock');
+    const launcher = document.getElementById('dock-launcher-btn');
+
+    if (launcher) {
+        launcher.addEventListener('mouseenter', () => {
+            openBottomDock(true);
+        });
+    }
+
     if (dock) {
         dock.addEventListener('mouseenter', () => {
-            isDockScrubbing = true;
-            wakeBottomDock(3500);
+            clearTimeout(dockFadeTimeout);
         });
         dock.addEventListener('mouseleave', () => {
-            isDockScrubbing = false;
-            wakeBottomDock(1800);
+            if (isDockOpen && !isDockScrubbing) {
+                dockFadeTimeout = setTimeout(() => {
+                    if (isDockOpen && !isDockScrubbing) closeBottomDock(false);
+                }, 2000);
+            }
         });
-        dock.addEventListener('touchstart', (e) => {
-            wakeBottomDock(3000);
+        dock.addEventListener('touchstart', () => {
+            clearTimeout(dockFadeTimeout);
         }, { passive: true });
     }
 
     const slider = document.getElementById('reader-page-slider');
     if (slider) {
-        slider.addEventListener('mousedown', () => { isDockScrubbing = true; wakeBottomDock(3500); });
-        slider.addEventListener('touchstart', () => { isDockScrubbing = true; wakeBottomDock(3500); }, { passive: true });
-        slider.addEventListener('mouseup', () => { isDockScrubbing = false; wakeBottomDock(1500); });
-        slider.addEventListener('touchend', () => { isDockScrubbing = false; wakeBottomDock(1500); });
+        slider.addEventListener('mousedown', () => {
+            isDockScrubbing = true;
+            clearTimeout(dockFadeTimeout);
+        });
+        slider.addEventListener('touchstart', () => {
+            isDockScrubbing = true;
+            clearTimeout(dockFadeTimeout);
+        }, { passive: true });
+        slider.addEventListener('mouseup', () => {
+            isDockScrubbing = false;
+            openBottomDock(false);
+        });
+        slider.addEventListener('touchend', () => {
+            isDockScrubbing = false;
+            openBottomDock(false);
+        });
     }
 
-    // Réveil instantané dès que la souris bouge
+    // Déploiement au survol du bord inférieur de l'écran (< 70px)
     window.addEventListener('mousemove', (e) => {
         if (!isReading) return;
-        
-        // Si le curseur est dans la zone inférieure (proche des contrôles)
-        if (e.clientY >= window.innerHeight - 160) {
-            wakeBottomDock(3200);
-            return;
-        }
-
-        const now = Date.now();
-        if (now - lastMouseMoveTime > 80) {
-            lastMouseMoveTime = now;
-            wakeBottomDock(2200);
+        if (!isDockOpen && e.clientY >= window.innerHeight - 70) {
+            openBottomDock(true);
         }
     }, { passive: true });
 
-    window.addEventListener('keydown', () => wakeBottomDock(2000));
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isDockOpen) {
+            closeBottomDock(true);
+        }
+    });
 }
 
 let isInitialOpen = true;
@@ -707,6 +952,9 @@ function goToHome3D() {
     if (stage) stage.style.display = 'block';
     if (cta) cta.style.display = 'flex';
     
+    const launcher = document.getElementById('dock-launcher-btn');
+    if (launcher) launcher.style.display = 'none';
+    closeBottomDock(true);
     saveUserStore();
     
     if (bookMesh) {
@@ -736,6 +984,11 @@ async function openReader() {
         showCenteredLoader("Ouverture du manuscrit...");
         if (!docTerrain) docTerrain = await pdfjsLib.getDocument('terrain.pdf?v=20260920_v10').promise;
         if (!docSommet) docSommet = await pdfjsLib.getDocument('sommet.pdf?v=20260920_v10').promise;
+    }
+    const launcher = document.getElementById('dock-launcher-btn');
+    if (launcher) {
+        updateDockLauncherBadge();
+        launcher.style.display = 'flex';
     }
     renderUniversalReader();
 }
@@ -769,6 +1022,7 @@ async function renderUniversalReader() {
     }
 
     if (document.getElementById('page-indicator-txt')) document.getElementById('page-indicator-txt').innerText = pLabel;
+    updateDockLauncherBadge();
 
     const wrapper = document.getElementById('spread-card-wrapper');
     const cLeft = document.getElementById('page-canvas-left');
