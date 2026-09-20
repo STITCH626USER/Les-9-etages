@@ -598,7 +598,7 @@ async function initAppCore() {
     initTouchPan();
 }
 
-function wakeBottomDock(customDuration = 1500) {
+function wakeBottomDock(customDuration = 2200) {
     const dock = document.getElementById('m-bottom-dock');
     if (!dock) return;
     dock.classList.add('dock-awake');
@@ -606,7 +606,9 @@ function wakeBottomDock(customDuration = 1500) {
     clearTimeout(dockFadeTimeout);
     if (!isDockScrubbing) {
         dockFadeTimeout = setTimeout(() => {
-            if (dock && !isDockScrubbing) dock.classList.remove('dock-awake');
+            if (dock && !isDockScrubbing) {
+                dock.classList.remove('dock-awake');
+            }
         }, customDuration);
     }
 }
@@ -629,16 +631,18 @@ function toggleBottomDock() {
     }
 }
 
+let lastMouseMoveTime = 0;
+
 function initDockFadeListeners() {
     const dock = document.getElementById('m-bottom-dock');
     if (dock) {
         dock.addEventListener('mouseenter', () => {
             isDockScrubbing = true;
-            wakeBottomDock(3000);
+            wakeBottomDock(3500);
         });
         dock.addEventListener('mouseleave', () => {
             isDockScrubbing = false;
-            wakeBottomDock(1200);
+            wakeBottomDock(1800);
         });
         dock.addEventListener('touchstart', (e) => {
             wakeBottomDock(3000);
@@ -653,7 +657,24 @@ function initDockFadeListeners() {
         slider.addEventListener('touchend', () => { isDockScrubbing = false; wakeBottomDock(1500); });
     }
 
-    window.addEventListener('keydown', () => wakeBottomDock(1800));
+    // Réveil instantané dès que la souris bouge
+    window.addEventListener('mousemove', (e) => {
+        if (!isReading) return;
+        
+        // Si le curseur est dans la zone inférieure (proche des contrôles)
+        if (e.clientY >= window.innerHeight - 160) {
+            wakeBottomDock(3200);
+            return;
+        }
+
+        const now = Date.now();
+        if (now - lastMouseMoveTime > 80) {
+            lastMouseMoveTime = now;
+            wakeBottomDock(2200);
+        }
+    }, { passive: true });
+
+    window.addEventListener('keydown', () => wakeBottomDock(2000));
 }
 
 let isInitialOpen = true;
