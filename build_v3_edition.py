@@ -226,6 +226,68 @@ body {
 </html>'''
 
 # ----------------------------------------------------
+# 2.1. PAGE 61 : NOUVEAU TITRE PARTIE II EN FORMAT OPTION A
+# ----------------------------------------------------
+html_p61 = '''<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+@page { size: 420pt 595.92pt; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    width: 420pt; height: 595.92pt; background: #ffffff;
+    padding: 42pt 33.75pt 30pt 33.75pt;
+    font-family: 'Lora', Georgia, serif; font-size: 9.15pt; line-height: 14pt;
+    color: #111111; -webkit-font-smoothing: antialiased; position: relative;
+}
+.partie-label {
+    font-family: 'Montserrat', sans-serif; font-size: 8pt; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: #71717a; text-align: center;
+    margin-bottom: 8pt;
+}
+h1 {
+    font-family: 'Montserrat', sans-serif; font-size: 15pt; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px; color: #000000;
+    text-align: center; line-height: 18pt; margin-bottom: 11pt;
+}
+.rule {
+    width: 352.5pt; height: 0.75pt; background-color: #000000; margin: 0 auto 12pt auto;
+}
+.subtitle {
+    font-family: 'Lora', Georgia, serif; font-size: 10pt; font-weight: 400;
+    text-align: center; color: #111111; margin-bottom: 36pt; line-height: 14pt;
+}
+p.intro {
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 9.5pt;
+    line-height: 15.5pt; text-align: center; color: #27272a; max-width: 310pt;
+    margin: 0 auto;
+}
+.page-number {
+    position: absolute; bottom: 23pt; left: 0; width: 100%; text-align: center;
+    font-family: 'Helvetica', Arial, sans-serif; font-size: 8.5pt; color: #666666;
+}
+</style>
+</head>
+<body>
+
+<div class="partie-label">PARTIE II</div>
+<h1>LES LEVIERS DU GOUVERNEMENT DU RÉEL</h1>
+<div class="rule"></div>
+<div class="subtitle">De la distance du pouvoir à la puissance d'agir</div>
+
+<p class="intro">Le premier acte de ce livre vous a fait descendre neuf étages d'une tour dont vous occupez peut-être l'un des paliers. Vous avez vu, étage par étage, ce que coûte la distance entre le pouvoir et la matière. Il est temps maintenant de construire quelque chose.</p>
+
+<div class="page-number">61</div>
+
+</body>
+</html>'''
+
+
+# ----------------------------------------------------
 # 3.1. PAGE 22 (SOMMET) : DÉDOUBLONNAGE PROPRE DU BILAN ÉTAGE 6
 # ----------------------------------------------------
 html_p22 = '''<!DOCTYPE html>
@@ -824,6 +886,7 @@ render_html_to_pdf(html_p4, os.path.join(SCRATCH, 'new_p4.pdf'))
 render_html_to_pdf(html_p5, os.path.join(SCRATCH, 'new_p5.pdf'))
 render_html_to_pdf(html_p53, os.path.join(SCRATCH, 'new_p53.pdf'))
 render_html_to_pdf(html_p60, os.path.join(SCRATCH, 'new_p60.pdf'))
+render_html_to_pdf(html_p61, os.path.join(SCRATCH, 'new_p61.pdf'))
 render_html_to_pdf(html_p84, os.path.join(SCRATCH, 'new_p84.pdf'))
 render_html_to_pdf(html_p85, os.path.join(SCRATCH, 'new_p85.pdf'))
 render_html_to_pdf(html_p86, os.path.join(SCRATCH, 'new_p86.pdf'))
@@ -873,8 +936,15 @@ new_sommet.insert_pdf(src_sommet, from_page=53, to_page=58)
 # Page 61 (droite) : Titre Partie II Les Leviers (src_sommet[62])
 # La page de souffle (citation Max De Pree) est supprimée pour positionner directement l'infographie en page 60 et les leviers en page 61
 
-# Pages 61..71 (Indices 61..71 from src_sommet: Partie II opener to Pourquoi le système résiste)
-new_sommet.insert_pdf(src_sommet, from_page=61, to_page=71)
+# Page 60 (gauche) : Infographie 3 200 milliards $ (src_sommet[61])
+new_sommet.insert_pdf(src_sommet, from_page=61, to_page=61)
+
+# Page 61 (droite) : Titre Partie II Les Leviers format Option A (new_p61.pdf)
+p61_doc = fitz.open(os.path.join(SCRATCH, 'new_p61.pdf'))
+new_sommet.insert_pdf(p61_doc, from_page=0, to_page=0)
+
+# Pages 62..71 from src_sommet (Indices 63..71: Ce que gouverner jusqu'à Pourquoi le système résiste)
+new_sommet.insert_pdf(src_sommet, from_page=63, to_page=71)
 
 # Page 73 : New Enriched Conclusion & Decision Grid
 p73_doc = fitz.open(os.path.join(SCRATCH, 'new_p73.pdf'))
@@ -1767,6 +1837,60 @@ p114.show_pdf_page(fitz.Rect(0, 0, 420, 595.92), doc_p114, 0)
 print("Applied 3M Post-it case on Sommet pages 112 and 113")
 
 # Patch Sommet Page 86 (suite suppression page de souffle) : Remplacement du cas FAVI par Zhang Ruimin / Haier (Rendanheyi)
+
+# Patch Sommet Page 62 : Nettoyage en-tête et application du format Option A (Ce que gouverner veut vraiment dire)
+p62_sommet = new_sommet[61]
+p62_sommet.add_redact_annot(fitz.Rect(30.0, 35.0, 390.0, 105.0), fill=(1, 1, 1))
+p62_sommet.apply_redactions()
+
+html_p62_header = '''<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+@page { size: 352.5pt 65pt; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    width: 352.5pt; height: 65pt; background: #ffffff;
+    font-family: 'Lora', Georgia, serif; color: #000000;
+    -webkit-font-smoothing: antialiased;
+}
+h1 {
+    font-family: 'Montserrat', sans-serif; font-size: 13.5pt; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px; color: #000000;
+    text-align: center; line-height: 16pt; margin-bottom: 10pt;
+}
+.rule {
+    width: 100%; height: 0.75pt; background-color: #000000; margin-bottom: 10pt;
+}
+.subtitle {
+    font-family: 'Lora', Georgia, serif; font-size: 10pt; font-weight: 400;
+    text-align: center; color: #111111; line-height: 13pt;
+}
+</style>
+</head>
+<body>
+<h1>CE QUE GOUVERNER VEUT VRAIMENT DIRE</h1>
+<div class="rule"></div>
+<div class="subtitle">L'équation tacite entre gouverner et contrôler</div>
+</body>
+</html>'''
+
+temp_p62_header = os.path.join(SCRATCH, 'temp_p62_header.html')
+pdf_p62_header = os.path.join(SCRATCH, 'header_p62.pdf')
+with open(temp_p62_header, 'w', encoding='utf-8') as f:
+    f.write(html_p62_header)
+subprocess.run([
+    CHROME, '--headless', '--disable-gpu', '--no-pdf-header-footer',
+    f'--print-to-pdf={pdf_p62_header}', temp_p62_header
+], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+header_doc_p62 = fitz.open(pdf_p62_header)
+p62_sommet.show_pdf_page(fitz.Rect(33.75, 41.0, 33.75 + 352.5, 41.0 + 65.0), header_doc_p62, 0)
+print("Applied Option A header on Sommet page 62")
+
 p88_sommet = new_sommet[85]
 p88_sommet.add_redact_annot(fitz.Rect(0, 0, 420, 595.92), fill=(1, 1, 1))
 p88_sommet.apply_redactions()
@@ -1790,15 +1914,22 @@ body {
 h1 {
     font-family: 'Montserrat', sans-serif; font-size: 13pt; font-weight: 800;
     text-transform: uppercase; letter-spacing: 0.5px; color: #000000;
-    line-height: 16pt; margin-bottom: 12pt;
+    text-align: center; line-height: 16pt; margin-bottom: 9pt;
+}
+.rule {
+    width: 352.5pt; height: 0.75pt; background-color: #000000; margin: 0 auto 9.5pt auto;
+}
+.subtitle {
+    font-family: 'Lora', Georgia, serif; font-size: 9.8pt; font-weight: 400;
+    text-align: center; color: #111111; margin-bottom: 14pt; line-height: 13pt;
 }
 h2 {
     font-family: 'Montserrat', sans-serif; font-size: 9.6pt; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.3px; color: #000000;
-    margin-top: 14pt; margin-bottom: 7pt; line-height: 13pt;
+    margin-top: 11pt; margin-bottom: 6pt; line-height: 13pt;
 }
 p {
-    text-align: justify; text-justify: inter-word; margin-bottom: 7.5pt;
+    text-align: justify; text-justify: inter-word; margin-bottom: 6.5pt;
 }
 .page-number {
     position: absolute; bottom: 23pt; left: 0; width: 100%; text-align: center;
@@ -1809,6 +1940,8 @@ p {
 <body>
 
 <h1>CEUX QUI ONT CHOISI DE FAIRE AUTREMENT</h1>
+<div class="rule"></div>
+<div class="subtitle">La preuve par les faits et les modèles réels</div>
 
 <p>Il aurait été commode — et intellectuellement malhonnête — de s'arrêter au diagnostic. De documenter les dysfonctionnements, les coûts cachés et les scénarios d'implosion, puis de conclure que la transformation est nécessaire sans montrer qu'elle est possible. Ce chapitre existe précisément pour éviter ce confort-là.</p>
 
@@ -1822,7 +1955,7 @@ p {
 
 <p>Devenu le numéro un mondial de l'électroménager avec plus de 80&nbsp;000 salariés (et le rachat de GE Appliances aux États-Unis), Zhang Ruimin engage alors la métamorphose organisationnelle la plus radicale du XXI<sup>e</sup> siècle : il démantèle la totalité de la hiérarchie intermédiaire. Plus de dix mille postes de cadres et de directeurs fonctionnels sont purement et simplement abolis.</p>
 
-<p>Le groupe est éclaté en quatre mille micro-entreprises autonomes de dix à quinze personnes. Chaque micro-entreprise choisit son propre leader par élection, gère son compte d'exploitation (P&L), embauche librement et contracte des accords internes ou externes. Si un service informatique interne est jugé trop lent ou trop cher, l'équipe a le droit contractuel de faire appel à un prestataire extérieur. Chez Haier, le client direct est devenu le seul et unique patron.</p>
+<p>Le groupe est éclaté en quatre mille micro-entreprises autonomes de dix à quinze personnes. Chaque micro-entreprise choisit son propre leader par élection, gère son compte d'exploitation (P&L), embauche librement et contracte des accords internes ou externes. Chez Haier, le client direct est devenu le seul et unique patron.</p>
 
 <div class="page-number">86</div>
 
@@ -1971,54 +2104,54 @@ html_toc_raw = '''<!DOCTYPE html>
 @page { size: 148mm 210mm; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    width: 148mm; height: 210mm; padding: 13mm 13mm 14mm 13mm;
+    width: 148mm; height: 210mm; padding: 10mm 13mm 11mm 13mm;
     box-sizing: border-box; background: #ffffff;
     font-family: 'Lora', Georgia, serif; color: #18181b; position: relative;
     -webkit-font-smoothing: antialiased;
 }
-.header { text-align: center; margin-bottom: 2.8mm; }
+.header { text-align: center; margin-bottom: 2.2mm; }
 .header .eyebrow {
-    font-family: 'Montserrat', sans-serif; font-size: 7.5pt; font-weight: 700; letter-spacing: 2.6px; text-transform: uppercase;
-    color: #52525b; margin-bottom: 1.2mm;
+    font-family: 'Montserrat', sans-serif; font-size: 7.2pt; font-weight: 700; letter-spacing: 2.6px; text-transform: uppercase;
+    color: #52525b; margin-bottom: 0.8mm;
 }
 .header h1 {
-    font-family: 'Montserrat', sans-serif; font-size: 14pt; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
-    color: #09090b; margin-bottom: 1.8mm;
+    font-family: 'Montserrat', sans-serif; font-size: 13.5pt; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
+    color: #09090b; margin-bottom: 1.5mm;
 }
 .header .rule {
-    width: 36px; height: 1.8px; background-color: #09090b; margin: 0 auto;
+    width: 36px; height: 1.6px; background-color: #09090b; margin: 0 auto;
 }
 .part-title {
-    font-family: 'Montserrat', sans-serif; font-size: 7.8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-    color: #09090b; margin-top: 2.6mm; margin-bottom: 0.9mm;
+    font-family: 'Montserrat', sans-serif; font-size: 7.6pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #09090b; margin-top: 2.2mm; margin-bottom: 0.8mm;
 }
 .part-rule {
-    width: 100%; height: 1px; background-color: #18181b; margin-bottom: 1.6mm;
+    width: 100%; height: 1px; background-color: #18181b; margin-bottom: 1.4mm;
 }
 .toc-list {
-    display: flex; flex-direction: column; gap: 0.85mm;
+    display: flex; flex-direction: column; gap: 0.75mm;
 }
 .toc-row {
-    display: flex; align-items: baseline; font-size: 7.5pt; line-height: 1.20;
+    display: flex; align-items: baseline; font-size: 7.3pt; line-height: 1.18;
 }
 .toc-num {
-    width: 3.8mm; font-family: 'Montserrat', sans-serif; font-size: 7.3pt; font-weight: 700; color: #09090b; flex-shrink: 0;
+    width: 3.8mm; font-family: 'Montserrat', sans-serif; font-size: 7.2pt; font-weight: 700; color: #09090b; flex-shrink: 0;
 }
 .toc-bullet {
-    width: 3.8mm; color: #71717a; flex-shrink: 0; text-align: center; font-size: 6.2pt;
+    width: 3.8mm; color: #71717a; flex-shrink: 0; text-align: center; font-size: 6.0pt;
 }
 .toc-label {
-    font-family: 'Lora', Georgia, serif; font-size: 7.8pt; color: #18181b; flex-shrink: 0;
+    font-family: 'Lora', Georgia, serif; font-size: 7.6pt; color: #18181b; flex-shrink: 0;
 }
 .toc-dots {
     flex: 1; border-bottom: 1px dotted #cbd5e1; margin: 0 4px; height: 0.9em;
 }
 .toc-page {
-    font-family: 'Montserrat', sans-serif; font-size: 7.5pt; font-weight: 600;
+    font-family: 'Montserrat', sans-serif; font-size: 7.3pt; font-weight: 600;
     color: #09090b; flex-shrink: 0; text-align: right; min-width: 5mm;
 }
 .footer-page {
-    position: absolute; bottom: 7.5mm; width: 100%; left: 0; text-align: center;
+    position: absolute; bottom: 6mm; width: 100%; left: 0; text-align: center;
     font-family: 'Montserrat', sans-serif; font-size: 8.5pt; color: #71717a;
 }
 </style>
@@ -2047,9 +2180,10 @@ body {
     <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">La vue d'ensemble du Sommet (Bilan)</div><div class="toc-dots"></div><div class="toc-page">{p_bilan}</div></div>
 </div>
 
-<div class="part-title" style="margin-top: 2.8mm;">PARTIE II — LES LEVIERS DU SOMMET</div>
+<div class="part-title" style="margin-top: 2.2mm;">PARTIE II — LES LEVIERS DU GOUVERNEMENT DU RÉEL</div>
 <div class="part-rule"></div>
 <div class="toc-list">
+    <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Ouverture — De la distance du pouvoir à la puissance d'agir</div><div class="toc-dots"></div><div class="toc-page">{p_ouverture}</div></div>
     <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Ce que gouverner veut vraiment dire</div><div class="toc-dots"></div><div class="toc-page">{p_gouverner}</div></div>
     <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Le coût de ne rien faire</div><div class="toc-dots"></div><div class="toc-page">{p_cout}</div></div>
     <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Pourquoi le système résiste</div><div class="toc-dots"></div><div class="toc-page">{p_systeme}</div></div>
@@ -2071,7 +2205,8 @@ body {
 </body>
 </html>'''
 
-html_toc = html_toc_raw.replace('{p_prologue}', str(p_prologue)).replace('{p_ceo}', str(p_ceo)).replace('{p_chairman}', str(p_chairman)).replace('{p_pres_int}', str(p_pres_int)).replace('{p_pres_div}', str(p_pres_div)).replace('{p_vp}', str(p_vp)).replace('{p_dir}', str(p_dir)).replace('{p_resp}', str(p_resp)).replace('{p_mgr}', str(p_mgr)).replace('{p_terrain}', str(p_terrain)).replace('{p_bilan}', str(p_bilan)).replace('{p_gouverner}', str(p_gouverner)).replace('{p_cout}', str(p_cout)).replace('{p_systeme}', str(p_systeme)).replace('{p_generations}', str(p_generations)).replace('{p_monde}', str(p_monde)).replace('{p_preuves}', str(p_preuves)).replace('{p_choisi}', str(p_choisi)).replace('{p_pionniers}', str(p_pionniers)).replace('{p_angles}', str(p_angles)).replace('{p_fiches}', str(p_fiches)).replace('{p_transition}', str(p_transition)).replace('{p_premier}', str(p_premier)).replace('{p_feuille}', str(p_feuille)).replace('{p_hall}', str(p_hall)).replace('{p_sources}', str(p_sources))
+p_ouverture = 61
+html_toc = html_toc_raw.replace('{p_prologue}', str(p_prologue)).replace('{p_ceo}', str(p_ceo)).replace('{p_chairman}', str(p_chairman)).replace('{p_pres_int}', str(p_pres_int)).replace('{p_pres_div}', str(p_pres_div)).replace('{p_vp}', str(p_vp)).replace('{p_dir}', str(p_dir)).replace('{p_resp}', str(p_resp)).replace('{p_mgr}', str(p_mgr)).replace('{p_terrain}', str(p_terrain)).replace('{p_bilan}', str(p_bilan)).replace('{p_ouverture}', str(p_ouverture)).replace('{p_gouverner}', str(p_gouverner)).replace('{p_cout}', str(p_cout)).replace('{p_systeme}', str(p_systeme)).replace('{p_generations}', str(p_generations)).replace('{p_monde}', str(p_monde)).replace('{p_preuves}', str(p_preuves)).replace('{p_choisi}', str(p_choisi)).replace('{p_pionniers}', str(p_pionniers)).replace('{p_angles}', str(p_angles)).replace('{p_fiches}', str(p_fiches)).replace('{p_transition}', str(p_transition)).replace('{p_premier}', str(p_premier)).replace('{p_feuille}', str(p_feuille)).replace('{p_hall}', str(p_hall)).replace('{p_sources}', str(p_sources))
 
 final_toc_pdf = os.path.join(SCRATCH, 'final_toc_p3.pdf')
 render_html_to_pdf(html_toc, final_toc_pdf)
