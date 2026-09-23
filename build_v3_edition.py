@@ -886,7 +886,6 @@ render_html_to_pdf(html_p4, os.path.join(SCRATCH, 'new_p4.pdf'))
 render_html_to_pdf(html_p5, os.path.join(SCRATCH, 'new_p5.pdf'))
 render_html_to_pdf(html_p53, os.path.join(SCRATCH, 'new_p53.pdf'))
 render_html_to_pdf(html_p60, os.path.join(SCRATCH, 'new_p60.pdf'))
-render_html_to_pdf(html_p61, os.path.join(SCRATCH, 'new_p61.pdf'))
 render_html_to_pdf(html_p84, os.path.join(SCRATCH, 'new_p84.pdf'))
 render_html_to_pdf(html_p85, os.path.join(SCRATCH, 'new_p85.pdf'))
 render_html_to_pdf(html_p86, os.path.join(SCRATCH, 'new_p86.pdf'))
@@ -937,14 +936,11 @@ new_sommet.insert_pdf(src_sommet, from_page=53, to_page=58)
 # La page de souffle (citation Max De Pree) est supprimée pour positionner directement l'infographie en page 60 et les leviers en page 61
 
 # Page 60 (gauche) : Infographie 3 200 milliards $ (src_sommet[61])
-new_sommet.insert_pdf(src_sommet, from_page=61, to_page=61)
+# Page 61 (droite) : Titre Partie II Les Leviers (src_sommet[62])
+# La page de souffle (citation Max De Pree) est supprimée pour positionner directement l'infographie en page 60 et les leviers en page 61
 
-# Page 61 (droite) : Titre Partie II Les Leviers format Option A (new_p61.pdf)
-p61_doc = fitz.open(os.path.join(SCRATCH, 'new_p61.pdf'))
-new_sommet.insert_pdf(p61_doc, from_page=0, to_page=0)
-
-# Pages 62..71 from src_sommet (Indices 63..71: Ce que gouverner jusqu'à Pourquoi le système résiste)
-new_sommet.insert_pdf(src_sommet, from_page=63, to_page=71)
+# Pages 61..71 (Indices 61..71 from src_sommet: Partie II opener to Pourquoi le système résiste)
+new_sommet.insert_pdf(src_sommet, from_page=61, to_page=71)
 
 # Page 73 : New Enriched Conclusion & Decision Grid
 p73_doc = fitz.open(os.path.join(SCRATCH, 'new_p73.pdf'))
@@ -2183,7 +2179,6 @@ body {
 <div class="part-title" style="margin-top: 2.2mm;">PARTIE II — LES LEVIERS DU GOUVERNEMENT DU RÉEL</div>
 <div class="part-rule"></div>
 <div class="toc-list">
-    <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Ouverture — De la distance du pouvoir à la puissance d'agir</div><div class="toc-dots"></div><div class="toc-page">{p_ouverture}</div></div>
     <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Ce que gouverner veut vraiment dire</div><div class="toc-dots"></div><div class="toc-page">{p_gouverner}</div></div>
     <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Le coût de ne rien faire</div><div class="toc-dots"></div><div class="toc-page">{p_cout}</div></div>
     <div class="toc-row"><div class="toc-bullet">•</div><div class="toc-label">Pourquoi le système résiste</div><div class="toc-dots"></div><div class="toc-page">{p_systeme}</div></div>
@@ -2205,8 +2200,7 @@ body {
 </body>
 </html>'''
 
-p_ouverture = 61
-html_toc = html_toc_raw.replace('{p_prologue}', str(p_prologue)).replace('{p_ceo}', str(p_ceo)).replace('{p_chairman}', str(p_chairman)).replace('{p_pres_int}', str(p_pres_int)).replace('{p_pres_div}', str(p_pres_div)).replace('{p_vp}', str(p_vp)).replace('{p_dir}', str(p_dir)).replace('{p_resp}', str(p_resp)).replace('{p_mgr}', str(p_mgr)).replace('{p_terrain}', str(p_terrain)).replace('{p_bilan}', str(p_bilan)).replace('{p_ouverture}', str(p_ouverture)).replace('{p_gouverner}', str(p_gouverner)).replace('{p_cout}', str(p_cout)).replace('{p_systeme}', str(p_systeme)).replace('{p_generations}', str(p_generations)).replace('{p_monde}', str(p_monde)).replace('{p_preuves}', str(p_preuves)).replace('{p_choisi}', str(p_choisi)).replace('{p_pionniers}', str(p_pionniers)).replace('{p_angles}', str(p_angles)).replace('{p_fiches}', str(p_fiches)).replace('{p_transition}', str(p_transition)).replace('{p_premier}', str(p_premier)).replace('{p_feuille}', str(p_feuille)).replace('{p_hall}', str(p_hall)).replace('{p_sources}', str(p_sources))
+html_toc = html_toc_raw.replace('{p_prologue}', str(p_prologue)).replace('{p_ceo}', str(p_ceo)).replace('{p_chairman}', str(p_chairman)).replace('{p_pres_int}', str(p_pres_int)).replace('{p_pres_div}', str(p_pres_div)).replace('{p_vp}', str(p_vp)).replace('{p_dir}', str(p_dir)).replace('{p_resp}', str(p_resp)).replace('{p_mgr}', str(p_mgr)).replace('{p_terrain}', str(p_terrain)).replace('{p_bilan}', str(p_bilan)).replace('{p_gouverner}', str(p_gouverner)).replace('{p_cout}', str(p_cout)).replace('{p_systeme}', str(p_systeme)).replace('{p_generations}', str(p_generations)).replace('{p_monde}', str(p_monde)).replace('{p_preuves}', str(p_preuves)).replace('{p_choisi}', str(p_choisi)).replace('{p_pionniers}', str(p_pionniers)).replace('{p_angles}', str(p_angles)).replace('{p_fiches}', str(p_fiches)).replace('{p_transition}', str(p_transition)).replace('{p_premier}', str(p_premier)).replace('{p_feuille}', str(p_feuille)).replace('{p_hall}', str(p_hall)).replace('{p_sources}', str(p_sources))
 
 final_toc_pdf = os.path.join(SCRATCH, 'final_toc_p3.pdf')
 render_html_to_pdf(html_toc, final_toc_pdf)
