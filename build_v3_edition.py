@@ -869,9 +869,9 @@ new_sommet.insert_pdf(p53_doc, from_page=0, to_page=0)
 # Pages 54..59 (Indices 53..58)
 new_sommet.insert_pdf(src_sommet, from_page=53, to_page=58)
 
-# Page 60 : Page de souffle / Citation Max De Pree (Palier de Jonction supprimé)
-p60_doc = fitz.open(os.path.join(SCRATCH, 'new_p60.pdf'))
-new_sommet.insert_pdf(p60_doc, from_page=0, to_page=0)
+# Page 60 (gauche) : Infographie 3 200 milliards $ (src_sommet[61])
+# Page 61 (droite) : Titre Partie II Les Leviers (src_sommet[62])
+# La page de souffle (citation Max De Pree) est supprimée pour positionner directement l'infographie en page 60 et les leviers en page 61
 
 # Pages 61..71 (Indices 61..71 from src_sommet: Partie II opener to Pourquoi le système résiste)
 new_sommet.insert_pdf(src_sommet, from_page=61, to_page=71)
@@ -1308,14 +1308,14 @@ subprocess.run([
 title_doc_p50 = fitz.open(pdf_p50_title)
 p50.show_pdf_page(fitz.Rect(33.75, 30.0, 33.75 + 340.0, 50.0), title_doc_p50, 0)
 
-# Patch Sommet Pages 71 & 72 (anciennement 72 & 73) : Mise en page aérée et équilibrée
-# Page 71 : Sections 3 et 4 avec conclusion et belle respiration
-p71 = new_sommet[70]
+# Patch Sommet Pages 70 & 71 (suite suppression page de souffle p60) : Mise en page aérée et équilibrée
+# Page 70 : Sections 3 et 4 avec conclusion et belle respiration
+p71 = new_sommet[69]
 p71.add_redact_annot(fitz.Rect(0, 0, 420, 595.92), fill=(1, 1, 1))
 p71.apply_redactions()
 
-# Page 72 : VOIX DU SOMMET (2 encadrés) + L'ENSEIGNEMENT DU SOMMET
-p72 = new_sommet[71]
+# Page 71 : VOIX DU SOMMET (2 encadrés) + L'ENSEIGNEMENT DU SOMMET
+p72 = new_sommet[70]
 p72.add_redact_annot(fitz.Rect(0, 0, 420, 595.92), fill=(1, 1, 1))
 p72.apply_redactions()
 
@@ -1470,8 +1470,8 @@ subprocess.run([
 doc_p72_air = fitz.open(pdf_p72_file)
 p72.show_pdf_page(fitz.Rect(0, 0, 420, 595.92), doc_p72_air, 0)
 
-# Patch Sommet Page 110 (anciennement 111) : Encadré LE SAVIEZ-VOUS institutionnel propre (Gloria Mark)
-p111 = new_sommet[109]
+# Patch Sommet Page 109 (anciennement 110) : Encadré LE SAVIEZ-VOUS institutionnel propre (Gloria Mark)
+p111 = new_sommet[108]
 p111.add_redact_annot(fitz.Rect(0, 0, 420, 595.92), fill=(1, 1, 1))
 p111.apply_redactions()
 
@@ -1551,7 +1551,7 @@ ol.protocol-list li strong {
     <li><strong>3. Le contrôle a posteriori basé sur la confiance&nbsp;:</strong> Remplacer le contrôle a priori par une revue trimestrielle informelle et collective des dépenses réalisées. Les données montrent que les équipes responsabilisées directement font preuve d'une gestion beaucoup plus économe et rigoureuse que les services d'achats distants.</li>
 </ol>
 
-<div class="page-number">110</div>
+<div class="page-number">109</div>
 
 </body>
 </html>'''
@@ -1568,8 +1568,8 @@ doc_p111 = fitz.open(pdf_p111_file)
 p111.show_pdf_page(fitz.Rect(0, 0, 420, 595.92), doc_p111, 0)
 print("Applied proper formatted LE SAVIEZ-VOUS callout on Sommet page 110")
 
-# Patch Sommet Pages 112 & 113 (anciennement 113 & 114) : Cas documenté 3M Post-It (remplace l'atelier découpe laser)
-p113 = new_sommet[111]
+# Patch Sommet Pages 111 & 112 (suite suppression page de souffle) : Cas documenté 3M Post-It
+p113 = new_sommet[110]
 p113.add_redact_annot(fitz.Rect(0, 0, 420, 595.92), fill=(1, 1, 1))
 p113.apply_redactions()
 
@@ -1653,7 +1653,7 @@ ol.protocol-list li strong {
 <p class="case-title">Le cas historique de l'innovation clandestine chez 3M&nbsp;:</p>
 <p class="body-text">Chez 3M, le chercheur Spencer Silver avait découvert un adhésif à faible adhérence jugé totalement «&nbsp;inutile&nbsp;» et rejeté par la direction commerciale pendant cinq ans. C'est son collègue Art Fry qui a détourné clandestinement les machines de l'usine le week-end pour enduire des chutes de papier jaune et créer les premiers prototypes de Post-it distribués sous le manteau aux secrétaires du siège.</p>
 
-<div class="page-number">112</div>
+<div class="page-number">111</div>
 
 </body>
 </html>'''
@@ -1669,7 +1669,7 @@ subprocess.run([
 doc_p113 = fitz.open(pdf_p113_file)
 p113.show_pdf_page(fitz.Rect(0, 0, 420, 595.92), doc_p113, 0)
 
-p114 = new_sommet[112]
+p114 = new_sommet[111]
 p114.add_redact_annot(fitz.Rect(0, 0, 420, 595.92), fill=(1, 1, 1))
 p114.apply_redactions()
 
@@ -1749,7 +1749,7 @@ ol.protocol-list li strong {
     <p>«&nbsp;Pendant vingt ans, mes réunions avec la direction consistaient à éplucher des documents juridiques de trois cents pages. Le jour où le nouveau directeur nous a emmenés dans l'atelier pour regarder ensemble comment réparer les postes de travail les plus pénibles, nous sommes passés de la guerre de tranchées au travail d'équipe pour sauver notre usine.&nbsp;»</p>
 </div>
 
-<div class="page-number">113</div>
+<div class="page-number">112</div>
 
 </body>
 </html>'''
@@ -1766,8 +1766,8 @@ doc_p114 = fitz.open(pdf_p114_file)
 p114.show_pdf_page(fitz.Rect(0, 0, 420, 595.92), doc_p114, 0)
 print("Applied 3M Post-it case on Sommet pages 112 and 113")
 
-# Patch Sommet Page 87 (anciennement 88) : Remplacement du cas FAVI par Zhang Ruimin / Haier (Rendanheyi)
-p88_sommet = new_sommet[86]
+# Patch Sommet Page 86 (suite suppression page de souffle) : Remplacement du cas FAVI par Zhang Ruimin / Haier (Rendanheyi)
+p88_sommet = new_sommet[85]
 p88_sommet.add_redact_annot(fitz.Rect(0, 0, 420, 595.92), fill=(1, 1, 1))
 p88_sommet.apply_redactions()
 
@@ -1824,7 +1824,7 @@ p {
 
 <p>Le groupe est éclaté en quatre mille micro-entreprises autonomes de dix à quinze personnes. Chaque micro-entreprise choisit son propre leader par élection, gère son compte d'exploitation (P&L), embauche librement et contracte des accords internes ou externes. Si un service informatique interne est jugé trop lent ou trop cher, l'équipe a le droit contractuel de faire appel à un prestataire extérieur. Chez Haier, le client direct est devenu le seul et unique patron.</p>
 
-<div class="page-number">87</div>
+<div class="page-number">86</div>
 
 </body>
 </html>'''
@@ -1841,8 +1841,8 @@ doc_p88 = fitz.open(pdf_p88_file)
 p88_sommet.show_pdf_page(fitz.Rect(0, 0, 420, 595.92), doc_p88, 0)
 print("Applied Zhang Ruimin / Haier case on Sommet page 87")
 
-# Patch Sommet Page 90 (anciennement 91) : Actualisation de la synthèse (Zhang Ruimin au lieu de Zobrist)
-p91_sommet = new_sommet[89]
+# Patch Sommet Page 89 (suite suppression page de souffle) : Actualisation de la synthèse (Zhang Ruimin au lieu de Zobrist)
+p91_sommet = new_sommet[88]
 r_zobrist_p91 = p91_sommet.search_for("Zobrist ne savait pas que les opérateurs seraient capables de gérer leurs propres")
 if r_zobrist_p91:
     r_z = r_zobrist_p91[0]
@@ -1851,8 +1851,8 @@ if r_zobrist_p91:
     p91_sommet.insert_text(fitz.Point(r_z.x0, r_z.y1 - 2.2), "Zhang Ruimin", fontsize=8.95, fontname="tiro", color=(0.07, 0.07, 0.07))
     print("Updated synthesis on Sommet page 90")
 
-# Patch Sommet Page 81 (anciennement 82) : Titre "Le coût de ne rien faire : l'urgence silencieuse" normalisé
-p81_sommet = new_sommet[80]
+# Patch Sommet Page 80 (suite suppression page de souffle) : Titre "Le coût de ne rien faire : l'urgence silencieuse" normalisé
+p81_sommet = new_sommet[79]
 # Redact former unstyled title and old separator line above it
 p81_sommet.add_redact_annot(fitz.Rect(30.0, 440.0, 390.0, 476.0), fill=(1, 1, 1))
 p81_sommet.apply_redactions()
@@ -1921,7 +1921,7 @@ print("Scanning exact new chapter positions...")
 def find_first_page_with(doc, term):
     for i in range(len(doc)):
         if i == 2: continue # skip TOC page
-        t = doc[i].get_text().upper()
+        t = doc[i].get_text().upper().replace(' ', ' ')
         if term.upper() in t:
             return i + 1
     return None
@@ -1939,21 +1939,21 @@ p_terrain = find_first_page_with(new_sommet, "ÉTAGE 0 SUR 8") or 55
 p_bilan = 59
 p_jonction = 60
 
-p_gouverner = find_first_page_with(new_sommet, "CE QUE GOUVERNER VEUT VRAIMENT DIRE") or 64
-p_cout = find_first_page_with(new_sommet, "LE COÛT DE NE RIEN FAIRE") or 69
-p_systeme = find_first_page_with(new_sommet, "POURQUOI LE SYSTÈME RÉSISTE") or 71
-p_generations = find_first_page_with(new_sommet, "DIRIGER 4 GÉNÉRATIONS") or 74
-p_monde = find_first_page_with(new_sommet, "ET SI ? LE MONDE D'APRÈS") or 79
-p_preuves = 84
-p_choisi = find_first_page_with(new_sommet, "CEUX QUI ONT CHOISI DE FAIRE AUTREMENT") or 88
-p_pionniers = find_first_page_with(new_sommet, "LES PIONNIERS DE LA TRANSFORMATION") or 92
-p_angles = find_first_page_with(new_sommet, "CE QUE LA TOUR NE VOIT PAS") or 97
-p_fiches = find_first_page_with(new_sommet, "LES FICHES PRATIQUES DU DIRIGEANT") or 100
-p_transition = find_first_page_with(new_sommet, "LA TRANSITION VUE D'EN HAUT") or 107
-p_premier = find_first_page_with(new_sommet, "LE PREMIER PAS DU DÉCIDEUR") or 122
-p_feuille = find_first_page_with(new_sommet, "18 MOIS POUR BÂTIR") or 124
-p_hall = find_first_page_with(new_sommet, "LE HALL CENTRAL") or 126
-p_sources = find_first_page_with(new_sommet, "LISTE DES SOURCES") or 128
+p_gouverner = find_first_page_with(new_sommet, "CE QUE GOUVERNER VEUT VRAIMENT DIRE") or 62
+p_cout = find_first_page_with(new_sommet, "LE COÛT DE NE RIEN FAIRE") or 67
+p_systeme = find_first_page_with(new_sommet, "POURQUOI LE SYSTÈME RÉSISTE") or 69
+p_generations = find_first_page_with(new_sommet, "DIRIGER 4 GÉNÉRATIONS") or 72
+p_monde = find_first_page_with(new_sommet, "ET SI ? LE MONDE D'APRÈS") or 77
+p_preuves = find_first_page_with(new_sommet, "LES PREUVES QUE ÇA MARCHE") or 82
+p_choisi = find_first_page_with(new_sommet, "CEUX QUI ONT CHOISI DE FAIRE AUTREMENT") or 86
+p_pionniers = find_first_page_with(new_sommet, "LES PIONNIERS DE LA TRANSFORMATION") or 90
+p_angles = find_first_page_with(new_sommet, "CE QUE LA TOUR NE VOIT PAS") or 95
+p_fiches = find_first_page_with(new_sommet, "LES FICHES PRATIQUES DU DIRIGEANT") or 98
+p_transition = find_first_page_with(new_sommet, "LA TRANSITION VUE D'EN HAUT") or 105
+p_premier = find_first_page_with(new_sommet, "LE PREMIER PAS DU DÉCIDEUR") or 120
+p_feuille = find_first_page_with(new_sommet, "18 MOIS POUR BÂTIR") or 122
+p_hall = find_first_page_with(new_sommet, "LE HALL CENTRAL") or 124
+p_sources = find_first_page_with(new_sommet, "LISTE DES SOURCES") or 126
 
 print(f"Scanned: CEO={p_ceo}, VP={p_vp}, Mgr={p_mgr}, Preuves={p_preuves}, Hall={p_hall}")
 
