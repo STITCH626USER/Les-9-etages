@@ -359,38 +359,63 @@ html_p83 = '''<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@600;700;800&display=swap');
 @page { size: 420pt 595.92pt; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    width: 420pt; height: 595.92pt; padding: 34.8pt 33.8pt 45pt 33.8pt;
-    font-family: 'Lora', Georgia, serif; color: #111111; background: #ffffff;
-    position: relative; -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    width: 420pt; height: 595.92pt; background: #ffffff;
+    padding: 34.8pt 33.75pt 30pt 33.75pt;
+    font-family: 'Lora', Georgia, serif; font-size: 9.15pt; line-height: 13.5pt;
+    color: #111111; -webkit-font-smoothing: antialiased; position: relative;
+}
+.header {
+    text-align: center; margin-bottom: 14pt;
+}
+h1 {
+    font-family: 'Montserrat', sans-serif; font-size: 13pt; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px; color: #000000;
+    line-height: 16pt; margin-bottom: 9pt;
+}
+.rule {
+    width: 352.5pt; height: 0.75pt; background-color: #000000; margin: 0 auto 9.5pt auto;
+}
+.subtitle {
+    font-family: 'Lora', Georgia, serif; font-size: 9.8pt; font-weight: 400;
+    color: #111111; line-height: 13pt;
 }
 p {
-    font-family: 'Lora', Georgia, serif;
-    font-size: 9.15pt; font-weight: 400; line-height: 13.5pt; text-align: justify;
-    margin-bottom: 7pt; color: #111111;
+    text-align: justify; text-justify: inter-word; margin-bottom: 8pt;
     hyphens: auto; -webkit-hyphens: auto;
 }
 .callout {
-    background-color: #f8f8f8; border-left: 3.5px solid #000000; padding: 10pt 12pt; margin: 14pt 0;
+    background-color: #f8f8f8; border-left: 3.5px solid #000000;
+    padding: 10pt 12pt; margin: 12pt 0;
 }
 .callout p {
     font-size: 8.9pt; font-style: italic; line-height: 1.45; margin-bottom: 0; color: #111111;
 }
 .conclusion-bold {
-    font-weight: 700; color: #000000; margin-top: 14pt;
+    font-weight: 700; color: #000000; margin-top: 10pt;
 }
-.footer-page {
-    position: absolute; bottom: 25pt; width: 100%; left: 0; text-align: center;
-    font-family: 'Helvetica', Arial, sans-serif; font-size: 8.5pt; color: #111111;
+.page-number {
+    position: absolute; bottom: 23pt; left: 0; width: 100%; text-align: center;
+    font-family: 'Helvetica', Arial, sans-serif; font-size: 8.5pt; color: #666666;
 }
 </style>
 </head>
 <body>
+
+<div class="header">
+    <h1>LE COÛT DE NE RIEN FAIRE</h1>
+    <div class="rule"></div>
+    <div class="subtitle">L'urgence silencieuse</div>
+</div>
+
+<p>Ces sept scénarios partagent une caractéristique commune qui mérite qu'on s'y arrête&nbsp;: dans chacun d'eux, les signaux d'alerte ont existé. Toujours. Quelqu'un savait. Souvent plusieurs personnes savaient. Ce qui a manqué, ce n'est pas l'information — c'est la structure institutionnelle qui aurait permis à cette information de remonter, d'être entendue et de produire une décision.</p>
+
 <p>L'inaction ne coûte rien dans l'immédiat. C'est sa caractéristique la plus dangereuse. Elle ne produit pas de facture, pas d'alerte comptable, pas de ligne rouge dans les tableaux de bord. Elle s'accumule silencieusement sous forme de capital humain érodé, de savoir-faire qui part, d'opportunités manquées, de clients perdus, de coûts de remplacement qui ne se voient pas parce qu'ils ne sont jamais nommés.</p>
 
 <div class="callout">
@@ -399,7 +424,8 @@ p {
 
 <p class="conclusion-bold">L'alternative n'est plus théorique&nbsp;: choisirez-vous d'ouvrir vous-même les portes de la tour, ou attendrez-vous que la pression du sol ne vous laisse plus d'autre issue&nbsp;?</p>
 
-<div class="footer-page">83</div>
+<div class="page-number">81</div>
+
 </body>
 </html>'''
 pdf_p83 = os.path.join(SCRATCH, 'new_p83.pdf')
@@ -1980,52 +2006,12 @@ if r_zobrist_p91:
     p91_sommet.insert_text(fitz.Point(r_z.x0, r_z.y1 - 2.2), "Zhang Ruimin", fontsize=8.95, fontname="tiro", color=(0.07, 0.07, 0.07))
     print("Updated synthesis on Sommet page 90")
 
-# Patch Sommet Page 80 (suite suppression page de souffle) : Titre "Le coût de ne rien faire : l'urgence silencieuse" normalisé
-p81_sommet = new_sommet[79]
-# Redact former unstyled title and old separator line above it
-p81_sommet.add_redact_annot(fitz.Rect(30.0, 440.0, 390.0, 476.0), fill=(1, 1, 1))
-p81_sommet.apply_redactions()
-
-html_p81_title = '''<!DOCTYPE html><html><head><meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-<style>
-@page { size: 352.5pt 36pt; margin: 0; }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-    width: 352.5pt; height: 36pt; background: #ffffff;
-    font-family: 'Montserrat', sans-serif;
-    -webkit-font-smoothing: antialiased;
-}
-.rule {
-    width: 100%; height: 0.75pt; background-color: #000000; margin-bottom: 11pt;
-}
-h2 {
-    font-size: 9.6pt; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.3px; color: #000000; display: flex; align-items: center;
-    line-height: 9.6pt;
-}
-.symbol {
-    display: inline-block; width: 4.8pt; height: 9.6pt; background-color: #000000;
-    margin-right: 6pt; flex-shrink: 0;
-}
-</style></head><body>
-<div class="rule"></div>
-<h2><span class="symbol"></span>LE COÛT DE NE RIEN FAIRE : L'URGENCE SILENCIEUSE</h2>
-</body></html>'''
-
-temp_p81_title = os.path.join(SCRATCH, 'temp_p81_title.html')
-pdf_p81_title = os.path.join(SCRATCH, 'p81_title.pdf')
-with open(temp_p81_title, 'w', encoding='utf-8') as f:
-    f.write(html_p81_title)
-subprocess.run([
-    CHROME, '--headless', '--disable-gpu', '--no-pdf-header-footer',
-    f'--print-to-pdf={pdf_p81_title}', temp_p81_title
-], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-doc_p81_title = fitz.open(pdf_p81_title)
-p81_sommet.show_pdf_page(fitz.Rect(33.75, 440.0, 33.75 + 352.5, 440.0 + 36.0), doc_p81_title, 0)
-print("Standardized unstyled title on Sommet page 81")
+# Patch Sommet Page 80 : Nettoyage du bas de page après le Scénario 7
+# Le titre "Le coût de ne rien faire" et son contenu sont déplacés intégralement sur la page suivante (Page 81)
+p80_sommet = new_sommet[79]
+p80_sommet.add_redact_annot(fitz.Rect(30.0, 438.0, 390.0, 555.0), fill=(1, 1, 1))
+p80_sommet.apply_redactions()
+print("Cleaned bottom of Sommet page 80 (section transferred entirely to page 81)")
 
 # Bottom-anchoring ("collé au bas") for Sommet floor opening pages with dead whitespace
 sommet_openings_shift = {
