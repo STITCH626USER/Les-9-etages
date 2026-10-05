@@ -513,7 +513,95 @@ html, body {
 }
 @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .loading-txt-main { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 900; color: #dfb256; letter-spacing: 1px; }
-.loading-txt-sub { font-size: 11px; font-weight: 700; color: #9ab0d0; }
+/* FOOTER PERMANENT MENTIONS LÉGALES */
+#permanent-legal-footer {
+    position: fixed;
+    bottom: 8px;
+    right: 14px;
+    z-index: 130;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(247, 238, 219, 0.55);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: opacity 0.2s ease;
+}
+#permanent-legal-footer a {
+    color: rgba(223, 178, 86, 0.85);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+#permanent-legal-footer a:hover {
+    color: #dfb256;
+    text-decoration: underline;
+}
+@media (max-width: 600px) {
+    #permanent-legal-footer {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 5px;
+        font-size: 10px;
+        white-space: nowrap;
+        background: rgba(6, 9, 17, 0.7);
+        padding: 2px 10px;
+        border-radius: 12px;
+        backdrop-filter: blur(6px);
+    }
+}
+
+/* MODAL MENTIONS LÉGALES */
+#legal-dialog-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(4, 6, 12, 0.94); backdrop-filter: blur(25px);
+    display: none; justify-content: center; align-items: center; z-index: 999;
+    padding: 16px;
+}
+.legal-box {
+    background: #0f1628;
+    border: 2px solid rgba(223, 178, 86, 0.4);
+    border-radius: 24px;
+    padding: 26px 22px;
+    width: 94%;
+    max-width: 520px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.98);
+}
+.legal-scroll-content {
+    overflow-y: auto;
+    margin: 16px 0;
+    padding-right: 6px;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #cbd5e1;
+}
+.legal-section-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #dfb256;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.legal-section-title:first-child {
+    margin-top: 0;
+}
+.legal-text {
+    margin-bottom: 8px;
+    color: #9ab0d0;
+}
 </style>
 </head>
 <body>
@@ -617,6 +705,55 @@ html, body {
         <div class="dialog-list" id="dialog-bm-items"></div>
         <button class="btn-dialog-close" onclick="closeBookmarksList()">Fermer ✕</button>
     </div>
+</div>
+
+<!-- MODAL MENTIONS LÉGALES -->
+<div id="legal-dialog-overlay" onclick="onLegalOverlayClick(event)">
+    <div class="legal-box" onclick="event.stopPropagation()">
+        <span class="dialog-box-icon">⚖️</span>
+        <h3 class="dialog-box-title">Mentions Légales & Droits d'Auteur</h3>
+        <p class="dialog-box-sub">Les 9 Étages de la Tour</p>
+        
+        <div class="legal-scroll-content">
+            <div class="legal-section-title">📖 Ouvrage & Droits d'Auteur</div>
+            <div class="legal-text">
+                <strong>Titre :</strong> Les 9 Étages de la Tour<br>
+                <strong>Auteur :</strong> Alexandre ROUX (Alexandre R.)<br>
+                <strong>Édition :</strong> Édition Numérique Interactive & Livre Tête-Bêche (2026)<br>
+                <strong>Dépôt légal & Copyright :</strong> © 2026 Alexandre ROUX. Tous droits réservés dans tous pays.
+            </div>
+
+            <div class="legal-section-title">🛡️ Propriété intellectuelle</div>
+            <div class="legal-text">
+                L’ensemble des textes, concepts, structures dialectiques (Côté Terrain / Côté Sommet), analyses sociologiques, typographies, illustrations, mises en page et développements logiciels de la liseuse interactive constituent une œuvre originale protégée par le Code de la Propriété Intellectuelle.<br>
+                Toute reproduction intégrale ou partielle, par quelque procédé que ce soit, ainsi que toute diffusion, adaptation ou traduction sans le consentement préalable écrit de l'auteur est strictement interdite (art. L. 122-4 du CPI).
+            </div>
+
+            <div class="legal-section-title">🔍 Clause d'anonymisation & Cadre sociologique</div>
+            <div class="legal-text">
+                Les situations, dialogues et profils présentés dans cet ouvrage s'appuient sur une démarche d'observation sociologique des organisations d'entreprise. Afin de préserver la confidentialité et la vie privée, les noms de personnes, de marques, de lieux et d'entreprises ont été rigoureusement modifiés ou anonymisés. Toute ressemblance avec des situations individuelles ou professionnelles réelles ne saurait être que pure coïncidence.
+            </div>
+
+            <div class="legal-section-title">🌐 Plateforme & Hébergement</div>
+            <div class="legal-text">
+                Cette application web interactive est hébergée sur GitHub Pages (GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA).
+            </div>
+
+            <div class="legal-section-title">🔒 Données personnelles & Cookies</div>
+            <div class="legal-text">
+                La liseuse ne collecte aucune donnée personnelle et ne dépose aucun cookie publicitaire ou de pistage. L'enregistrement de vos marque-pages et de votre dernière page lue s'effectue exclusivement en local dans la mémoire de votre navigateur (LocalStorage).
+            </div>
+        </div>
+
+        <button class="btn-dialog-close" onclick="closeLegalModal()">Fermer ✕</button>
+    </div>
+</div>
+
+<!-- LIEN PERMANENT EN BAS DE PAGE -->
+<div id="permanent-legal-footer">
+    <a href="#" onclick="openLegalModal(); return false;" title="Consulter les mentions légales et droits d'auteur">Mentions Légales</a>
+    <span>•</span>
+    <span>© 2026 Alexandre R.</span>
 </div>
 
 <script>
@@ -1292,6 +1429,20 @@ function openBookmarksList() {
 
 function closeBookmarksList() {
     document.getElementById('bookmarks-dialog-overlay').style.display = 'none';
+}
+
+function openLegalModal() {
+    document.getElementById('legal-dialog-overlay').style.display = 'flex';
+}
+
+function closeLegalModal() {
+    document.getElementById('legal-dialog-overlay').style.display = 'none';
+}
+
+function onLegalOverlayClick(event) {
+    if (event.target === document.getElementById('legal-dialog-overlay')) {
+        closeLegalModal();
+    }
 }
 
 function jumpToBm(side, pageNum) {
