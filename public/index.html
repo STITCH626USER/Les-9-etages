@@ -417,8 +417,8 @@ function persistMobileSession() {
 }
 
 async function initPDFs() {
-    docTerrain = await pdfjsLib.getDocument('terrain.pdf').promise;
-    docSommet = await pdfjsLib.getDocument('sommet.pdf').promise;
+    docTerrain = await pdfjsLib.getDocument('terrain.pdf?v=6').promise;
+    docSommet = await pdfjsLib.getDocument('sommet.pdf?v=6').promise;
     setupTouchLiseuse();
 }
 
