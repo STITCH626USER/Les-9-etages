@@ -1,21 +1,36 @@
-# 🏢 LES 9 ÉTAGES DE LA TOUR — Édition Mobile 3D
+# LES 9 ÉTAGES — Liseuse Interactive Tête-Bêche
 
-> **Expérience de lecture interactive 3D & Liseuse Tête-Bêche pour Smartphone et Tablette.**
-
----
-
-### ✨ Fonctionnalités :
-- 📱 **Page Simple A5 Haute Résolution (2.4X Retina)**.
-- 🍃 **Animation de tournage de page 3D (Page-Curl Physique)**.
-- 🔄 **Retournement Tête-Bêche 180° instantané** (Côté Terrain ⇄ Côté Sommet).
-- 🕹️ **Manipulation 3D Temps Réel (Three.js WebGL)** avec rotation Trackball tactile libre.
-- 🔖 **Marque-page 1-Clic Persistant** (mémoire locale automatique sans email).
+> **Édition numérique interactive intégrale de l’ouvrage *« Les 9 étages »* par Alexandre ROUX.**
 
 ---
 
-### 🚀 Déploiement GitHub Pages :
-1. Rendez-vous dans les **Settings** de votre repository GitHub.
-2. Cliquez sur l'onglet **Pages** (dans le menu de gauche).
-3. Sous **Branch**, sélectionnez `main` (ou `master`) et le dossier `/ (root)`.
-4. Cliquez sur **Save** : votre livre 3D sera accessible en ligne gratuitement avec une adresse publique du type :  
-   👉 `https://stitch626user.github.io/nom-du-repo/`
+## Architecture & Fonctionnalités
+
+- **Scène d’accueil 3D WebGL (Three.js)** : manipulation libre à 360° avec inertie physique, tranches de feuillets réalistes, dos imprimé continu et retournement tête-bêche à 180° (*Côté Terrain* ⇄ *Côté Sommet*).
+- **Synchronisation exacte des folios imprimés (1:1)** : `Couverture` (`p. 0`) suivie des folios exacts `p. 1` à `141` (*Côté Terrain*) et `p. 1` à `149` (*Côté Sommet*), en affichage **1 page** ou **double-page reliée (2 pages)** respectant la parité pair/impair de l’édition imprimée.
+- **Sommaire intégral des deux versants & Ascenseur des 9 Étages** : navigation directe entre les étages `0` à `8` et bascule miroir en un clic vers le même étage vu depuis le versant opposé.
+- **Recherche plein texte instantanée (`⌘K` / `Ctrl+K` / `/`)** : indexation complète des 290 pages (insensible aux accents et ligatures), filtrage par versant et extraits surlignés en contexte.
+- **Confort de lecture haute définition** : cache LRU hors-écran anti-scintillement avec préchargement des pages adjacentes, zoom fluide (`100 %` à `350 %`), trois ambiances éditoriales (*Nuit*, *Atelier*, *Ivoire*), filtres papier (*Fidèle*, *Crème*, *Inversé*), marque-pages persistants en local (`localStorage`) et jonction interactive au **Hall Central**.
+
+---
+
+## Raccourcis Clavier
+
+| Touche | Action |
+| :--- | :--- |
+| `←` / `→` ou `Espace` | Page ou double-page précédente / suivante |
+| `S` | Ouvrir / fermer le Sommaire & l’Ascenseur des 9 Étages |
+| `⌘K` / `Ctrl+K` ou `/` | Recherche plein texte intégrale |
+| `R` | Retourner physiquement le livre à 180° (*Terrain* ⇄ *Sommet*) |
+| `D` | Basculer entre affichage 1 page et double-page (ordinateur/tablette) |
+| `B` | Ajouter / retirer un marque-page sur la page courante |
+| `+` / `-` / `0` | Zoomer, dézoomer, réinitialiser à 100 % |
+| `F` | Activer / quitter le mode plein écran |
+
+---
+
+## Déploiement GitHub Pages
+
+1. Ouvrez l’onglet **Settings → Pages** du dépôt GitHub.
+2. Sélectionnez la branche principale (`main` / `master`) et le dossier racine `/ (root)`.
+3. Enregistrez : l’application statique est immédiatement servie sans étape de build.
