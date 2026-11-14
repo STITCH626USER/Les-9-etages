@@ -24,8 +24,8 @@
     }
 </script>
 
-<!-- Corpus texte intégral indexé (Terrain 141 p. + Sommet 149 p.) -->
-<script src="book_data.js?v=20"></script>
+<!-- Corpus texte intégral indexé (Terrain 141 p. + Sommet 143 p.) -->
+<script src="book_data.js?v=23"></script>
 
 <style>
 /* ==========================================================================
@@ -758,7 +758,7 @@ button, input {
     z-index: 4;
 }
 
-/* Bandeau contextuel du Hall Central (jonction p. 141 Terrain / p. 149 Sommet) */
+/* Bandeau contextuel du Hall Central (jonction p. 141 Terrain / p. 143 Sommet) */
 #hall-central-banner {
     display: none;
     position: absolute;
@@ -1999,7 +1999,7 @@ button, input {
             </span>
         </button>
 
-        <!-- Bannière interactive au Hall Central (Terrain p. 141 / Sommet p. 149) -->
+        <!-- Bannière interactive au Hall Central (Terrain p. 141 / Sommet p. 143) -->
         <div id="hall-central-banner">
             <div class="hall-banner-text">
                 <span class="hall-banner-kicker">Jonction · Le Hall Central</span>
@@ -2085,7 +2085,7 @@ button, input {
         </button>
         <button id="toc-tab-sommet" class="side-tab-btn" onclick="switchTocTab('sommet')">
             <span>Côté Sommet</span>
-            <span class="tab-sub">Descente · 149 pages</span>
+            <span class="tab-sub">Descente · 143 pages</span>
         </button>
     </div>
 
@@ -2160,7 +2160,7 @@ button, input {
                 <button class="scope-pill-btn" data-scope="terrain" onclick="setSearchScope('terrain')">Côté Terrain</button>
                 <button class="scope-pill-btn" data-scope="sommet" onclick="setSearchScope('sommet')">Côté Sommet</button>
             </div>
-            <span id="search-stats-lbl">290 pages indexées</span>
+            <span id="search-stats-lbl">284 pages indexées</span>
         </div>
 
         <div id="search-results-list"></div>
@@ -2230,7 +2230,7 @@ button, input {
 /* ==========================================================================
    ARCHITECTURE ÉDITORIALE EXACTE DES DEUX VERSANTS (FOLIOS IMPRIMÉS 1:1)
    ========================================================================== */
-const ASSET_VERSION = '20';
+const ASSET_VERSION = '23';
 const STORAGE_KEY = 'LES_9_ETAGES_READER_V18';
 
 const BOOK_META = {
@@ -2272,8 +2272,8 @@ const BOOK_META = {
     },
     sommet: {
         label: 'Côté Sommet',
-        totalPages: 149,
-        hallPage: 149,
+        totalPages: 143,
+        hallPage: 143,
         epigraph: '« Gouverner, c’est accepter de ne plus toucher terre. »',
         coverUrl: `cover_sommet.jpg?v=${ASSET_VERSION}`,
         pdfUrl: `sommet.pdf?v=${ASSET_VERSION}`,
@@ -2283,33 +2283,33 @@ const BOOK_META = {
             { part: 'Ouverture', page: 2, title: 'Architecture & Avertissement éditorial' },
             { part: 'Ouverture', page: 3, title: 'Table des matières' },
             { part: 'Ouverture', page: 4, endPage: 6, title: 'Prologue — Demain, le terrain ne répond plus' },
-            { part: 'Partie I — La Tour (Descente)', page: 7, endPage: 14, floor: 8, title: 'Le CEO', role: 'L’altitude absolue' },
-            { part: 'Partie I — La Tour (Descente)', page: 15, endPage: 22, floor: 7, title: 'Le Chairman', role: 'Le conseil et le temps long' },
-            { part: 'Partie I — La Tour (Descente)', page: 23, endPage: 30, floor: 6, title: 'Le Président international', role: 'Gouverner des cartes' },
-            { part: 'Partie I — La Tour (Descente)', page: 31, endPage: 38, floor: 5, title: 'Le Président de division', role: 'L’arbitre des périmètres' },
-            { part: 'Partie I — La Tour (Descente)', page: 39, endPage: 46, floor: 4, title: 'Le Vice-Président', role: 'La traduction financière' },
-            { part: 'Partie I — La Tour (Descente)', page: 47, endPage: 54, floor: 3, title: 'Le Directeur de site', role: 'Le dernier rempart' },
-            { part: 'Partie I — La Tour (Descente)', page: 55, endPage: 62, floor: 2, title: 'Le Responsable de service', role: 'L’étau des indicateurs' },
-            { part: 'Partie I — La Tour (Descente)', page: 63, endPage: 70, floor: 1, title: 'Le Manager de proximité', role: 'Au seuil de l’atelier' },
-            { part: 'Partie I — La Tour (Descente)', page: 71, endPage: 76, floor: 0, title: 'Le retour au réel', role: 'Toucher terre' },
-            { part: 'Partie I — La Tour (Descente)', page: 77, endPage: 77, title: 'La vue d’ensemble du Sommet' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 79, endPage: 82, title: 'Ce que gouverner veut vraiment dire' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 83, endPage: 84, title: 'Le manifeste de la gouvernance vivante' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 85, endPage: 86, title: 'Le coût de ne rien faire' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 87, endPage: 90, title: 'Pourquoi le système résiste' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 91, endPage: 96, title: 'Diriger quatre générations sans caricature' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 97, endPage: 102, title: 'Et si ? Le monde d’après' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 103, endPage: 104, title: 'Les preuves que ça marche' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 105, endPage: 108, title: 'Ceux qui ont choisi de faire autrement' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 109, endPage: 114, title: 'Les pionniers de la transformation' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 115, endPage: 118, title: 'Ce que la tour ne voit pas (Angles morts)' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 119, endPage: 124, title: 'Les fiches pratiques du dirigeant (1 à 10)' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 125, endPage: 138, title: 'La transition vue d’en haut' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 139, endPage: 140, title: 'Le premier pas du décideur' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 141, endPage: 144, title: 'Le plan de transformation' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 145, endPage: 146, title: 'Le Hall Central' },
-            { part: 'Partie II — Le Gouvernement du Réel', page: 147, endPage: 148, title: 'Liste des sources & références' },
-            { part: 'Jonction Centrale', page: 149, endPage: 149, title: 'Pivot — Hall Central' }
+            { part: 'Partie I — La Tour (Descente)', page: 7, endPage: 12, floor: 8, title: 'Le CEO', role: 'L’altitude absolue' },
+            { part: 'Partie I — La Tour (Descente)', page: 13, endPage: 18, floor: 7, title: 'Le Chairman', role: 'Le conseil et le temps long' },
+            { part: 'Partie I — La Tour (Descente)', page: 19, endPage: 24, floor: 6, title: 'Le Président international', role: 'Gouverner des cartes' },
+            { part: 'Partie I — La Tour (Descente)', page: 25, endPage: 30, floor: 5, title: 'Le Président de division', role: 'L’arbitre des périmètres' },
+            { part: 'Partie I — La Tour (Descente)', page: 31, endPage: 36, floor: 4, title: 'Le Vice-Président', role: 'La traduction financière' },
+            { part: 'Partie I — La Tour (Descente)', page: 37, endPage: 42, floor: 3, title: 'Le Directeur de site', role: 'Le dernier rempart' },
+            { part: 'Partie I — La Tour (Descente)', page: 43, endPage: 48, floor: 2, title: 'Le Responsable de service', role: 'L’étau des indicateurs' },
+            { part: 'Partie I — La Tour (Descente)', page: 49, endPage: 54, floor: 1, title: 'Le Manager de proximité', role: 'Au seuil de l’atelier' },
+            { part: 'Partie I — La Tour (Descente)', page: 55, endPage: 60, floor: 0, title: 'Le retour au réel', role: 'Toucher terre' },
+            { part: 'Partie I — La Tour (Descente)', page: 61, endPage: 61, title: 'La vue d’ensemble du Sommet' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 63, endPage: 66, title: 'Ce que gouverner veut vraiment dire' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 67, endPage: 68, title: 'Le manifeste de la gouvernance vivante' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 69, endPage: 72, title: 'Le coût de ne rien faire' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 73, endPage: 76, title: 'Pourquoi le système résiste' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 77, endPage: 82, title: 'Diriger quatre générations sans caricature' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 83, endPage: 88, title: 'Et si ? Le monde d’après' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 89, endPage: 92, title: 'Les preuves que ça marche' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 93, endPage: 96, title: 'Ceux qui ont choisi de faire autrement' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 97, endPage: 102, title: 'Les pionniers de la transformation' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 103, endPage: 106, title: 'Ce que la tour ne voit pas (Angles morts)' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 107, endPage: 118, title: 'Les fiches pratiques du dirigeant (01 à 10)' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 119, endPage: 132, title: 'La transition vue d’en haut' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 133, endPage: 134, title: 'Le premier pas du décideur' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 135, endPage: 138, title: 'Le plan de transformation' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 139, endPage: 140, title: 'Le Hall Central' },
+            { part: 'Partie II — Le Gouvernement du Réel', page: 141, endPage: 142, title: 'Liste des sources & références' },
+            { part: 'Jonction Centrale', page: 143, endPage: 143, title: 'Pivot — Hall Central' }
         ]
     }
 };
@@ -3668,7 +3668,7 @@ function runInstantSearch() {
 
     if (rawQ.length < 2) {
         currentSearchHits = [];
-        statsEl.textContent = '290 pages indexées';
+        statsEl.textContent = '284 pages indexées';
         listEl.innerHTML = `
             <div class="search-empty-state">
                 Saisissez au moins 2 caractères pour explorer instantanément les deux versants.<br>
