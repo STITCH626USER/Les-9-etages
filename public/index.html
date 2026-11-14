@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" id="meta-theme-color" content="#0a0b0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Les 9 étages">
+<meta name="format-detection" content="telephone=no">
 <title>LES 9 ÉTAGES — Alexandre ROUX | Liseuse Interactive Tête-Bêche</title>
 <meta name="title" content="LES 9 ÉTAGES — Alexandre ROUX">
 <meta name="description" content="Édition numérique interactive tête-bêche de l'ouvrage « Les 9 étages » d'Alexandre ROUX. Deux entrées opposées — Côté Terrain et Côté Sommet — réunies au Hall Central.">
@@ -25,12 +31,22 @@
 </script>
 
 <!-- Corpus texte intégral indexé (Terrain 141 p. + Sommet 143 p.) -->
-<script src="book_data.js?v=23"></script>
+<script src="book_data.js?v=24"></script>
 
 <style>
 /* ==========================================================================
    SYSTÈME DE DESIGN ARCHITECTURAL & ÉDITORIAL — LES 9 ÉTAGES
    ========================================================================== */
+:root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --topbar-h: 54px;
+    --bottombar-h: 60px;
+    --vvh: 100dvh;
+}
+
 :root,
 html[data-theme="nuit"] {
     --bg-stage: #0a0b0e;
@@ -130,13 +146,18 @@ html[data-paper="darkpage"] .canvas-page { filter: invert(0.915) hue-rotate(180d
 html, body {
     width: 100%;
     height: 100%;
+    height: 100dvh;
     overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     background: var(--bg-stage);
     color: var(--ink-primary);
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     user-select: none;
+    -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition: background-color 0.25s ease, color 0.25s ease;
 }
@@ -144,6 +165,7 @@ html, body {
 button, input {
     font-family: inherit;
     color: inherit;
+    touch-action: manipulation;
 }
 
 .svg-ico {
@@ -167,7 +189,7 @@ button, input {
     top: 0;
     left: 0;
     right: 0;
-    height: 54px;
+    height: calc(var(--topbar-h) + var(--safe-top));
     background: var(--bg-panel);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -175,9 +197,14 @@ button, input {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: var(--safe-top) calc(16px + var(--safe-right)) 0 calc(16px + var(--safe-left));
     z-index: 400;
     gap: 10px;
+    transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.btn-txt-mobile {
+    display: none;
 }
 
 .brand-cluster {
@@ -410,10 +437,11 @@ button, input {
    ========================================================================== */
 #home-stage-view {
     position: fixed;
-    top: 54px;
+    top: calc(var(--topbar-h) + var(--safe-top));
     left: 0;
     right: 0;
     bottom: 0;
+    padding: 0 var(--safe-right) var(--safe-bottom) var(--safe-left);
     background: var(--bg-stage-radial);
     z-index: 20;
     display: flex;
@@ -551,6 +579,7 @@ button, input {
     display: none;
     align-items: center;
     gap: 8px;
+    max-width: 100%;
     background: var(--btn-warm-surface);
     border: 1.5px solid var(--accent-warm);
     color: var(--ink-primary);
@@ -562,8 +591,15 @@ button, input {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.50);
     transition: all 0.18s ease;
 }
+#home-resume-txt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
 #home-resume-pill svg {
     color: var(--accent-warm);
+    flex-shrink: 0;
 }
 #home-resume-pill:hover {
     background: var(--accent);
@@ -624,6 +660,7 @@ button, input {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
 }
 .door-kicker {
     font-size: 9.5px;
@@ -647,11 +684,11 @@ button, input {
 }
 
 /* ==========================================================================
-   ESPACE DE LECTURE HAUTE DÉFINITION (#reader-view)
+   ESPACE DE LECTURE HAUTE DÉFINITION (#reader-view) & MODE IMMERSIF
    ========================================================================== */
 #reader-view {
     position: fixed;
-    top: 54px;
+    top: calc(var(--topbar-h) + var(--safe-top));
     left: 0;
     right: 0;
     bottom: 0;
@@ -659,6 +696,51 @@ button, input {
     flex-direction: column;
     background: var(--bg-stage-radial);
     z-index: 50;
+}
+
+/* Pilule flottante discrète en mode lecture plein écran immersif */
+.immersive-hud-pill {
+    display: none;
+    position: absolute;
+    bottom: calc(10px + var(--safe-bottom));
+    right: calc(12px + var(--safe-right));
+    z-index: 65;
+    background: var(--bg-panel);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border-strong);
+    color: var(--ink-primary);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    opacity: 0.88;
+    transition: opacity 0.18s ease, transform 0.15s ease;
+}
+.immersive-hud-pill:active { transform: scale(0.96); }
+
+body.is-immersive-reading #top-bar {
+    transform: translateY(-108%);
+    opacity: 0;
+    pointer-events: none;
+}
+body.is-immersive-reading #reader-view {
+    top: 0;
+    padding-top: var(--safe-top);
+    padding-left: var(--safe-left);
+    padding-right: var(--safe-right);
+    padding-bottom: var(--safe-bottom);
+}
+body.is-immersive-reading #reader-view #bottom-bar {
+    display: none;
+}
+body.is-immersive-reading .immersive-hud-pill {
+    display: inline-flex;
 }
 
 #reader-viewport {
@@ -866,8 +948,9 @@ button, input {
    BARRE DE CONTRÔLE INFÉRIEURE FIXE & ÉPURÉE (#bottom-bar)
    ========================================================================== */
 #bottom-bar {
-    height: 60px;
+    height: calc(var(--bottombar-h) + var(--safe-bottom));
     width: 100%;
+    flex-shrink: 0;
     background: var(--bg-panel-solid);
     border-top: 1px solid var(--border-hairline);
     display: flex;
@@ -875,7 +958,7 @@ button, input {
     justify-content: center;
     position: relative;
     z-index: 70;
-    padding: 0 16px;
+    padding: 0 calc(16px + var(--safe-right)) var(--safe-bottom) calc(16px + var(--safe-left));
 }
 
 /* Curseur de progression net intégré sur l'arête supérieure de la barre */
@@ -1143,8 +1226,8 @@ button, input {
 /* Footer mentions légales sur l'accueil 3D */
 #home-legal-footer {
     position: fixed;
-    bottom: 7px;
-    right: 14px;
+    bottom: calc(7px + var(--safe-bottom));
+    right: calc(14px + var(--safe-right));
     z-index: 30;
     font-size: 10.5px;
     color: var(--ink-muted);
@@ -1185,6 +1268,9 @@ button, input {
     left: 0;
     bottom: 0;
     width: min(92vw, 430px);
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+    padding-left: var(--safe-left);
     background: var(--bg-panel-solid);
     border-right: 1px solid var(--border-strong);
     z-index: 650;
@@ -1362,7 +1448,34 @@ button, input {
 .toc-scroll-list {
     flex: 1;
     overflow-y: auto;
-    padding: 12px 14px 24px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 12px 14px 20px;
+}
+
+.drawer-footer-legal {
+    flex-shrink: 0;
+    padding: 9px 16px;
+    border-top: 1px solid var(--border-hairline);
+    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-size: 10px;
+    color: var(--ink-muted);
+}
+.drawer-footer-legal button {
+    background: transparent;
+    border: none;
+    color: var(--ink-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.drawer-footer-legal button:hover {
+    color: var(--ink-primary);
+    text-decoration: underline;
 }
 .toc-part-heading {
     font-size: 9.5px;
@@ -1430,20 +1543,23 @@ button, input {
 .modal-overlay {
     display: none;
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--vvh, 100dvh);
     background: var(--modal-backdrop);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     z-index: 700;
     align-items: flex-start;
     justify-content: center;
-    padding: 7vh 16px 24px;
+    padding: calc(6vh + var(--safe-top)) calc(16px + var(--safe-right)) calc(20px + var(--safe-bottom)) calc(16px + var(--safe-left));
 }
 .modal-overlay.is-open { display: flex; }
 
 .modal-card {
     width: min(100%, 640px);
-    max-height: 84vh;
+    max-height: calc(var(--vvh, 100dvh) - var(--safe-top) - var(--safe-bottom) - 36px);
     background: var(--bg-panel-solid);
     border: 1px solid var(--border-strong);
     border-radius: 10px;
@@ -1511,6 +1627,8 @@ button, input {
 #search-results-list {
     flex: 1;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding: 10px 12px 16px;
     display: flex;
     flex-direction: column;
@@ -1619,9 +1737,10 @@ button, input {
 #theme-popover {
     display: none;
     position: fixed;
-    top: 60px;
-    right: 16px;
+    top: calc(var(--topbar-h) + var(--safe-top) + 6px);
+    right: calc(12px + var(--safe-right));
     width: 280px;
+    max-width: calc(100vw - 24px - var(--safe-left) - var(--safe-right));
     background: var(--bg-panel-solid);
     border: 1px solid var(--border-strong);
     border-radius: 8px;
@@ -1684,6 +1803,8 @@ button, input {
 .dialog-body {
     padding: 16px 20px 20px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     flex: 1;
 }
 
@@ -1753,9 +1874,11 @@ button, input {
 /* Toast notification discret */
 #toast-pill {
     position: fixed;
-    top: 66px;
+    top: calc(var(--topbar-h) + var(--safe-top) + 10px);
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
+    max-width: calc(100vw - 28px);
+    text-align: center;
     background: var(--accent);
     color: var(--accent-ink);
     padding: 7px 16px;
@@ -1775,47 +1898,148 @@ button, input {
 }
 
 /* ==========================================================================
-   RESPONSIVE TABLETTE & MOBILE
+   ADAPTATION MOBILE UNIVERSELLE — APPLE iOS (iPhone/iPad) & ANDROID
    ========================================================================== */
+
+/* Cibles tactiles élargies & prévention du zoom auto Safari iOS sur les champs */
+@media (pointer: coarse) {
+    .scrubber-edge-wrap {
+        top: -14px;
+        height: 28px;
+    }
+    .scrubber-progress-line {
+        top: 12.5px;
+    }
+    #page-range-slider {
+        height: 28px;
+    }
+    #page-range-slider::-webkit-slider-thumb {
+        width: 18px;
+        height: 18px;
+        margin-top: -7.5px;
+    }
+    #page-range-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+    }
+    #search-query-input,
+    #inline-page-input {
+        font-size: 16px;
+    }
+    .toc-item-btn {
+        padding: 10px 10px;
+    }
+    .floor-cell-btn {
+        height: 38px;
+    }
+}
+
+/* Désactivation des survols persistants après appui tactile sur iOS / Android */
+@media (hover: none) {
+    .hdr-btn:hover {
+        background: var(--btn-surface);
+        border-color: var(--border-hairline);
+    }
+    .hdr-btn.is-active:hover {
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-color: var(--accent);
+    }
+    .hdr-btn-flip:hover {
+        background: var(--btn-warm-surface);
+        color: var(--ink-primary);
+        border-color: var(--accent-warm);
+    }
+    .pager-btn:hover:not(:disabled) {
+        background: var(--btn-surface);
+        border-color: var(--border-strong);
+    }
+    .door-card-btn:hover {
+        transform: none;
+    }
+}
+
 @media (max-width: 960px) {
     .mini-floor-gauge { display: none !important; }
     .kbd-hint { display: none; }
-    .bottom-context { display: none; }
-    .bottom-tools { flex: 0; }
-    .bottom-bar-inner { justify-content: space-between; }
+    .current-chapter-lbl { display: none; }
+    .bottom-context { flex: 0 0 auto; }
+    .bottom-tools { flex: 0 0 auto; }
+    .bottom-bar-inner { justify-content: space-between; gap: 6px; }
 }
 
-@media (max-width: 820px) {
+@media (max-width: 720px) {
     #btn-spread-mode { display: none; }
     .edge-nav-zone { display: none; }
 }
 
 @media (max-width: 640px) {
-    #top-bar { height: 50px; padding: 0 10px; gap: 6px; }
-    #home-stage-view, #reader-view { top: 50px; }
+    :root {
+        --topbar-h: 48px;
+        --bottombar-h: 52px;
+    }
+
+    #top-bar {
+        padding: var(--safe-top) calc(8px + var(--safe-right)) 0 calc(8px + var(--safe-left));
+        gap: 5px;
+    }
+    .brand-cluster { gap: 6px; }
+    .brand-btn { padding: 4px 5px; margin-left: -4px; gap: 7px; }
     .brand-author { display: none; }
-    .brand-main { font-size: 11.5px; letter-spacing: 0.1em; }
+    .brand-main { font-size: 11px; letter-spacing: 0.08em; }
     .header-sep { display: none; }
+    .side-badge { padding: 3px 7px; font-size: 9px; letter-spacing: 0.08em; }
+    .header-actions { gap: 4px; }
+    .hdr-btn,
+    .hdr-btn.hdr-btn-icon {
+        padding: 0 7px;
+        height: 32px;
+        min-width: 32px;
+    }
     .hdr-btn span.btn-txt { display: none; }
-    .hdr-btn-flip span.btn-txt { display: inline; font-size: 10px; }
-    .hdr-btn { padding: 0 8px; height: 32px; }
+    .hdr-btn-flip span.btn-txt-mobile {
+        display: inline;
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+    }
+    #btn-fullscreen-toggle { display: none; }
 
-    .home-top-caption { padding-top: 10px; }
-    .home-epigraph { font-size: 12px; padding: 0 10px; }
-    .home-bottom-dock { margin-bottom: 22px; gap: 8px; }
+    .home-top-caption { padding: 8px 12px 2px; }
+    .home-kicker { font-size: 9px; letter-spacing: 0.16em; line-height: 1.35; }
+    .home-epigraph { font-size: 12px; padding: 0 6px; line-height: 1.35; }
+    .home-bottom-dock {
+        width: calc(100% - 20px);
+        margin: 2px auto 22px;
+        gap: 7px;
+    }
+    #home-resume-pill { padding: 6px 13px; font-size: 11px; }
+    .manip-hint-desktop { display: none; }
+    .home-manip-bar { padding: 4px; gap: 5px; }
+    .home-manip-btn { padding: 5px 10px; font-size: 10px; }
     .home-dual-doors { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .door-card-btn { padding: 10px 11px; }
-    .door-title { font-size: 11.5px; }
-    .door-sub { font-size: 10.5px; }
+    .door-card-btn { padding: 9px 10px; gap: 6px; }
+    .door-kicker { font-size: 8.5px; letter-spacing: 0.1em; }
+    .door-title { font-size: 11px; letter-spacing: 0.03em; }
+    .door-sub { font-size: 10px; line-height: 1.25; }
 
-    #bottom-bar { height: 56px; padding: 0 10px; }
-    .folio-box { min-width: 98px; padding: 0 8px; font-size: 11.5px; }
+    #bottom-bar {
+        padding: 0 calc(8px + var(--safe-right)) var(--safe-bottom) calc(8px + var(--safe-left));
+    }
+    .pager-btn { width: 32px; height: 32px; }
+    .folio-box { min-width: 88px; height: 32px; padding: 0 7px; font-size: 11px; }
+    #inline-page-input { font-size: 16px; width: 56px; height: 26px; }
+    .zoom-cluster { height: 32px; }
+    .zoom-step-btn { width: 28px; font-size: 15px; }
+    .zoom-pct-btn { padding: 0 6px; min-width: 44px; font-size: 10.5px; }
+    #mirror-floor-quick-btn { padding: 4px 7px; font-size: 9.5px; height: 32px; gap: 4px; }
     .legal-link-btn { display: none; }
+
     #home-legal-footer {
         left: 50%;
         right: auto;
         transform: translateX(-50%);
-        bottom: 4px;
+        bottom: calc(4px + var(--safe-bottom));
         font-size: 9.5px;
         white-space: nowrap;
     }
@@ -1825,7 +2049,132 @@ button, input {
         gap: 8px;
         bottom: 10px;
         padding: 10px 12px;
+        width: calc(100% - 20px);
     }
+
+    .modal-overlay {
+        padding: calc(10px + var(--safe-top)) calc(10px + var(--safe-right)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-left));
+    }
+    .modal-card {
+        max-height: calc(var(--vvh, 100dvh) - var(--safe-top) - var(--safe-bottom) - 20px);
+        border-radius: 9px;
+    }
+    .search-input-bar { padding: 11px 12px; gap: 9px; }
+    #search-query-input { font-size: 16px; }
+    .search-filter-bar { padding: 8px 12px; }
+    .dialog-header { padding: 13px 15px; }
+    .dialog-body { padding: 13px 15px 16px; }
+}
+
+/* Smartphones en portrait (iPhone SE/13/14/15/16 Pro Max, Pixel, Galaxy S/A) */
+@media (max-width: 460px) {
+    .brand-titles { display: none; }
+}
+
+/* Smartphones compacts 360px–385px (Galaxy S, iPhone SE/Mini) */
+@media (max-width: 385px) {
+    #top-bar {
+        padding-left: calc(6px + var(--safe-left));
+        padding-right: calc(6px + var(--safe-right));
+        gap: 4px;
+    }
+    .header-actions { gap: 3.5px; }
+    .hdr-btn,
+    .hdr-btn.hdr-btn-icon {
+        height: 31px;
+        min-width: 30px;
+        padding: 0 6px;
+    }
+    .side-badge {
+        padding: 3px 6px;
+        font-size: 8.5px;
+        letter-spacing: 0.06em;
+    }
+}
+
+/* Écrans pliables externes ultra-étroits (< 355px, ex. Galaxy Z Fold fermé) */
+@media (max-width: 355px) {
+    .zoom-pct-btn { display: none; }
+    .home-dual-doors { grid-template-columns: 1fr; gap: 6px; }
+}
+
+/* Smartphones en mode Paysage (iOS & Android Landscape) : grille 2 colonnes sans rognage */
+@media (max-height: 520px) and (orientation: landscape) {
+    :root {
+        --topbar-h: 42px;
+        --bottombar-h: 44px;
+    }
+    #top-bar { gap: 6px; }
+    .brand-author { display: none; }
+    .header-sep { display: none; }
+    .hdr-btn,
+    .hdr-btn.hdr-btn-icon { height: 30px; padding: 0 8px; min-width: 30px; }
+    .hdr-btn span.btn-txt { display: none; }
+    .hdr-btn-flip span.btn-txt-mobile {
+        display: inline;
+        font-size: 9.5px;
+        font-weight: 800;
+    }
+
+    #home-stage-view {
+        display: grid;
+        grid-template-columns: minmax(190px, 43%) 1fr;
+        grid-template-rows: auto 1fr;
+        align-items: center;
+        column-gap: 14px;
+        padding: 4px calc(14px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(14px + var(--safe-left));
+    }
+    #stage-3d-canvas-wrap,
+    #stage-fallback-card {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        height: 100%;
+        min-height: 0;
+    }
+    .home-top-caption {
+        grid-column: 2;
+        grid-row: 1;
+        text-align: left;
+        padding: 4px 2px 2px;
+        align-self: end;
+    }
+    .home-kicker { font-size: 8.5px; letter-spacing: 0.14em; }
+    .home-epigraph { font-size: 11.5px; margin-top: 2px; padding: 0; }
+    .home-bottom-dock {
+        grid-column: 2;
+        grid-row: 2;
+        width: 100%;
+        max-width: none;
+        margin: 4px 0 0;
+        align-items: stretch;
+        align-self: start;
+        gap: 6px;
+    }
+    .manip-hint-desktop { display: none; }
+    .home-manip-bar { align-self: flex-start; padding: 3px 5px; }
+    .home-manip-btn { padding: 4px 9px; font-size: 9.5px; }
+    #home-resume-pill { align-self: flex-start; padding: 5px 12px; font-size: 10.5px; }
+    .door-card-btn { padding: 7px 10px; }
+    .door-kicker { font-size: 8px; }
+    .door-title { font-size: 10.5px; }
+    .door-sub { font-size: 9.5px; }
+    #home-legal-footer {
+        bottom: calc(3px + var(--safe-bottom));
+        right: calc(14px + var(--safe-right));
+        left: auto;
+        transform: none;
+        font-size: 9px;
+    }
+
+    .pager-btn { width: 30px; height: 30px; }
+    .folio-box { height: 30px; min-width: 90px; font-size: 11px; }
+    .zoom-cluster { height: 30px; }
+    .legal-link-btn { display: none; }
+
+    .drawer-header { padding: 10px 14px 8px; }
+    .side-tabs { padding: 7px 14px; }
+    .elevator-panel { padding: 8px 14px; }
+    .floor-cell-btn { height: 28px; font-size: 11px; }
 }
 </style>
 </head>
@@ -1873,6 +2222,7 @@ button, input {
         <button class="hdr-btn hdr-btn-flip" onclick="flipTeteBeche()" title="Retourner physiquement le livre à 180° (Touche R)">
             <svg class="svg-ico" viewBox="0 0 24 24"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
             <span class="btn-txt">Retourner 180°</span>
+            <span class="btn-txt-mobile">180°</span>
         </button>
 
         <button id="btn-open-toc" class="hdr-btn" onclick="toggleTocDrawer()" title="Sommaire complet & Ascenseur des 9 Étages (Touche S)">
@@ -1905,7 +2255,7 @@ button, input {
             <svg class="svg-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
         </button>
 
-        <button class="hdr-btn hdr-btn-icon" onclick="toggleFullscreenMode()" title="Plein écran (Touche F)">
+        <button id="btn-fullscreen-toggle" class="hdr-btn hdr-btn-icon" onclick="toggleFullscreenMode()" title="Plein écran (Touche F)">
             <svg class="svg-ico" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
         </button>
     </div>
@@ -1922,7 +2272,7 @@ button, input {
 
     <div id="stage-3d-canvas-wrap" aria-label="Objet-livre 3D interactif Les 9 Étages"></div>
     <div id="stage-fallback-card">
-        <img id="fallback-cover-img" src="cover_terrain.jpg?v=19" alt="Couverture Les 9 étages">
+        <img id="fallback-cover-img" src="cover_terrain.jpg?v=24" alt="Couverture Les 9 étages">
     </div>
 
     <div class="home-bottom-dock">
@@ -1932,8 +2282,8 @@ button, input {
         </button>
 
         <div class="home-manip-bar">
-            <span>Glissez pour inspecter à 360°</span>
-            <span>·</span>
+            <span class="manip-hint-desktop">Glissez pour inspecter à 360°</span>
+            <span class="manip-hint-desktop">·</span>
             <button class="home-manip-btn" onclick="flipTeteBeche()">
                 <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
                 Retourner le livre
@@ -1999,6 +2349,11 @@ button, input {
             </span>
         </button>
 
+        <button id="immersive-hud-pill" class="immersive-hud-pill" onclick="exitImmersiveMode()" title="Afficher les barres de contrôle">
+            <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            <span id="immersive-hud-txt">p. 1 / 141</span>
+        </button>
+
         <!-- Bannière interactive au Hall Central (Terrain p. 141 / Sommet p. 143) -->
         <div id="hall-central-banner">
             <div class="hall-banner-text">
@@ -2041,7 +2396,7 @@ button, input {
 
                 <div class="folio-box" onclick="activateInlinePageInput()" title="Cliquer pour saisir un numéro de page">
                     <span id="folio-label-txt">p. 1 / 141</span>
-                    <input id="inline-page-input" type="number" min="0" max="141"
+                    <input id="inline-page-input" type="number" min="0" max="141" inputmode="numeric" pattern="[0-9]*" enterkeyhint="go"
                            onkeydown="onInlinePageKey(event)" onblur="commitInlinePageInput()">
                 </div>
 
@@ -2101,6 +2456,11 @@ button, input {
     </div>
 
     <div id="toc-list-container" class="toc-scroll-list"></div>
+    <div class="drawer-footer-legal">
+        <button onclick="closeTocDrawer(); openLegalModal();">Mentions légales</button>
+        <span>·</span>
+        <span>© 2026 Alexandre ROUX</span>
+    </div>
 </aside>
 
 <!-- ======================================================================
@@ -2147,7 +2507,7 @@ button, input {
     <div class="modal-card" onclick="event.stopPropagation()">
         <div class="search-input-bar">
             <svg class="svg-ico ico-lg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input id="search-query-input" type="text" placeholder="Rechercher un concept, un étage, un auteur, une citation…" autocomplete="off" spellcheck="false"
+            <input id="search-query-input" type="text" placeholder="Rechercher un concept, un étage, un auteur, une citation…" autocomplete="off" spellcheck="false" enterkeyhint="search"
                    oninput="runInstantSearch()" onkeydown="onSearchInputKey(event)">
             <button class="close-icon-btn" onclick="closeSearchModal()" title="Fermer (Échap)">
                 <svg class="svg-ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -2230,7 +2590,7 @@ button, input {
 /* ==========================================================================
    ARCHITECTURE ÉDITORIALE EXACTE DES DEUX VERSANTS (FOLIOS IMPRIMÉS 1:1)
    ========================================================================== */
-const ASSET_VERSION = '23';
+const ASSET_VERSION = '24';
 const STORAGE_KEY = 'LES_9_ETAGES_READER_V18';
 
 const BOOK_META = {
@@ -2315,12 +2675,32 @@ const BOOK_META = {
 };
 
 /* ==========================================================================
-   ÉTAT GLOBAL DE L'APPLICATION
+   ÉTAT GLOBAL DE L'APPLICATION & DÉTECTION ADAPTATIVE MOBILE (iOS / ANDROID)
    ========================================================================== */
+function isCompactMobile() {
+    const w = window.innerWidth || 1024;
+    const h = window.innerHeight || 768;
+    return Math.min(w, h) <= 540;
+}
+
+function isTouchCoarseDevice() {
+    if (typeof window.matchMedia === 'function') {
+        try {
+            if (window.matchMedia('(pointer: coarse)').matches) return true;
+        } catch (_) {}
+    }
+    return isCompactMobile() || (window.innerWidth || 1024) <= 900;
+}
+
+function getDefaultDisplayMode() {
+    return (!isCompactMobile() && (window.innerWidth || 1024) > 900) ? 'spread' : 'single';
+}
+
 let currentSide = 'terrain';
 let currentPage = 1; // 0 = Couverture, 1..N = folio imprimé exact
 let isReading = false;
-let displayMode = (window.innerWidth > 900) ? 'spread' : 'single';
+let isImmersiveReading = false;
+let displayMode = getDefaultDisplayMode();
 let tocActiveTab = 'terrain';
 let hallBannerDismissed = { terrain: false, sommet: false };
 
@@ -2335,7 +2715,7 @@ let docSommet = null;
 let loadingDocsPromise = null;
 const coverImages = { terrain: null, sommet: null };
 
-// Cache LRU de bitmaps rendus pour éliminer tout flash blanc
+// Cache LRU de bitmaps rendus (calibré sur mobile pour préserver la mémoire WebKit/Android)
 const pageBitmapCache = new Map();
 const MAX_BITMAP_CACHE = 18;
 let activeRenderToken = 0;
@@ -2362,7 +2742,7 @@ let userState = {
     hasReadBefore: false,
     terrainBookmarks: [],
     sommetBookmarks: [],
-    displayMode: (window.innerWidth > 900) ? 'spread' : 'single',
+    displayMode: getDefaultDisplayMode(),
     theme: 'nuit',
     paper: 'original'
 };
@@ -2431,7 +2811,7 @@ function getFloorSection(side, floorNum) {
 }
 
 function getEffectiveDisplayMode() {
-    return (window.innerWidth <= 820) ? 'single' : displayMode;
+    return (window.innerWidth <= 720) ? 'single' : displayMode;
 }
 
 /**
@@ -2620,7 +3000,7 @@ function init3DStage() {
         camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
 
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isCompactMobile() ? 1.75 : 2));
         if (renderer.outputEncoding !== undefined && THREE.sRGBEncoding !== undefined) {
             renderer.outputEncoding = THREE.sRGBEncoding;
         }
@@ -2809,6 +3189,7 @@ function preloadCoverImage(side) {
 function ensurePDFDocumentsLoaded() {
     if (docTerrain && docSommet) return Promise.resolve();
     if (loadingDocsPromise) return loadingDocsPromise;
+    if (typeof pdfjsLib === 'undefined') return Promise.reject(new Error('Bibliothèque PDF.js indisponible'));
 
     loadingDocsPromise = Promise.all([
         pdfjsLib.getDocument(BOOK_META.terrain.pdfUrl).promise.then(d => { docTerrain = d; }),
@@ -2825,12 +3206,26 @@ function ensurePDFDocumentsLoaded() {
 /* ==========================================================================
    MOTEUR DE RENDU ZÉRO-FLICKER AVEC CACHE LRU & PRÉCHARGEMENT VOISINS
    ========================================================================== */
+function getMaxBitmapCache() {
+    return isCompactMobile() ? 8 : MAX_BITMAP_CACHE;
+}
+
+function pruneStaleBitmapCache(activeDimSuffix) {
+    if (!isCompactMobile() || pageBitmapCache.size <= 4) return;
+    for (const k of Array.from(pageBitmapCache.keys())) {
+        if (!k.endsWith(`:${activeDimSuffix}`) && pageBitmapCache.size > 4) {
+            pageBitmapCache.delete(k);
+        }
+    }
+}
+
 function putInBitmapCache(key, canvasEl) {
     if (pageBitmapCache.has(key)) {
         pageBitmapCache.delete(key);
     }
     pageBitmapCache.set(key, canvasEl);
-    while (pageBitmapCache.size > MAX_BITMAP_CACHE) {
+    const limit = getMaxBitmapCache();
+    while (pageBitmapCache.size > limit) {
         const oldestKey = pageBitmapCache.keys().next().value;
         pageBitmapCache.delete(oldestKey);
     }
@@ -2880,15 +3275,15 @@ function computePageMetrics(mode) {
     const vpEl = document.getElementById('reader-viewport');
     const availW = (vpEl && vpEl.clientWidth) ? vpEl.clientWidth : window.innerWidth;
     const availH = (vpEl && vpEl.clientHeight) ? vpEl.clientHeight : (window.innerHeight - 114);
-    const isMobile = window.innerWidth <= 640;
+    const compact = isCompactMobile() || window.innerWidth <= 640;
 
     // Ratio ISO A5 : 148 / 210 = 0.70476
     const pageRatio = 148 / 210;
-    const padW = isMobile ? 16 : 96;
-    const padH = isMobile ? 16 : 32;
+    const padW = compact ? 6 : 96;
+    const padH = compact ? (isImmersiveReading ? 4 : 8) : 32;
 
-    const maxW = Math.max(200, availW - padW);
-    const maxH = Math.max(240, availH - padH);
+    const maxW = Math.max(180, availW - padW);
+    const maxH = Math.max(180, availH - padH);
 
     let singleH = maxH;
     let singleW = singleH * pageRatio;
@@ -2899,7 +3294,10 @@ function computePageMetrics(mode) {
         singleH = singleW / pageRatio;
     }
 
-    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.8) * 1.25, 3.0);
+    const rawDpr = window.devicePixelRatio || 1;
+    const dpr = compact
+        ? Math.min(Math.max(rawDpr, 1.75) * 1.15, 2.65)
+        : Math.min(Math.max(rawDpr, 1.8) * 1.25, 3.0);
     return {
         singleW: Math.round(singleW),
         singleH: Math.round(singleH),
@@ -2972,6 +3370,7 @@ async function renderCurrentView(options = {}) {
         applyZoomAndPanTransform(false);
 
         saveUserState();
+        pruneStaleBitmapCache(`${Math.round(metrics.singleW * metrics.dpr)}x${Math.round(metrics.singleH * metrics.dpr)}`);
         scheduleNeighborPrefetch(currentSide, visPages, effMode, metrics);
     } catch (err) {
         if (err && err.name !== 'RenderingCancelledException') {
@@ -2995,12 +3394,13 @@ function scheduleNeighborPrefetch(side, visPages, effMode, metrics) {
     const maxP = BOOK_META[side].totalPages;
     const lastVis = visPages[visPages.length - 1];
     const firstVis = visPages[0];
+    const compact = isCompactMobile();
     const candidates = [];
 
     if (lastVis + 1 <= maxP) candidates.push(lastVis + 1);
-    if (effMode === 'spread' && lastVis + 2 <= maxP) candidates.push(lastVis + 2);
+    if (!compact && effMode === 'spread' && lastVis + 2 <= maxP) candidates.push(lastVis + 2);
     if (firstVis - 1 >= 0) candidates.push(firstVis - 1);
-    if (effMode === 'spread' && firstVis - 2 >= 0) candidates.push(firstVis - 2);
+    if (!compact && effMode === 'spread' && firstVis - 2 >= 0) candidates.push(firstVis - 2);
 
     const runIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 90));
     runIdle(() => {
@@ -3084,9 +3484,16 @@ function refreshHomeStageUI() {
 
 function syncReaderHUD(effMode, visPages) {
     const maxP = BOOK_META[currentSide].totalPages;
+    const folioFormatted = formatFolioLabel(currentSide, currentPage, effMode);
     const folioTxt = document.getElementById('folio-label-txt');
     if (folioTxt) {
-        folioTxt.textContent = formatFolioLabel(currentSide, currentPage, effMode);
+        folioTxt.textContent = folioFormatted;
+    }
+
+    const immTxt = document.getElementById('immersive-hud-txt');
+    if (immTxt) {
+        const shortSide = (currentSide === 'terrain') ? 'Terrain' : 'Sommet';
+        immTxt.textContent = `${shortSide} · ${folioFormatted}`;
     }
 
     const sec = getActiveSectionForView(currentSide, currentPage, effMode);
@@ -3112,7 +3519,14 @@ function syncReaderHUD(effMode, visPages) {
         if (gaugeLbl) gaugeLbl.textContent = `Étage ${sec.floor}`;
         if (quickMirrorBtn && quickMirrorTxt) {
             const otherLabel = (currentSide === 'terrain') ? 'Sommet' : 'Terrain';
-            quickMirrorTxt.textContent = `Étage ${sec.floor} côté ${otherLabel}`;
+            const vw = window.innerWidth || 1024;
+            if (vw <= 420) {
+                quickMirrorTxt.textContent = `É${sec.floor}`;
+            } else if (vw <= 640) {
+                quickMirrorTxt.textContent = `É${sec.floor} · ${otherLabel}`;
+            } else {
+                quickMirrorTxt.textContent = `Étage ${sec.floor} côté ${otherLabel}`;
+            }
             quickMirrorBtn.style.display = 'inline-flex';
         }
     } else {
@@ -3193,8 +3607,33 @@ function resumeSavedReading() {
     enterBookSide(side, page || 1);
 }
 
+function setImmersiveMode(active) {
+    const next = Boolean(active && isReading);
+    if (isImmersiveReading === next) return;
+    isImmersiveReading = next;
+    if (document.body && document.body.classList) {
+        document.body.classList.toggle('is-immersive-reading', isImmersiveReading);
+    }
+    if (isReading) {
+        requestAnimationFrame(() => {
+            renderCurrentView();
+        });
+    }
+}
+
+function toggleImmersiveMode() {
+    if (!isReading) return;
+    setImmersiveMode(!isImmersiveReading);
+}
+
+function exitImmersiveMode() {
+    if (!isImmersiveReading) return;
+    setImmersiveMode(false);
+}
+
 function returnTo3DStage() {
     closeAllOverlays();
+    setImmersiveMode(false);
     if (!isReading) {
         reset3DBookPose();
         return;
@@ -3205,7 +3644,7 @@ function returnTo3DStage() {
 
     document.getElementById('reader-view').style.display = 'none';
     document.getElementById('header-floor-gauge').style.display = 'none';
-    document.getElementById('home-stage-view').style.display = 'flex';
+    document.getElementById('home-stage-view').style.display = '';
 
     if (bookGroup) {
         const pose = getTargetBookPose(currentSide);
@@ -3769,6 +4208,7 @@ function onSearchInputKey(e) {
         e.preventDefault();
         const chosen = currentSearchHits[selectedSearchIdx];
         if (chosen) {
+            if (e.target && typeof e.target.blur === 'function') e.target.blur();
             closeSearchModal();
             jumpToPage(chosen.side, chosen.page);
         }
@@ -3866,6 +4306,10 @@ function toggleThemePopover(e) {
 function applyThemeAttributes(themeName, paperName) {
     document.documentElement.setAttribute('data-theme', themeName);
     document.documentElement.setAttribute('data-paper', paperName);
+    const metaTheme = document.getElementById('meta-theme-color');
+    if (metaTheme) {
+        metaTheme.content = (themeName === 'ivoire') ? '#f7f5ee' : (themeName === 'atelier' ? '#1f222a' : '#0a0b0e');
+    }
     document.querySelectorAll('[data-set-theme]').forEach(b => {
         b.classList.toggle('is-active', b.dataset.setTheme === themeName);
     });
@@ -3887,12 +4331,32 @@ function setPaperFilter(paperName) {
 }
 
 function toggleFullscreenMode() {
-    if (!document.fullscreenElement) {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen().catch(() => {});
+    const docEl = document.documentElement;
+    const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+    const reqFs = docEl && (docEl.requestFullscreen || docEl.webkitRequestFullscreen);
+    const exitFs = document.exitFullscreen || document.webkitExitFullscreen;
+
+    if (!fsEl) {
+        if (reqFs) {
+            try {
+                const p = reqFs.call(docEl);
+                if (p && typeof p.catch === 'function') {
+                    p.catch(() => {
+                        if (isReading) toggleImmersiveMode();
+                    });
+                }
+                return;
+            } catch (_) {}
         }
-    } else if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
+        if (isReading) {
+            toggleImmersiveMode();
+            showToast(isImmersiveReading ? 'Lecture plein écran activée' : 'Barres de contrôle affichées');
+        }
+    } else if (exitFs) {
+        try {
+            const p = exitFs.call(document);
+            if (p && typeof p.catch === 'function') p.catch(() => {});
+        } catch (_) {}
     }
 }
 
@@ -3997,8 +4461,10 @@ function initReaderInteractions() {
     let startX = 0, startY = 0, originPanX = 0, originPanY = 0;
     let moved = false;
     let lastWheelTurn = 0;
+    let lastTouchZoomAt = 0;
 
     vp.addEventListener('dblclick', (e) => {
+        if (Date.now() - lastTouchZoomAt < 500) return;
         if (!isReading || e.target.closest('button, input, #hall-central-banner')) return;
         const rect = vp.getBoundingClientRect();
         const rx = e.clientX - (rect.left + rect.width / 2);
@@ -4069,43 +4535,41 @@ function initReaderInteractions() {
         }
     }, { passive: false });
 
-    // Gestes tactiles (Swipe de page & Pinch-to-Zoom)
+    // Gestes tactiles universels iOS & Android :
+    // - Pincement 2 doigts + panoramique simultané autour du point médian
+    // - Glissement horizontal 1 doigt avec suivi visuel temps réel et inertie
+    // - Tap bords gauche/droit (19 %) : tourne la page sans latence
+    // - Tap centre (62 %) : mode lecture plein écran immersif
+    // - Double-tap localisé (< 36 px) : zoom 200 % centré sur le paragraphe
     let touchPinching = false;
     let touchPanning = false;
+    let touchMoved = false;
+    let swipeAxis = null;
     let tStartX = 0, tStartY = 0, tStartTime = 0;
-    let pinchStartDist = 0, pinchStartZoom = 1.0, pinchMid = { x: 0, y: 0 };
-    let lastTap = 0;
+    let pinchPrevDist = 0, pinchPrevMidX = 0, pinchPrevMidY = 0;
+    let lastTapTime = 0, lastTapX = 0, lastTapY = 0;
+    let singleTapTimer = null;
 
     vp.addEventListener('touchstart', (e) => {
         if (!isReading || e.target.closest('button, input, #hall-central-banner')) return;
         if (e.touches.length === 2) {
+            clearTimeout(singleTapTimer);
             touchPinching = true;
             touchPanning = false;
+            swipeAxis = null;
             const dx = e.touches[0].clientX - e.touches[1].clientX;
             const dy = e.touches[0].clientY - e.touches[1].clientY;
-            pinchStartDist = Math.hypot(dx, dy);
-            pinchStartZoom = currentZoom;
+            pinchPrevDist = Math.hypot(dx, dy);
             const rect = vp.getBoundingClientRect();
-            pinchMid = {
-                x: (e.touches[0].clientX + e.touches[1].clientX) / 2 - (rect.left + rect.width / 2),
-                y: (e.touches[0].clientY + e.touches[1].clientY) / 2 - (rect.top + rect.height / 2)
-            };
+            pinchPrevMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - (rect.left + rect.width / 2);
+            pinchPrevMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - (rect.top + rect.height / 2);
         } else if (e.touches.length === 1) {
-            const now = Date.now();
-            if (now - lastTap < 300) {
-                lastTap = 0;
-                const rect = vp.getBoundingClientRect();
-                const rx = e.touches[0].clientX - (rect.left + rect.width / 2);
-                const ry = e.touches[0].clientY - (rect.top + rect.height / 2);
-                if (currentZoom > 1.1) resetZoom(true);
-                else zoomAtCursor(1.8, rx, ry, true);
-                return;
-            }
-            lastTap = now;
             touchPanning = true;
+            touchMoved = false;
+            swipeAxis = null;
             tStartX = e.touches[0].clientX;
             tStartY = e.touches[0].clientY;
-            tStartTime = now;
+            tStartTime = Date.now();
             originPanX = panX;
             originPanY = panY;
         }
@@ -4118,45 +4582,160 @@ function initReaderInteractions() {
             const dx = e.touches[0].clientX - e.touches[1].clientX;
             const dy = e.touches[0].clientY - e.touches[1].clientY;
             const dist = Math.hypot(dx, dy);
-            if (pinchStartDist > 0) {
-                zoomAtCursor(pinchStartZoom * (dist / pinchStartDist), pinchMid.x, pinchMid.y, false);
+            const rect = vp.getBoundingClientRect();
+            const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - (rect.left + rect.width / 2);
+            const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - (rect.top + rect.height / 2);
+
+            panX += (midX - pinchPrevMidX);
+            panY += (midY - pinchPrevMidY);
+            if (pinchPrevDist > 4 && dist > 4) {
+                const nextZ = currentZoom * (dist / pinchPrevDist);
+                const prevZ = currentZoom;
+                zoomAtCursor(nextZ, midX, midY, false);
+                if (Math.abs(currentZoom - prevZ) < 0.005) {
+                    applyZoomAndPanTransform(false);
+                }
+            } else {
+                applyZoomAndPanTransform(false);
             }
+            pinchPrevDist = dist;
+            pinchPrevMidX = midX;
+            pinchPrevMidY = midY;
         } else if (touchPanning && e.touches.length === 1) {
             const dx = e.touches[0].clientX - tStartX;
             const dy = e.touches[0].clientY - tStartY;
+            if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+                touchMoved = true;
+            }
+
             if (currentZoom > 1.02) {
                 e.preventDefault();
                 panX = originPanX + dx;
                 panY = originPanY + dy;
                 applyZoomAndPanTransform(false);
+            } else {
+                if (!swipeAxis && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
+                    swipeAxis = (Math.abs(dx) > Math.abs(dy) * 1.15) ? 'x' : 'y';
+                }
+                if (swipeAxis === 'x') {
+                    e.preventDefault();
+                    const stage = document.getElementById('spread-stage');
+                    if (stage && !isFlipping3D) {
+                        const effMode = getEffectiveDisplayMode();
+                        const vis = getVisiblePages(currentSide, currentPage, effMode);
+                        const maxP = BOOK_META[currentSide].totalPages;
+                        const blocked = (dx > 0 && vis[0] <= 0) || (dx < 0 && vis[vis.length - 1] >= maxP);
+                        const dragOffset = blocked ? dx * 0.22 : Math.max(-110, Math.min(110, dx * 0.58));
+                        stage.style.transition = 'none';
+                        stage.style.transform = `translate3d(${Math.round(dragOffset)}px, 0, 0) scale(1)`;
+                    }
+                }
             }
         }
     }, { passive: false });
 
-    vp.addEventListener('touchend', (e) => {
+    const finishTouchGesture = (e) => {
         if (touchPinching) {
             if (e.touches.length < 2) {
                 touchPinching = false;
+                touchPanning = false;
                 applyZoomAndPanTransform(true);
             }
             return;
         }
-        if (touchPanning) {
-            touchPanning = false;
-            const ch = e.changedTouches && e.changedTouches[0];
-            if (ch && currentZoom <= 1.02) {
-                const dx = ch.clientX - tStartX;
-                const dy = ch.clientY - tStartY;
-                const dt = Date.now() - tStartTime;
-                if (dt < 500 && Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+        if (!touchPanning) return;
+        touchPanning = false;
+
+        const ch = e.changedTouches && e.changedTouches[0];
+        if (!ch || e.type === 'touchcancel') {
+            applyZoomAndPanTransform(true);
+            return;
+        }
+
+        const dx = ch.clientX - tStartX;
+        const dy = ch.clientY - tStartY;
+        const now = Date.now();
+        const dt = Math.max(1, now - tStartTime);
+
+        if (touchMoved) {
+            if (currentZoom <= 1.02) {
+                applyZoomAndPanTransform(true);
+                const minSwipe = Math.min(52, Math.max(32, vp.clientWidth * 0.12));
+                const isFastFlick = (dt < 260 && Math.abs(dx) > 24 && (Math.abs(dx) / dt) > 0.40);
+                if (swipeAxis === 'x' && (Math.abs(dx) > minSwipe || isFastFlick) && Math.abs(dx) > Math.abs(dy) * 1.2) {
                     if (dx < 0) nextStep();
                     else prevStep();
                 }
             } else {
                 applyZoomAndPanTransform(true);
             }
+            return;
         }
-    });
+
+        if (dt > 320) return;
+
+        const rect = vp.getBoundingClientRect();
+        const relRatioX = (ch.clientX - rect.left) / Math.max(1, rect.width);
+        const rx = ch.clientX - (rect.left + rect.width / 2);
+        const ry = ch.clientY - (rect.top + rect.height / 2);
+
+        // Zones latérales (gauche/droite 19 %) : tourne la page immédiatement lorsque non zoomé
+        if (currentZoom <= 1.02 && (relRatioX < 0.19 || relRatioX > 0.81)) {
+            clearTimeout(singleTapTimer);
+            lastTapTime = 0;
+            if (relRatioX < 0.19) prevStep();
+            else nextStep();
+            return;
+        }
+
+        // Zone centrale : désambiguïsation Double-Tap (Zoom) vs Simple-Tap (Mode immersif)
+        if ((now - lastTapTime) < 260 && Math.hypot(ch.clientX - lastTapX, ch.clientY - lastTapY) < 36) {
+            clearTimeout(singleTapTimer);
+            lastTapTime = 0;
+            lastTouchZoomAt = now;
+            if (currentZoom > 1.08) {
+                resetZoom(true);
+            } else {
+                zoomAtCursor(isCompactMobile() ? 2.0 : 1.75, rx, ry, true);
+            }
+        } else {
+            lastTapTime = now;
+            lastTapX = ch.clientX;
+            lastTapY = ch.clientY;
+            if (currentZoom <= 1.02 && isTouchCoarseDevice()) {
+                clearTimeout(singleTapTimer);
+                singleTapTimer = setTimeout(() => {
+                    if (isReading && currentZoom <= 1.02) {
+                        toggleImmersiveMode();
+                    }
+                }, 235);
+            }
+        }
+    };
+
+    vp.addEventListener('touchend', finishTouchGesture);
+    vp.addEventListener('touchcancel', finishTouchGesture);
+
+    // Geste de balayage vers la gauche pour refermer le tiroir Sommaire sur mobile
+    const tocDrawerEl = document.getElementById('toc-drawer');
+    if (tocDrawerEl) {
+        let dStartX = 0, dStartY = 0;
+        tocDrawerEl.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                dStartX = e.touches[0].clientX;
+                dStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+        tocDrawerEl.addEventListener('touchend', (e) => {
+            const ch = e.changedTouches && e.changedTouches[0];
+            if (!ch) return;
+            const dx = ch.clientX - dStartX;
+            const dy = ch.clientY - dStartY;
+            if (dx < -55 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+                closeTocDrawer();
+            }
+        }, { passive: true });
+    }
 
     // Fermeture du popover thème au clic extérieur
     window.addEventListener('click', (e) => {
@@ -4189,6 +4768,9 @@ function initReaderInteractions() {
             } else if (isReading && currentZoom > 1.02) {
                 e.preventDefault();
                 resetZoom(true);
+            } else if (isReading && isImmersiveReading) {
+                e.preventDefault();
+                exitImmersiveMode();
             }
             return;
         }
@@ -4237,14 +4819,32 @@ function initReaderInteractions() {
         }
     });
 
+    // Synchronisation de la hauteur utile (clavier virtuel iOS Safari & Android Chrome)
+    const syncVisualViewport = () => {
+        const vv = window.visualViewport;
+        const h = (vv && vv.height) ? vv.height : window.innerHeight;
+        if (h && document.documentElement && document.documentElement.style) {
+            document.documentElement.style.setProperty('--vvh', `${Math.round(h)}px`);
+        }
+    };
+    syncVisualViewport();
+    if (window.visualViewport && typeof window.visualViewport.addEventListener === 'function') {
+        window.visualViewport.addEventListener('resize', syncVisualViewport);
+    }
+
     let resizeTimer = null;
-    window.addEventListener('resize', () => {
+    const handleViewportChange = (delayMs) => {
+        syncVisualViewport();
         fit3DCameraToViewport();
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
+            fit3DCameraToViewport();
             if (isReading) renderCurrentView();
-        }, 120);
-    });
+        }, delayMs);
+    };
+
+    window.addEventListener('resize', () => handleViewportChange(110));
+    window.addEventListener('orientationchange', () => handleViewportChange(180));
 
     if (typeof ResizeObserver !== 'undefined') {
         const stageWrap = document.getElementById('stage-3d-canvas-wrap');
